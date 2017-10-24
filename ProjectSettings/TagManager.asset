@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Villager
+  - Enemy
+  - Building
+  - ConstructionSite
+  - Manager
   layers:
   - Default
   - TransparentFX

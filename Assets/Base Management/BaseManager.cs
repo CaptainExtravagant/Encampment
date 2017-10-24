@@ -13,8 +13,12 @@ public class BaseManager : MonoBehaviour {
 
     GameObject heldBuilding;
 
-    List<BaseVillager> villagerList = new List<BaseVillager>();
+    bool isUnderAttack;
+
+    public List<BaseVillager> villagerList = new List<BaseVillager>();
     public List<ConstructionArea> toBeBuilt = new List<ConstructionArea>();
+    public List<BaseBuilding> buildingList = new List<BaseBuilding>();
+    public List<BaseEnemy> enemyList = new List<BaseEnemy>();
 
     protected BaseManager()
     {
@@ -28,6 +32,33 @@ public class BaseManager : MonoBehaviour {
             PlaceBuilding();
             
         }
+
+        if(FindEnemies())
+        {
+            isUnderAttack = true;
+        }
+        else
+        {
+            isUnderAttack = false;
+        }
+    }
+
+    private bool FindEnemies()
+    {
+        enemyList.Clear();
+        if (FindObjectsOfType<BaseEnemy>().Length > 0)
+        {
+            enemyList.AddRange(FindObjectsOfType<BaseEnemy>());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void Awake()
+    {
+        villagerList.AddRange(FindObjectsOfType<BaseVillager>());
     }
 
     void PlaceBuilding()
@@ -43,12 +74,17 @@ public class BaseManager : MonoBehaviour {
             //Place construction site on mouse position and add to list of construction areas.
             GameObject constructionReference;
 
-            constructionReference = heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld();
+            constructionReference = heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld(this);
 
             toBeBuilt.Add(constructionReference.GetComponent<ConstructionArea>());
             placingBuilding = false;
             heldBuilding = null;
         }
+    }
+
+    public bool GetUnderAttack()
+    {
+        return isUnderAttack;
     }
 
     private void Start()
@@ -59,7 +95,7 @@ public class BaseManager : MonoBehaviour {
         supplyStone = 100;
         supplyWood = 100;
 
-        for (int i = 0; i < 5; i++)
+        /*for (int i = 0; i < 5; i++)
         {
             //Create some villagers
             GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
@@ -69,7 +105,7 @@ public class BaseManager : MonoBehaviour {
                 villagerList.Add(newVillager.GetComponent<BaseVillager>());
                 newVillager = null;
             }
-        }
+        }*/
     }
 
 }

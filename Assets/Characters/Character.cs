@@ -20,7 +20,7 @@ public class Character : MonoBehaviour{
     //=======
     //STRUCTS
     //=======
-    protected struct Attributes
+    public struct Attributes
     {
         public float fitness;
         public float nimbleness;
@@ -46,7 +46,7 @@ public class Character : MonoBehaviour{
             charm = attributesIn.charm;
         }
     }
-    protected struct CombatSkills
+    public struct CombatSkills
     {
         public float brawling;
         public float sword;
@@ -81,13 +81,13 @@ public class Character : MonoBehaviour{
             longsword = skillsIn.longsword;
         }
     }
-    protected struct CharacterInfo
+    public struct CharacterInfo
     {
-        string characterName;
-        float characterHealth;
-        int characterLevel;
-        Attributes characterAttributes;
-        CombatSkills characterCombatSkills;
+        public string characterName;
+        public float characterHealth;
+        public int characterLevel;
+        public Attributes characterAttributes;
+        public CombatSkills characterCombatSkills;
 
         public CharacterInfo(string name, float health, int level, Attributes attributes, CombatSkills combatSkills)
         {
@@ -104,6 +104,13 @@ public class Character : MonoBehaviour{
     //=======
     protected CharacterInfo characterInfo;
     protected CHARACTER_STATE currentState;
+    protected BaseWeapon equippedWeapon;
+    protected BaseArmor equippedArmor;
+
+    public float debugHealth;
+    private float currentHealth;
+
+    protected bool isAttacking;
 
     protected NavMeshAgent agent;
 
@@ -113,12 +120,23 @@ public class Character : MonoBehaviour{
     private float attackCooldownTime;
     private float attackTimer;
 
-    float baseAttributeValue = 75;
+    protected float baseAttributeValue = 75;
     float baseCombatValue = 4;
 
-    public Character()
+    public virtual void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        CreateCharacter(new Vector3(0, 1, 0));
+    }
+
+    public virtual void Update ()
+    {
+        AIUpdate();
+    }
+
+    public CombatSkills GetCombatSkills()
+    {
+        return characterInfo.characterCombatSkills;
     }
 
     //==========================
@@ -133,12 +151,12 @@ public class Character : MonoBehaviour{
         //If Fitness is higher than Nimbleness, lower Nimbleness by 13% of Fitness value
         if(fitness > nimbleness)
         {
-            nimbleness -= fitness / 0.13f;
+            nimbleness -= fitness * 0.13f;
         }
         else if(nimbleness > fitness)
         {
             //If Nimbleness is higher, lower Fitness by 13% of Nimbleness
-            fitness -= nimbleness / 0.13f;
+            fitness -= nimbleness * 0.13f;
         }
 
         //Find random values for Curiosity and Focus
@@ -148,11 +166,11 @@ public class Character : MonoBehaviour{
         //If Curiosity is higher than Focus, lower by 13%
         if(curiosity > focus)
         {
-            focus -= curiosity / 0.13f;
+            focus -= curiosity * 0.13f;
         }
         else if(focus > curiosity)
         {
-            curiosity -= focus / 0.13f;
+            curiosity -= focus * 0.13f;
         }
 
         //Find value for Charm
@@ -165,28 +183,28 @@ public class Character : MonoBehaviour{
     private CombatSkills CreateCombatSkills(Attributes newAttributes)
     {
         //Brawling is based off a characters fitness
-        float brawling = (baseCombatValue + (newAttributes.fitness / 0.05f));
+        float brawling = (baseCombatValue + (newAttributes.fitness * 0.05f));
 
         //Sword skills are based off nimbleness and focus
-        float sword = (baseCombatValue + ((newAttributes.nimbleness + newAttributes.focus) / 0.05f));
+        float sword = (baseCombatValue + ((newAttributes.nimbleness + newAttributes.focus) * 0.05f));
 
         //Longsword skills are based off fitness
-        float longsword = (baseCombatValue + (newAttributes.fitness / 0.05f));
+        float longsword = (baseCombatValue + (newAttributes.fitness * 0.05f));
 
         //Axe skills are based off fitness
-        float axe = (baseCombatValue + (newAttributes.fitness / 0.05f));
+        float axe = (baseCombatValue + (newAttributes.fitness * 0.05f));
 
         //Polearm skills are based off fitness and focus
-        float polearm = (baseCombatValue + ((newAttributes.fitness + newAttributes.focus) / 0.05f));
+        float polearm = (baseCombatValue + ((newAttributes.fitness + newAttributes.focus) * 0.05f));
 
         //Bow skills are based off focus
-        float bow = (baseCombatValue + (newAttributes.focus / 0.05f));
+        float bow = (baseCombatValue + (newAttributes.focus * 0.05f));
 
         //Dodge skills are based off nimbleness and focus, as this isn't a weapon skill 10% of the total is used
-        float dodge = (baseCombatValue + ((newAttributes.nimbleness + newAttributes.focus) / 0.1f));
+        float dodge = (baseCombatValue + ((newAttributes.nimbleness + newAttributes.focus) * 0.1f));
 
         //Armor skills are based off fitness, as it isn't a weapon skill, 10% is used
-        float armor = (baseCombatValue + (newAttributes.fitness / 0.1f));
+        float armor = (baseCombatValue + (newAttributes.fitness * 0.1f));
 
         return new CombatSkills(brawling, sword, axe, polearm, bow, dodge, armor, longsword);
     }
@@ -205,7 +223,7 @@ public class Character : MonoBehaviour{
 
         return newHealth;
     }
-    protected void CreateCharacter(Vector3 spawnPosition, string path)
+    protected void CreateCharacter(Vector3 spawnPosition)
     {
         //Create base Attributes and Combat Skills
         Attributes characterAttributes = new Attributes(CreateAttributes());
@@ -214,9 +232,19 @@ public class Character : MonoBehaviour{
         //Create Character Info using previous stats, start characters at level 1
         characterInfo = new CharacterInfo(CreateName(), CreateHealth(characterAttributes), 1, characterAttributes, combatSkills);
 
+        //Set attack rate
+        attackCooldownTime = 5 - (characterInfo.characterAttributes.nimbleness / 10);
+        if(attackCooldownTime <= 0)
+        {
+            attackCooldownTime = 1.0f;
+        }
+
+        currentHealth = characterInfo.characterHealth;
+
+        //Set spawn position
         transform.position = spawnPosition;
 
-        //Instantiate(Resources.Load(path), spawnPosition, Quaternion.identity);
+        debugHealth = characterInfo.characterHealth;
 
     }
 
@@ -264,7 +292,7 @@ public class Character : MonoBehaviour{
     {
         Character[] targetList = FindObjectsOfType<Character>();
 
-        for(int i = targetList.Length; i < 0; i--)
+        for(int i = 0; i < targetList.Length; i++)
         {
             //If this is the first item, set it to be the current target
             if(i == targetList.Length)
@@ -298,19 +326,127 @@ public class Character : MonoBehaviour{
             AIFindTarget();
         }
 
+        targetPosition = targetObject.transform.position;
+
         agent.SetDestination(targetPosition);
 
         currentState = CHARACTER_STATE.CHARACTER_MOVING;
-
-        if(Vector3.Distance(transform.position, targetPosition) <= 1.0f)
+        
+        if(targetObject.GetComponent<ConstructionArea>() && AICheckRange())
+        {
+            currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+        }
+        else if(targetObject.GetComponent<Character>() && AICheckRange())
         {
             currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
         }
     }
 
+    protected bool AICheckRange()
+    {
+        //Check distance to the target object, if "in range" return true
+        if (Vector3.Distance(transform.position, targetPosition) <= 2.0f)
+            return true;
+        else
+            return false;
+    }
+
     //Attack the target if they're close enough
     protected void AIAttack()
     {
+        if(targetObject == null)
+        {
+            isAttacking = false;
+            agent.enabled = true;
+            currentState = CHARACTER_STATE.CHARACTER_WANDER;
+        }
 
+        if(isAttacking && targetObject != null)
+        {
+            attackTimer += Time.deltaTime;
+
+            if(attackTimer >= attackCooldownTime)
+            {
+                //Attack the target
+                DealDamage(targetObject.GetComponent<Character>());
+                attackTimer = 0;
+            }
+        }
+        else if(!isAttacking && targetObject != null)
+        {
+            //Set attacking to true, start attack timer, stop navigation
+            isAttacking = true;
+            agent.enabled = false;
+        }
     }
+
+    protected void DealDamage(Character targetCharacter)
+    {
+
+        if (equippedWeapon != null)
+        {
+            //Deal damage to target character
+            targetCharacter.TakeDamage(equippedWeapon.GetDamageValue(), this);
+        }
+        else
+        {
+            //If the character doesn't have an active weapon, use their brawling skill instead
+            targetCharacter.TakeDamage(GetCombatSkills().brawling, this);
+        }
+    }
+
+    protected void TakeDamage(float inDamage, Character attackingCharacter)
+    {
+        bool dodged = false;
+        float totalDamage;
+
+        //Remove health based on damage taken and armor value
+        if (equippedArmor != null)
+        {
+            totalDamage = inDamage - equippedArmor.GetDefenseValue();
+        }
+        else
+        {
+            totalDamage = inDamage;
+        }
+        //If dodge value is higher than damage being dealt and armor isn't heavy, avoid damage all together
+        if (equippedArmor != null)
+        {
+            if (GetCombatSkills().dodge > totalDamage && !equippedArmor.IsHeavyArmor())
+            {
+                dodged = true;
+            }
+        }
+
+        if (!dodged)
+        {
+            print("Total damage: " + totalDamage);
+            currentHealth -= totalDamage;
+        }
+
+        CheckHealth();
+
+        //The dude who just hit you is probably more important if he isn't your current target, switch (CHANGE TO AGGRO SYSTEM LATER)
+        if(attackingCharacter != targetObject)
+        {
+            targetObject = attackingCharacter.gameObject;
+        }
+    }
+
+    protected void CheckHealth()
+    {
+        debugHealth = currentHealth;
+        print("New Health: " + debugHealth);
+
+        if(currentHealth <= 0)
+        {
+            currentState = CHARACTER_STATE.CHARACTER_DEAD;
+        }
+    }
+    
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
 }

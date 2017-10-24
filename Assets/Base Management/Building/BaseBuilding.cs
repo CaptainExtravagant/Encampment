@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class BaseBuilding : MonoBehaviour {
 
-    bool placedInWorld;
-    bool built;
+    private bool placedInWorld;
+    private bool isBuilt;
+
+    protected BaseManager baseManager;
 
     RaycastHit hit;
     Ray cursorPosition;
+
+    public float buildTime;
 
     public BaseBuilding(string path)
     {
@@ -19,8 +23,6 @@ public class BaseBuilding : MonoBehaviour {
     {
 
     }
-
-    
 
     private void Update()
     {
@@ -42,15 +44,18 @@ public class BaseBuilding : MonoBehaviour {
         {
             transform.position = new Vector3(Mathf.Round(hit.point.x), 0.0f, Mathf.Round(hit.point.z));
         }
-        //transform.position = new Vector3(cursorPosition.x, 0.0f, cursorPosition.z);
     }
 
-    public GameObject PlaceInWorld()
+    public GameObject PlaceInWorld(BaseManager managerReference)
     {
         GameObject constructionReference;
 
         placedInWorld = true;
         constructionReference = (GameObject)Instantiate(Resources.Load("Buildings/ConstructionActor"), transform.position, Quaternion.identity);
+
+        constructionReference.GetComponent<ConstructionArea>().SetBuildTime(buildTime);
+        constructionReference.GetComponent<ConstructionArea>().SetBaseManager(managerReference);
+
         GameObject.Destroy(gameObject);
         return constructionReference;
     }
@@ -58,6 +63,11 @@ public class BaseBuilding : MonoBehaviour {
     public bool IsPlaced()
     {
         return placedInWorld;
+    }
+
+    public bool IsBuilt()
+    {
+        return isBuilt;
     }
 
 }
