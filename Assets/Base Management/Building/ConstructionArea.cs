@@ -9,7 +9,7 @@ public class ConstructionArea : MonoBehaviour {
 
     public void CreateBuilding()
     {
-        baseManager.toBeBuilt.Remove(this);
+        //baseManager.toBeBuilt.Remove(this);
         Destroy(gameObject);
     }
 

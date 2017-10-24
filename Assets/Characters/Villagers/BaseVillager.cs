@@ -192,25 +192,25 @@ public class BaseVillager : Character{
 
     void VillagerBuild()
     {
-        if(targetObject == null)
+        if(targetObject.GetComponent<BaseBuilding>().IsBuilt())
         {
             isBuilding = false;
             agent.enabled = true;
             currentState = CHARACTER_STATE.CHARACTER_WANDER;
         }
 
-        if (isBuilding && targetObject != null)
+        if (isBuilding && !targetObject.GetComponent<BaseBuilding>().IsBuilt())
         {
             timer += Time.deltaTime;
 
             if (timer >= buildTimer)
             {
                 //Add construction points to building
-                targetObject.GetComponent<ConstructionArea>().AddConstructionPoints(taskSkills.construction);
+                targetObject.GetComponent<BaseBuilding>().AddConstructionPoints(taskSkills.construction);
                 timer = 0;
             }
         }
-        else if (!isBuilding && targetObject != null)
+        else if (!isBuilding && !targetObject.GetComponent<BaseBuilding>().IsBuilt())
         {
                 //Set building to true, start build timer, stop navigation
                 isBuilding = true;

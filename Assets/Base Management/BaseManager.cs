@@ -16,7 +16,7 @@ public class BaseManager : MonoBehaviour {
     bool isUnderAttack;
 
     public List<BaseVillager> villagerList = new List<BaseVillager>();
-    public List<ConstructionArea> toBeBuilt = new List<ConstructionArea>();
+    public List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
     public List<BaseBuilding> buildingList = new List<BaseBuilding>();
     public List<BaseEnemy> enemyList = new List<BaseEnemy>();
 
@@ -67,16 +67,17 @@ public class BaseManager : MonoBehaviour {
         {
             //Create building reference to place
             heldBuilding = (GameObject)Instantiate(Resources.Load("Buildings/BuildingActor"));
+            heldBuilding.GetComponent<BaseBuilding>().SetBaseManager(this);
+
             placingBuilding = true;
         }
         else
         {
             //Place construction site on mouse position and add to list of construction areas.
-            GameObject constructionReference;
 
-            constructionReference = heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld(this);
+            heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld(this);
 
-            toBeBuilt.Add(constructionReference.GetComponent<ConstructionArea>());
+            toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
             placingBuilding = false;
             heldBuilding = null;
         }

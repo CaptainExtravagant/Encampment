@@ -106,8 +106,7 @@ public class Character : MonoBehaviour{
     protected CHARACTER_STATE currentState;
     protected BaseWeapon equippedWeapon;
     protected BaseArmor equippedArmor;
-
-    public float debugHealth;
+    
     private float currentHealth;
 
     protected bool isAttacking;
@@ -243,8 +242,7 @@ public class Character : MonoBehaviour{
 
         //Set spawn position
         transform.position = spawnPosition;
-
-        debugHealth = characterInfo.characterHealth;
+        
 
     }
 
@@ -332,7 +330,7 @@ public class Character : MonoBehaviour{
 
         currentState = CHARACTER_STATE.CHARACTER_MOVING;
         
-        if(targetObject.GetComponent<ConstructionArea>() && AICheckRange())
+        if(!targetObject.GetComponent<BaseBuilding>().IsBuilt() && AICheckRange())
         {
             currentState = CHARACTER_STATE.CHARACTER_BUILDING;
         }
@@ -435,8 +433,6 @@ public class Character : MonoBehaviour{
 
     protected void CheckHealth()
     {
-        debugHealth = currentHealth;
-        print("New Health: " + debugHealth);
 
         if(currentHealth <= 0)
         {
