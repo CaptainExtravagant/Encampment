@@ -43,7 +43,7 @@ public class BaseVillager : Character{
         CreateCharacter(new Vector3 (Random.value * 10, 1, Random.value * 10));
         SetTaskSkills();
 
-        managerReference = GameObject.FindGameObjectWithTag("Manager").GetComponent<BaseManager>();
+		managerReference = FindObjectOfType<BaseManager>();
 
         timer = wanderTimer;
     }
@@ -135,6 +135,7 @@ public class BaseVillager : Character{
                         workingResource.MineResource((int)taskSkills.farming);
                         break;
                 }
+				timer = 0;
             }
         }
         else if(!isWorking && targetObject != null)

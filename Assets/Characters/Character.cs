@@ -330,19 +330,25 @@ public class Character : MonoBehaviour{
         agent.SetDestination(targetPosition);
 
         currentState = CHARACTER_STATE.CHARACTER_MOVING;
-        
-        if(!targetObject.GetComponent<BaseBuilding>().IsBuilt() && AICheckRange())
-        {
-            currentState = CHARACTER_STATE.CHARACTER_BUILDING;
-        }
-        else if(targetObject.GetComponent<Character>() && AICheckRange())
-        {
-            currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
-        }
-        else if(targetObject.GetComponent<ResourceTile>() && AICheckRange())
-        {
-            currentState = CHARACTER_STATE.CHARACTER_COLLECTING;
-        }
+
+		if (targetObject == null) {
+			Debug.Log ("Target is null");
+		}
+
+
+		if (targetObject != null) {
+			if (targetObject.GetComponent<BaseBuilding> () && AICheckRange ()) {
+				if(targetObject.GetComponent<BaseBuilding>().IsBuilt())
+					{
+				currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+					}
+
+			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
+				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
+			} else if (targetObject.GetComponent<ResourceTile> () && AICheckRange ()) {
+				currentState = CHARACTER_STATE.CHARACTER_COLLECTING;
+			}
+		}
     }
 
     protected bool AICheckRange()

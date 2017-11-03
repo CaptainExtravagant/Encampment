@@ -4,38 +4,41 @@ using UnityEngine;
 
 public class ResourceTile : MonoBehaviour {
 
-	enum RESOURCE_TYPE
+	public enum RESOURCE_TYPE
     {
         STONE = 0,
         WOOD,
         FOOD
     }
 
-    private RESOURCE_TYPE resourceType;
+	public RESOURCE_TYPE resourceType;
 
     private BaseManager managerReference;
 
-    private int resourceValue;
+	private int resourceValue;
 
-    public int largeResource = 300;
-    public int mediumResource = 200;
-    public int smallResource = 100;
-
-    public GameObject largeMesh;
-    public GameObject mediumMesh;
-    public GameObject smallMesh;
-
+	private Mesh chosenMesh;
     private MeshFilter meshFilter;
+	private MeshCollider colliderReference;
 
     public int GetResourceType()
     {
         return (int)resourceType;
     }
 
-    public void Init(BaseManager newManager)
-    {
-        managerReference = newManager;
-    }
+	void Awake()
+	{
+		managerReference = FindObjectOfType<BaseManager> ();
+
+		resourceValue = Random.Range (0, 400);
+	}
+
+	private void SetUpMesh()
+	{
+		colliderReference = gameObject.GetComponent<MeshCollider> ();
+		meshFilter = gameObject.GetComponent<MeshFilter> ();
+		chosenMesh = meshFilter.mesh;
+	}
 
     public void MineResource(int miningValue)
     {
@@ -43,26 +46,8 @@ public class ResourceTile : MonoBehaviour {
 
         managerReference.AddResources(miningValue, (int)resourceType);
 
-        UpdateState();
-    }
-
-    private void UpdateState()
-    {
-        if(resourceValue < largeResource)
-        {
-            DestroyObject(largeMesh);
-        }
-        else if(resourceValue < mediumResource)
-        {
-            DestroyObject(mediumMesh);
-        }
-        else if(resourceValue < smallResource)
-        {
-            DestroyObject(smallMesh);
-        }
-        else if(resourceValue <= 0)
-        {
-            DestroyObject(gameObject);
-        }
+		if (resourceValue <= 0) {
+			Destroy (gameObject);
+		}
     }
 }
