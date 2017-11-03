@@ -18,6 +18,8 @@ public class BaseVillager : Character{
         public float sailing;
     }
 
+    private bool isSelected;
+
     private TaskSkills taskSkills;
 
     public float wanderRadius;
@@ -30,6 +32,10 @@ public class BaseVillager : Character{
     private bool isBuilding;
 
     private BaseManager managerReference;
+
+    private ResourceTile workingResource;
+    private bool isWorking;
+    private float workTimer;
 
     public override void Start()
     {
@@ -89,6 +95,10 @@ public class BaseVillager : Character{
                 VillagerWander();
                 break;
 
+            case CHARACTER_STATE.CHARACTER_COLLECTING:
+                VillagerCollect();
+                break;
+
             default:
                 currentState = CHARACTER_STATE.CHARACTER_WANDER;
                 VillagerWander();
@@ -96,6 +106,66 @@ public class BaseVillager : Character{
         }
     }
     
+    void VillagerCollect()
+    {
+        if(targetObject == null)
+        {
+            isWorking = false;
+            agent.enabled = true;
+            currentState = CHARACTER_STATE.CHARACTER_WANDER;
+        }
+
+        if(isWorking && targetObject != null)
+        {
+            timer += Time.deltaTime;
+
+            if(timer >= workTimer)
+            {
+                switch(workingResource.GetResourceType())
+                {
+                    case 0:
+                        workingResource.MineResource((int)taskSkills.mining);
+                        break;
+
+                    case 1:
+                        workingResource.MineResource((int)taskSkills.woodcutting);
+                        break;
+
+                    case 2:
+                        workingResource.MineResource((int)taskSkills.farming);
+                        break;
+                }
+            }
+        }
+        else if(!isWorking && targetObject != null)
+        {
+            isWorking = true;
+            agent.enabled = false;
+            workTimer = wanderTimer;
+        }
+    }
+
+    public void SelectWorkArea(GameObject objectReference)
+    {
+        Debug.Log("Work Area Selected");
+
+        targetObject = objectReference;
+
+        workingResource = objectReference.GetComponent<ResourceTile>();
+
+        currentState = CHARACTER_STATE.CHARACTER_MOVING;
+    }
+
+    public bool GetSelected()
+    {
+        return isSelected;
+    }
+
+    public void SetSelected(bool newValue)
+    {
+        Debug.Log("Character selected");
+        isSelected = newValue;
+    }
 
     void VillagerWander()
     {

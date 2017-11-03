@@ -13,6 +13,14 @@ public class CameraMovement : MonoBehaviour {
     Vector3 holdingPoint;
     bool holdingMouse;
 
+    float holdMouseTimer = 0.1f;
+    float timer;
+
+    public bool IsHoldingMouse()
+    {
+        return holdingMouse;
+    }
+
     private void Awake()
     {
         //Set camera target reference and holdingMouse to false as default
@@ -39,23 +47,33 @@ public class CameraMovement : MonoBehaviour {
         //=====================
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (!holdingMouse)
-            {
-                //Find the position on screen where the mouse was clicked and set holdingMouse to true
-                holdingPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-                holdingMouse = true;
-            }
+            holdMouseTimer += Time.deltaTime;
 
         }
 
         if(Input.GetKey(KeyCode.Mouse0))
         {
-            CameraDragMovement();
+            timer += Time.deltaTime;
+
+            if (!holdingMouse && timer >= holdMouseTimer)
+            {
+                //Find the position on screen where the mouse was clicked and set holdingMouse to true
+                holdingPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                holdingMouse = true;
+
+            }
+
+            if(holdingMouse)
+            {
+                CameraDragMovement();
+            }
         }
 
         if(Input.GetKeyUp(KeyCode.Mouse0))
         {
             holdingMouse = false;
+
+            timer = 0;
         }
 
         //=====================

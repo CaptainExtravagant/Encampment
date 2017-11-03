@@ -13,6 +13,7 @@ public class Character : MonoBehaviour{
         CHARACTER_WANDER = 0,
         CHARACTER_MOVING,
         CHARACTER_BUILDING,
+        CHARACTER_COLLECTING,
         CHARACTER_ATTACKING,
         CHARACTER_DEAD
     };
@@ -337,6 +338,10 @@ public class Character : MonoBehaviour{
         else if(targetObject.GetComponent<Character>() && AICheckRange())
         {
             currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
+        }
+        else if(targetObject.GetComponent<ResourceTile>() && AICheckRange())
+        {
+            currentState = CHARACTER_STATE.CHARACTER_COLLECTING;
         }
     }
 

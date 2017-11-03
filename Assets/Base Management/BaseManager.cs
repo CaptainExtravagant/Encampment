@@ -109,4 +109,23 @@ public class BaseManager : MonoBehaviour {
         }*/
     }
 
+    public void AddResources(int resourceValue, int resourceType)
+    {
+        switch(resourceType)
+        {
+            case 0:
+                supplyStone += resourceValue;
+                break;
+
+            case 1:
+                supplyWood += resourceValue;
+                break;
+
+            case 2:
+                supplyFood += resourceValue;
+                break;
+        }
+
+    }
+
 }
