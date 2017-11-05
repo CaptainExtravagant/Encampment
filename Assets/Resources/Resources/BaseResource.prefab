@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114247023111531104}
   - component: {fileID: 33917479289208144}
   - component: {fileID: 23156843210578294}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BaseResource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,4 +108,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceType: 0
-  resourceValue: 0

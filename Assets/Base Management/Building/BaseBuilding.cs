@@ -21,6 +21,9 @@ public class BaseBuilding : MonoBehaviour {
     private bool placedInWorld;
     private bool isBuilt;
 
+    public int buildingCost;
+    public ResourceTile.RESOURCE_TYPE buildingResource;
+
     private BUILDING_TYPE buildingType;
     private int buildingLevel;
 
@@ -96,11 +99,19 @@ public class BaseBuilding : MonoBehaviour {
         }
     }
 
-    public void PlaceInWorld(BaseManager managerReference)
+    public bool PlaceInWorld(BaseManager managerReference)
     {
-        placedInWorld = true;
 
-        //SetMesh();
+        if (managerReference.RemoveResources(buildingCost, (int)buildingResource))
+        {
+            placedInWorld = true;
+            return true;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return false;
+        }
     }
 
     public bool IsPlaced()

@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23532462522382702}
   - component: {fileID: 64416819047912412}
   - component: {fileID: 114522184882428478}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: StoneResource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,4 +108,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceType: 0
-  resourceValue: 0

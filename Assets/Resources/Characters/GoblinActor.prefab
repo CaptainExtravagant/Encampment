@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114520281984582120}
   - component: {fileID: 54687035805734656}
   - component: {fileID: 195607463399255704}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GoblinActor
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -111,7 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d10b5055ac28d104fa6fdd3b5604b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugHealth: 0
 --- !u!114 &114965451546301512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -123,7 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a64fdb222d0b7fc40a8e806308e0c39e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugHealth: 0
 --- !u!136 &136991152522143256
 CapsuleCollider:
   m_ObjectHideFlags: 1

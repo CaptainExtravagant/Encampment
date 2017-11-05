@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseManager : MonoBehaviour {
 
@@ -19,6 +20,25 @@ public class BaseManager : MonoBehaviour {
     public List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
     public List<BaseBuilding> buildingList = new List<BaseBuilding>();
     public List<BaseEnemy> enemyList = new List<BaseEnemy>();
+
+    public GameObject woodText;
+    public GameObject stoneText;
+    public GameObject foodText;
+
+    public void LaunchAttack()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            //Create some villagers
+            GameObject newGoblin = (GameObject)Instantiate(Resources.Load("Characters/GoblinActor"));
+
+            if (newGoblin != null)
+            {
+                enemyList.Add(newGoblin.GetComponent<BaseEnemy>());
+                newGoblin = null;
+            }
+        }
+    }
 
     protected BaseManager()
     {
@@ -41,6 +61,15 @@ public class BaseManager : MonoBehaviour {
         {
             isUnderAttack = false;
         }
+
+        UIUpdate();
+    }
+
+    private void UIUpdate()
+    {
+        woodText.GetComponent<Text>().text = "Wood: " + supplyWood;
+        stoneText.GetComponent<Text>().text = "Stone: " + supplyStone;
+        foodText.GetComponent<Text>().text = "Food: " + supplyFood;
     }
 
     private bool FindEnemies()
@@ -75,9 +104,11 @@ public class BaseManager : MonoBehaviour {
         {
             //Place construction site on mouse position and add to list of construction areas.
 
-            heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld(this);
+            if(heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld(this))
+            {
+                toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
+            }
 
-            toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
             placingBuilding = false;
             heldBuilding = null;
         }
@@ -109,6 +140,21 @@ public class BaseManager : MonoBehaviour {
         }*/
     }
 
+    public void SpawnVillagers()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            //Create some villagers
+            GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
+
+            if (newVillager != null)
+            {
+                villagerList.Add(newVillager.GetComponent<BaseVillager>());
+                newVillager = null;
+            }
+        }
+    }
+
     public void AddResources(int resourceValue, int resourceType)
     {
         switch(resourceType)
@@ -128,4 +174,46 @@ public class BaseManager : MonoBehaviour {
 
     }
 
+    public bool RemoveResources(int resourceValue, int resourceType)
+    {
+        int tempValue;
+
+        switch(resourceType)
+        {
+            case 0:
+                tempValue = supplyStone;
+                tempValue -= resourceValue;
+
+                if (tempValue >= 0)
+                {
+                    supplyStone -= resourceValue;
+                    return true;
+                }
+                else { return false; }
+
+            case 1:
+                tempValue = supplyWood;
+                tempValue -= resourceValue;
+
+                if(tempValue >= 0)
+                {
+                    supplyWood -= resourceValue;
+                    return true;
+                }
+                else { return false; }
+
+            case 2:
+                tempValue = supplyFood;
+                tempValue -= resourceValue;
+
+                if(tempValue >= 0)
+                {
+                    supplyFood -= resourceValue;
+                    return true;
+                }
+                else { return false; }
+        }
+
+        return false;
+    }
 }

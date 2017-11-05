@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 65561899945658042}
   - component: {fileID: 23249474425561338}
   - component: {fileID: 114000990094554762}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BuildingActor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,4 +105,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c138b9958c11384ea12859ea4b6b5c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildTime: 100

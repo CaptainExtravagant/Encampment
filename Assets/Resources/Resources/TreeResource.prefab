@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23413085744683682}
   - component: {fileID: 64460856275728962}
   - component: {fileID: 114133136403369538}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TreeResource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,4 +109,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceType: 1
-  resourceValue: 0

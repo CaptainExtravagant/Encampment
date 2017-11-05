@@ -338,7 +338,7 @@ public class Character : MonoBehaviour{
 
 		if (targetObject != null) {
 			if (targetObject.GetComponent<BaseBuilding> () && AICheckRange ()) {
-				if(targetObject.GetComponent<BaseBuilding>().IsBuilt())
+				if(!targetObject.GetComponent<BaseBuilding>().IsBuilt())
 					{
 				currentState = CHARACTER_STATE.CHARACTER_BUILDING;
 					}

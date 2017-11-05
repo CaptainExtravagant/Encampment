@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23444935862669198}
   - component: {fileID: 64289976321838598}
   - component: {fileID: 114453554852520908}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BushResource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,4 +108,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceType: 2
-  resourceValue: 0
