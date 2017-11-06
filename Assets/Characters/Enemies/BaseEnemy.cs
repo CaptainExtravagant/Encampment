@@ -43,16 +43,15 @@ public class BaseEnemy : Character {
         {
             for (int i = 0; i < managerReference.villagerList.Count; i++)
             {
-                if(i == 0)
-                {
-                    targetPosition = managerReference.villagerList[i].transform.position;
-                    targetObject = managerReference.villagerList[i].gameObject;
-                }
-                else if(Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, managerReference.villagerList[i].transform.position))
-                {
-                    targetPosition = managerReference.villagerList[i].transform.position;
-                    targetObject = managerReference.villagerList[i].gameObject;
-                }
+				if (managerReference.villagerList [i] != null) {
+					if (i == 0) {
+						targetPosition = managerReference.villagerList [i].transform.position;
+						targetObject = managerReference.villagerList [i].gameObject;
+					} else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.villagerList [i].transform.position)) {
+						targetPosition = managerReference.villagerList [i].transform.position;
+						targetObject = managerReference.villagerList [i].gameObject;
+					}
+				}
             }
 
             if(targetObject != null)
