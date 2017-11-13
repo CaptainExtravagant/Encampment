@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseWeapon : MonoBehaviour {
+public class BaseWeapon : BaseItem {
 
     protected enum WEAPON_TYPE
     {
@@ -15,11 +15,9 @@ public class BaseWeapon : MonoBehaviour {
     }
 
     private WEAPON_TYPE weaponType;
-    private float baseAbility;
 
     private float damage;
     private float defense;
-    private string weaponName;
 
     private bool twoHanded;
 
@@ -40,12 +38,12 @@ public class BaseWeapon : MonoBehaviour {
 
     public string GetWeaponName()
     {
-        return weaponName;
+        return itemName;
     }
 
     public void SetWeaponName(string newName)
     {
-        weaponName = newName;
+        itemName = newName;
     }
 
     public float GetDamageValue()

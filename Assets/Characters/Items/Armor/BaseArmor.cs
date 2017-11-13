@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseArmor : MonoBehaviour {
-
-    private float baseAbility;
-
+public class BaseArmor : BaseItem {
+    
     private float defense;
-    private string armorName;
-
     private bool heavyArmor;
 
     protected void SetBaseScore(float smithingSkill)
@@ -23,12 +19,12 @@ public class BaseArmor : MonoBehaviour {
 
     public string GetArmorName()
     {
-        return armorName;
+        return itemName;
     }
 
     public void SetArmorName(string newName)
     {
-        armorName = newName;
+        itemName = newName;
     }
 
     public float GetDefenseValue()
