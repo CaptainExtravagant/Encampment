@@ -48,6 +48,11 @@ public class BaseVillager : Character{
         timer = wanderTimer;
     }
 
+    public TaskSkills GetTaskSkills()
+    {
+        return taskSkills;
+    }
+
     private void SetTaskSkills()
     {
         taskSkills.mining = baseAttributeValue * (characterInfo.characterAttributes.fitness / 100);
@@ -164,8 +169,20 @@ public class BaseVillager : Character{
 
     public void SetSelected(bool newValue)
     {
-        Debug.Log("Character selected");
+        if (newValue)
+        {
+            Debug.Log("Character selected");
+        }
+        else
+        {
+            Debug.Log("Character Deselected");
+        }
         isSelected = newValue;
+    }
+
+    public CharacterInfo GetCharacterInfo()
+    {
+        return characterInfo;
     }
 
     void VillagerWander()

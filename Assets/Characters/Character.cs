@@ -127,6 +127,8 @@ public class Character : MonoBehaviour{
     {
         agent = GetComponent<NavMeshAgent>();
         CreateCharacter(new Vector3(0, 1, 0));
+
+
     }
 
     public virtual void Update ()
@@ -454,6 +456,30 @@ public class Character : MonoBehaviour{
     public float GetCurrentHealth()
     {
         return currentHealth;
+    }
+
+    //==============
+    //EQUIPPED ITEMS
+    //==============
+
+    protected void EquipWeapon()
+    {
+
+    }
+
+    protected void EquipArmor()
+    {
+
+    }
+
+    public BaseWeapon GetEquippedWeapon()
+    {
+        return equippedWeapon;
+    }
+
+    public BaseArmor GetEquippedArmor()
+    {
+        return equippedArmor;
     }
 
 }
