@@ -105,8 +105,8 @@ public class Character : MonoBehaviour{
     //=======
     protected CharacterInfo characterInfo;
     protected CHARACTER_STATE currentState;
-    protected BaseWeapon equippedWeapon;
-    protected BaseArmor equippedArmor;
+	public BaseWeapon equippedWeapon;
+	public BaseArmor equippedArmor;
     
     private float currentHealth;
 
@@ -462,18 +462,21 @@ public class Character : MonoBehaviour{
     //EQUIPPED ITEMS
     //==============
 
-    protected void EquipWeapon()
+	protected void EquipWeapon(BaseWeapon weaponToEquip)
     {
-
+		equippedWeapon = weaponToEquip;
     }
 
-    protected void EquipArmor()
+	protected void EquipArmor(BaseArmor armorToEquip)
     {
-
+		equippedArmor = armorToEquip;
     }
 
     public BaseWeapon GetEquippedWeapon()
     {
+		if (equippedWeapon == null) {
+			Debug.Log ("No weapon equipped");
+		}
         return equippedWeapon;
     }
 

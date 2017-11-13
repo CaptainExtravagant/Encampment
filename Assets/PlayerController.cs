@@ -107,9 +107,9 @@ public class PlayerController : MonoBehaviour {
                         "CHARACTER TASK SKILLS \n" +
                         TaskTextLoop() + "\n" +
                         "\n" +
-                        "EQUIPPED WEAPON: " + villagerReference.GetEquippedWeapon().GetWeaponName() + "\n" +
+						"EQUIPPED WEAPON: " + villagerReference.GetEquippedWeapon().GetItemName() + "\n" +
                         "\n" +
-                        "EQUIPPED ARMOR: " + villagerReference.GetEquippedArmor().GetArmorName() + "\n"
+                        "EQUIPPED ARMOR: " + villagerReference.GetEquippedArmor().GetItemName() + "\n"
 
             ;
 

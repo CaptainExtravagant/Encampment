@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Weapon_Sword : BaseWeapon {
 
-	void Start()
+	void Awake()
     {
-        SetWeaponType(WEAPON_TYPE.WEAPON_SWORD);
-        SetWeaponName("Sword");
+		SetWeaponType(WEAPON_TYPE.WEAPON_SWORD);
+		SetItemName("Sword");
     }
 
-    private void CalculateStats(Character characterReference)
+	public override void CalculateStats(Character characterReference)
     {
+
         //Calculate Attack Value
         float attackValue;
         float characterSkill = characterReference.GetCombatSkills().sword;
@@ -25,7 +26,5 @@ public class Weapon_Sword : BaseWeapon {
         defenseValue = (GetBaseScore() / 10) + characterSkill;
 
         SetDefenseValue(defenseValue);
-
-
     }
 }

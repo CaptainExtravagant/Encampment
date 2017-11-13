@@ -21,6 +21,25 @@ public class BaseWeapon : BaseItem {
 
     private bool twoHanded;
 
+	public virtual void CalculateStats(Character characterReference)
+	{
+		SetItemName ("BaseWeapon");
+
+		//Calculate Attack Value
+		float attackValue;
+		float characterSkill = characterReference.GetCombatSkills().brawling;
+
+		attackValue = GetBaseScore() + characterSkill;
+		SetDamageValue(attackValue);
+
+		//Calculate Defense Value
+		float defenseValue;
+
+		defenseValue = (GetBaseScore() / 10) + characterSkill;
+
+		SetDefenseValue(defenseValue);
+	}
+
     protected void SetBaseScore(float smithingSkill)
     {
         baseAbility = smithingSkill / 10;
@@ -34,16 +53,6 @@ public class BaseWeapon : BaseItem {
     protected void SetWeaponType(WEAPON_TYPE newWeaponType)
     {
         weaponType = newWeaponType;
-    }
-
-    public string GetWeaponName()
-    {
-        return itemName;
-    }
-
-    public void SetWeaponName(string newName)
-    {
-        itemName = newName;
     }
 
     public float GetDamageValue()
