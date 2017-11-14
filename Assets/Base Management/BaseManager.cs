@@ -216,4 +216,5 @@ public class BaseManager : MonoBehaviour {
 
         return false;
     }
+
 }

@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour {
 
     Character.CharacterInfo selectedCharacterInfo;
     BaseVillager.TaskSkills selectedCharacterTaskSkills;
+
+	public GameObject inventoryPanel;
     public GameObject characterPanel;
     Text infoText;
 
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour {
         infoText = characterPanel.GetComponentInChildren<Text>();
 
         CloseCharacterInfoPanel();
+		CloseInventory ();
     }
 
     void Update()
@@ -263,4 +266,14 @@ public class PlayerController : MonoBehaviour {
 
 		return foundObject;
     }
+
+	public void OpenInventory()
+	{
+		inventoryPanel.SetActive (true);
+	}
+
+	public void CloseInventory()
+	{
+		inventoryPanel.SetActive (false);
+	}
 }
