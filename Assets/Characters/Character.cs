@@ -106,6 +106,8 @@ public class Character : MonoBehaviour{
     protected CharacterInfo characterInfo;
     protected CHARACTER_STATE currentState;
 	public BaseWeapon equippedWeapon;
+    public BaseWeapon offHandWeapon;
+    protected bool offHandEnabled = true;
 	public BaseArmor equippedArmor;
     
     private float currentHealth;
@@ -409,17 +411,29 @@ public class Character : MonoBehaviour{
     protected void TakeDamage(float inDamage, Character attackingCharacter)
     {
         bool dodged = false;
+        float totalDefense = 0;
         float totalDamage;
 
         //Remove health based on damage taken and armor value
         if (equippedArmor != null)
         {
+            totalDefense += equippedArmor.GetDefenseValue();
             totalDamage = inDamage - equippedArmor.GetDefenseValue();
         }
-        else
+        if(offHandWeapon != null && offHandWeapon.GetWeaponType() == BaseWeapon.WEAPON_TYPE.WEAPON_SHIELD)
         {
-            totalDamage = inDamage;
+            totalDefense += offHandWeapon.GetDefenseValue();
         }
+
+        totalDefense += equippedWeapon.GetDefenseValue();
+        
+        totalDamage = inDamage - totalDefense;
+
+        if(totalDamage < 0)
+        {
+            totalDamage = 0;
+        }
+        
         //If dodge value is higher than damage being dealt and armor isn't heavy, avoid damage all together
         if (equippedArmor != null)
         {
@@ -462,9 +476,22 @@ public class Character : MonoBehaviour{
     //EQUIPPED ITEMS
     //==============
 
-	protected void EquipWeapon(BaseWeapon weaponToEquip)
+	protected void EquipWeaponToMainHand(BaseWeapon weaponToEquip)
     {
 		equippedWeapon = weaponToEquip;
+
+        if(equippedWeapon.IsTwoHanded())
+        {
+            offHandEnabled = false;
+        }
+    }
+
+    protected void EquipWeaponToOffHand(BaseWeapon weaponToEquip)
+    {
+        if (offHandEnabled)
+        {
+            offHandWeapon = weaponToEquip;
+        }
     }
 
 	protected void EquipArmor(BaseArmor armorToEquip)
@@ -478,6 +505,15 @@ public class Character : MonoBehaviour{
 			Debug.Log ("No weapon equipped");
 		}
         return equippedWeapon;
+    }
+
+    public BaseWeapon GetOffHandWeapon()
+    {
+        if(offHandWeapon == null)
+        {
+            Debug.Log("No offhand weapon equipped");
+        }
+        return offHandWeapon;
     }
 
     public BaseArmor GetEquippedArmor()

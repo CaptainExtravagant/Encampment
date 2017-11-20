@@ -112,6 +112,8 @@ public class PlayerController : MonoBehaviour {
                         "\n" +
 						"EQUIPPED WEAPON: " + villagerReference.GetEquippedWeapon().GetItemName() + "\n" +
                         "\n" +
+                        "OFFHAND ITEM: " + villagerReference.GetOffHandWeapon().GetItemName() + "\n" +
+                        "\n" +
                         "EQUIPPED ARMOR: " + villagerReference.GetEquippedArmor().GetItemName() + "\n"
 
             ;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseWeapon : BaseItem {
 
-    protected enum WEAPON_TYPE
+    public enum WEAPON_TYPE
     {
         WEAPON_SWORD = 0,
         WEAPON_AXE,
@@ -55,6 +55,11 @@ public class BaseWeapon : BaseItem {
         weaponType = newWeaponType;
     }
 
+    public WEAPON_TYPE GetWeaponType()
+    {
+        return weaponType;
+    }
+
     public float GetDamageValue()
     {
         return damage;
@@ -75,7 +80,7 @@ public class BaseWeapon : BaseItem {
         defense = newDefense;
     }
 
-    protected bool IsTwoHanded()
+    public bool IsTwoHanded()
     {
         return twoHanded;
     }
