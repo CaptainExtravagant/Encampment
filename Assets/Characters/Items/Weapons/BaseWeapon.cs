@@ -21,7 +21,12 @@ public class BaseWeapon : BaseItem {
 
     private bool twoHanded;
 
-	public virtual void CalculateStats(Character characterReference)
+    private void Awake()
+    {
+        itemType = ITEM_TYPE.ITEM_WEAPON;
+    }
+
+    public virtual void CalculateStats(Character characterReference)
 	{
 		SetItemName ("BaseWeapon");
 

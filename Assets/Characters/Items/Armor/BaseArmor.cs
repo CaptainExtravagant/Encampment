@@ -7,6 +7,11 @@ public class BaseArmor : BaseItem {
     private float defense;
     private bool heavyArmor;
 
+    private void Awake()
+    {
+        itemType = ITEM_TYPE.ITEM_ARMOR;
+    }
+
     protected void SetBaseScore(float smithingSkill)
     {
         baseAbility = smithingSkill / 10;

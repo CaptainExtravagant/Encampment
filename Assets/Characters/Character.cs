@@ -86,14 +86,16 @@ public class Character : MonoBehaviour{
     {
         public string characterName;
         public float characterHealth;
+        public int characterSex;
         public int characterLevel;
         public Attributes characterAttributes;
         public CombatSkills characterCombatSkills;
 
-        public CharacterInfo(string name, float health, int level, Attributes attributes, CombatSkills combatSkills)
+        public CharacterInfo(int sex, string name, float health,  int level, Attributes attributes, CombatSkills combatSkills)
         {
             characterName = name;
             characterHealth = health;
+            characterSex = sex;
             characterLevel = level;
             characterAttributes = attributes;
             characterCombatSkills = combatSkills;
@@ -124,6 +126,10 @@ public class Character : MonoBehaviour{
 
     protected float baseAttributeValue = 75;
     float baseCombatValue = 4;
+
+    private string[] MaleFirstNames = {"Noah", "Liam", "William", "Mason", "James", "Benjamin", "Jacob", "Michael", "Elijah", "Ethan" };
+    private string[] CharacterLastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson" };
+    private string[] FemaleFirstNames = {"Emma", "Olivia", "Ava", "Sophia", "Isabella", "Mia", "Charlotte", "Abigail", "Emily", "Kelley" };
 
     public virtual void Start()
     {
@@ -212,9 +218,17 @@ public class Character : MonoBehaviour{
 
         return new CombatSkills(brawling, sword, axe, polearm, bow, dodge, armor, longsword);
     }
-    private string CreateName()
+    private string CreateName(int sex)
     {
         string newName = "";
+        if(sex == 1)
+        {
+            newName = MaleFirstNames[Random.Range(0, MaleFirstNames.Length)] + " " + CharacterLastNames[Random.Range(0, CharacterLastNames.Length)];
+        }
+        else if(sex == 2)
+        {
+            newName = FemaleFirstNames[Random.Range(0, FemaleFirstNames.Length)] + " " + CharacterLastNames[Random.Range(0, CharacterLastNames.Length)];
+        }
 
         return newName;
     }
@@ -229,12 +243,16 @@ public class Character : MonoBehaviour{
     }
     protected void CreateCharacter(Vector3 spawnPosition)
     {
+        int tempSex = Random.Range(1, 3);
+
+        Debug.Log(tempSex);
+
         //Create base Attributes and Combat Skills
         Attributes characterAttributes = new Attributes(CreateAttributes());
         CombatSkills combatSkills = new CombatSkills(CreateCombatSkills(characterAttributes));
 
         //Create Character Info using previous stats, start characters at level 1
-        characterInfo = new CharacterInfo(CreateName(), CreateHealth(characterAttributes), 1, characterAttributes, combatSkills);
+        characterInfo = new CharacterInfo(tempSex, CreateName(tempSex), CreateHealth(characterAttributes), 1, characterAttributes, combatSkills);
 
         //Set attack rate
         attackCooldownTime = 5 - (characterInfo.characterAttributes.nimbleness / 10);

@@ -27,11 +27,11 @@ public class InventoryBase : MonoBehaviour {
 				imageList [i].sprite = itemToAdd.GetSprite ();
 				imageList [i].enabled = true;
 
-				itemButtonList [i] = itemButtonReference;
+                itemButtonList[i] = Instantiate(itemButtonReference, inventoryScrollBox.transform, true);
+                
 				itemButtonList [i].GetComponent<Button> ().image = imageList [i];
 				itemButtonList [i].GetComponentInChildren<Text> ().text = itemToAdd.GetItemName ();
 
-				Instantiate (itemButtonList [i], inventoryScrollBox.transform, true);
 			}
 		}
 	}
@@ -43,6 +43,8 @@ public class InventoryBase : MonoBehaviour {
 				itemList [i] = null;
 				imageList [i].sprite = null;
 				imageList [i].enabled = false;
+
+                itemButtonList[i] = null;
 			}
 		}
 	}

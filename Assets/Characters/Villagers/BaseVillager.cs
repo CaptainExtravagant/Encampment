@@ -34,6 +34,7 @@ public class BaseVillager : Character{
     private BaseManager managerReference;
 
     private ResourceTile workingResource;
+    private BaseBuilding workingBuilding;
     private bool isWorking;
     private float workTimer;
 
@@ -222,14 +223,12 @@ public class BaseVillager : Character{
                     //If this is the first item, set it to be the current target
                     if (i == 0)
                     {
-                        targetPosition = managerReference.enemyList[i].transform.position;
-                        targetObject = managerReference.enemyList[i].gameObject;
+                        SetTarget(managerReference.enemyList[i].gameObject);
                     }
                     //If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
                     else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, managerReference.enemyList[i].transform.position))
                     {
-                        targetPosition = managerReference.enemyList[i].transform.position;
-                        targetObject = managerReference.enemyList[i].gameObject;
+                        SetTarget(managerReference.enemyList[i].gameObject);
                     }
                 }
             }
@@ -252,15 +251,13 @@ public class BaseVillager : Character{
                         //If this is the first item, set it to be the current target
                         if (i == 0)
                         {
-                            targetPosition = managerReference.toBeBuilt[i].transform.position;
-                            targetObject = managerReference.toBeBuilt[i].gameObject;
+                            SetTarget(managerReference.toBeBuilt[i].gameObject);
                         }//If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
                         else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, managerReference.toBeBuilt[i].transform.position))
                         {
                             //Does this site have a build slot available?
-
-                            targetPosition = managerReference.toBeBuilt[i].transform.position;
-                            targetObject = managerReference.toBeBuilt[i].gameObject;
+                            
+                            SetTarget(managerReference.toBeBuilt[i].gameObject);
                         }
                     }
                 }
@@ -309,6 +306,15 @@ public class BaseVillager : Character{
         }
     }
 
+    void VillagerWork()
+    {
+        //targetObject uses Interface to apply work, depending on what's needed, send entire stat list
+    }
 
+    public void SetTarget(GameObject newTarget)
+    {
+        targetPosition = newTarget.transform.position;
+        targetObject = newTarget;
+    }
 
 }

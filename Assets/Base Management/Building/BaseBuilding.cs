@@ -15,8 +15,12 @@ public class BaseBuilding : MonoBehaviour {
         BUILDING_MININGCAMP,
         BUILDING_DOCK,
         BUILDING_BARRACKS,
-        BUILDING_OUTPOST
+        BUILDING_OUTPOST,
+        BUILDING_BLACKSMITH
     }
+
+    protected BaseVillager[] workingVillagers;
+    protected int maxWorkingVillagers;
 
     private bool placedInWorld;
     private bool isBuilt;
@@ -52,6 +56,24 @@ public class BaseBuilding : MonoBehaviour {
         {
             BindToMouse();
         }
+    }
+
+    public virtual void OnClicked(BaseVillager selectedVillager)
+    {
+
+    }
+
+    protected bool AddVillagerToWork(BaseVillager selectedVillager)
+    {
+        for(int i = 0; i < maxWorkingVillagers; i++)
+        {
+            if(workingVillagers[i] == null)
+            {
+                workingVillagers[i] = selectedVillager;
+                return true;
+            }
+        }
+        return false;
     }
 
     protected void SetBuildingType(BUILDING_TYPE newBuildingType)

@@ -7,13 +7,17 @@ public class BaseItem : MonoBehaviour {
     protected float baseAbility;
     protected string itemName;
 
+    public enum ITEM_TYPE
+    {
+        ITEM_WEAPON = 0,
+        ITEM_ARMOR,
+        ITEM_UTILITY
+    }
+
+    public ITEM_TYPE itemType;
+
 	protected Sprite itemSprite;
-
-	protected void Init()
-	{
-		//Event dispatch to inventory manager, add to inventory etc.
-	}
-
+    
 	public Sprite GetSprite()
 	{
 		return itemSprite;

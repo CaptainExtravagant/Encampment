@@ -47,10 +47,19 @@ public class PlayerController : MonoBehaviour {
 				if (selectedObject.GetComponent<BaseVillager> ()) {
 					Debug.Log ("Villager Found");
 
-					villagerReference = selectedObject.GetComponent<BaseVillager> ();
+                    if (villagerReference == null)
+                    {
+                        villagerReference = selectedObject.GetComponent<BaseVillager>();
 
-					villagerReference.SetSelected (true);
-                    OpenCharacterInfoPanel();
+                        villagerReference.SetSelected(true);
+                        OpenCharacterInfoPanel();
+                    }
+                    else
+                    {
+                        villagerReference.SetSelected(false);
+                        villagerReference = null;
+                        CloseCharacterInfoPanel();
+                    }
 				}
 				else if (selectedObject.GetComponent<ResourceTile> ()) {
 					Debug.Log ("Resources Found");
@@ -74,6 +83,9 @@ public class PlayerController : MonoBehaviour {
 					//Assign villagers to buildings, open building menu
 
 					if (villagerReference != null) {
+
+                        buildingReference.OnClicked(villagerReference);
+
 						villagerReference.SetSelected (false);
 						villagerReference = null;
                         CloseCharacterInfoPanel();
