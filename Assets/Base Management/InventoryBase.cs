@@ -5,9 +5,19 @@ using UnityEngine.UI;
 
 public class InventoryBase : MonoBehaviour {
 
+	private GameObject itemButtonReference;
+	private GameObject[] itemButtonList;
+
 	public BaseItem[] itemList = new BaseItem[itemCap];
 	public Image[] imageList = new Image[itemCap];
 	private static int itemCap = 10;
+
+	public GameObject inventoryScrollBox;
+
+	void Awake()
+	{
+		itemButtonReference = (GameObject)Resources.Load ("InventoryItem");
+	}
 
 	public void AddItem(BaseItem itemToAdd)
 	{
@@ -17,6 +27,11 @@ public class InventoryBase : MonoBehaviour {
 				imageList [i].sprite = itemToAdd.GetSprite ();
 				imageList [i].enabled = true;
 
+				itemButtonList [i] = itemButtonReference;
+				itemButtonList [i].GetComponent<Button> ().image = imageList [i];
+				itemButtonList [i].GetComponentInChildren<Text> ().text = itemToAdd.GetItemName ();
+
+				Instantiate (itemButtonList [i], inventoryScrollBox.transform, true);
 			}
 		}
 	}

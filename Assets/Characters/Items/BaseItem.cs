@@ -9,6 +9,11 @@ public class BaseItem : MonoBehaviour {
 
 	protected Sprite itemSprite;
 
+	protected void Init()
+	{
+		//Event dispatch to inventory manager, add to inventory etc.
+	}
+
 	public Sprite GetSprite()
 	{
 		return itemSprite;
