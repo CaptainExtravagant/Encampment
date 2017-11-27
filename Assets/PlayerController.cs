@@ -21,14 +21,14 @@ public class PlayerController : MonoBehaviour {
 
 	public GameObject inventoryPanel;
     public GameObject characterPanel;
-    Text infoText;
+    Text[] infoText;
 
     private void Awake()
     {
         cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
 
-        infoText = characterPanel.GetComponentInChildren<Text>();
+		infoText = characterPanel.GetComponentsInChildren<Text>();
 
         CloseCharacterInfoPanel();
 		CloseInventory ();
@@ -108,33 +108,118 @@ public class PlayerController : MonoBehaviour {
         selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
 
-        infoText.text = "CHARACTER INFO \n" +
-                        "\n" +
-                        "Name: " + selectedCharacterInfo.characterName + "\n" +
-                        "Level: " + selectedCharacterInfo.characterLevel + "\n" +
-                        "\n" +
-                        "CHARACTER ATTRIBUTES \n" +
-                        AttributeTextLoop() + "\n" +
-                        "\n" +
-                        "CHARACTER COMBAT SKILLS \n" +
-                        CombatTextLoop() + "\n" +
-                        "\n" +
-                        "CHARACTER TASK SKILLS \n" +
-                        TaskTextLoop() + "\n" +
-                        "\n" +
-						"EQUIPPED WEAPON: " + villagerReference.GetEquippedWeapon().GetItemName() + "\n" +
-                        "\n" +
-                        "OFFHAND ITEM: " + villagerReference.GetOffHandWeapon().GetItemName() + "\n" +
-                        "\n" +
-                        "EQUIPPED ARMOR: " + villagerReference.GetEquippedArmor().GetItemName() + "\n"
+		for (int i = 0; i < infoText.Length; i++) {
+			switch (i) {
+			case 1:
+				infoText [i].text = selectedCharacterInfo.characterName;
+				break;
 
-            ;
+			case 3:
+				if (selectedCharacterInfo.characterSex == 1) {
+					infoText [i].text = "Male";
+				} else {
+					infoText [i].text = "Female";
+				}
+				break;
+
+			case 5:
+				infoText [i].text = selectedCharacterInfo.characterLevel.ToString();
+				break;
+
+			case 8:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.fitness.ToString ();
+				break;
+
+			case 10:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.nimbleness.ToString ();
+				break;
+
+			case 12:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.curiosity.ToString ();
+				break;
+
+			case 14:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.focus.ToString ();
+				break;
+
+			case 16:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.charm.ToString ();
+				break;
+
+			case 19:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.brawling.ToString ();
+				break;
+
+			case 21:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.sword.ToString ();
+				break;
+
+			case 23:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.longsword.ToString ();
+				break;
+
+			case 25:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.axe.ToString ();
+				break;
+
+			case 27:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.polearm.ToString ();
+				break;
+
+			case 29:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.bow.ToString ();
+				break;
+
+			case 31:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.dodge.ToString ();
+				break;
+
+			case 33:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.armor.ToString ();
+				break;
+
+			case 36:
+				infoText [i].text = selectedCharacterTaskSkills.mining.ToString ();
+				break;
+
+			case 38:
+				infoText [i].text = selectedCharacterTaskSkills.woodcutting.ToString ();
+				break;
+
+			case 40:
+				infoText [i].text = selectedCharacterTaskSkills.blacksmithing.ToString ();
+				break;
+
+			case 42:
+				infoText [i].text = selectedCharacterTaskSkills.weaponCrafting.ToString ();
+				break;
+
+			case 44:
+				infoText [i].text = selectedCharacterTaskSkills.armorCrafting.ToString ();
+				break;
+
+			case 46:
+				infoText [i].text = selectedCharacterTaskSkills.tailoring.ToString ();
+				break;
+
+			case 48:
+				infoText [i].text = selectedCharacterTaskSkills.farming.ToString ();
+				break;
+
+			case 50:
+				infoText [i].text = selectedCharacterTaskSkills.construction.ToString ();
+				break;
+
+			case 52:
+				infoText [i].text = selectedCharacterTaskSkills.sailing.ToString ();
+				break;
+			}
+		}
 
         characterPanel.SetActive(true);
     }
     void CloseCharacterInfoPanel()
     {
-        infoText.text = "";
         characterPanel.SetActive(false);
     }
 
