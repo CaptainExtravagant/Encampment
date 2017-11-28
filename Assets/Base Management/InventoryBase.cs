@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InventoryBase : MonoBehaviour {
 
-	private GameObject itemButtonReference;
+	public GameObject itemButtonReference;
 	private GameObject[] itemButtonList;
 
 	public BaseItem[] itemList = new BaseItem[itemCap];
@@ -16,16 +16,14 @@ public class InventoryBase : MonoBehaviour {
 
 	void Awake()
 	{
-		itemButtonReference = (GameObject)Resources.Load ("InventoryItem");
+		//itemButtonReference = (GameObject)Resources.Load ("InventoryItem");
 	}
 
 	public void AddItem(BaseItem itemToAdd)
 	{
 		for (int i = 0; i < itemList.Length; i++) {
 			if (itemList [i] == null) {
-				itemList [i] = itemToAdd;
-				imageList [i].sprite = itemToAdd.GetSprite ();
-				imageList [i].enabled = true;
+				itemList [i] = Instantiate(itemToAdd);
 
                 itemButtonList[i] = Instantiate(itemButtonReference, inventoryScrollBox.transform, true);
                 

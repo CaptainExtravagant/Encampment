@@ -14,6 +14,9 @@ public class BaseManager : MonoBehaviour {
 
     GameObject heldBuilding;
 
+	public GameObject buildingMenu;
+	private bool buildingMenuOpen = true;
+
     bool isUnderAttack;
 
     public List<BaseVillager> villagerList = new List<BaseVillager>();
@@ -114,6 +117,17 @@ public class BaseManager : MonoBehaviour {
         }
     }
 
+	public void ToggleBuildingMenu()
+	{
+		if (buildingMenuOpen) {
+			buildingMenu.SetActive (false);
+			buildingMenuOpen = false;
+		} else {
+			buildingMenu.SetActive (true);
+			buildingMenuOpen = true;
+		}
+	}
+
     public bool GetUnderAttack()
     {
         return isUnderAttack;
@@ -121,6 +135,7 @@ public class BaseManager : MonoBehaviour {
 
     private void Start()
     {
+		ToggleBuildingMenu ();
 
         supplyFood = 100;
         supplyMorale = 50;

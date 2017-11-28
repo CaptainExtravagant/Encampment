@@ -2,7 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseBuilding : MonoBehaviour {
+public class BaseBuilding : MonoBehaviour, I_Building {
+
+	public virtual void WorkBuilding(BaseVillager villagerReference)
+	{
+	}
+
+	public GameObject infoPanel;
+	protected bool infoPanelOpen;
 
     public enum BUILDING_TYPE
     {
@@ -47,8 +54,25 @@ public class BaseBuilding : MonoBehaviour {
     {
         //SetMesh();
 
+		CloseInfoPanel ();
+
         buildTime = 10;
     }
+
+	virtual protected void InitInfoPanel()
+	{
+
+	}
+
+	public void OpenInfoPanel()
+	{
+		infoPanel.SetActive (true);
+	}
+
+	public void CloseInfoPanel()
+	{
+		infoPanel.SetActive (false);
+	}
 
     private void Update()
     {

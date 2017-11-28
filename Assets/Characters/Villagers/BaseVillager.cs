@@ -308,7 +308,11 @@ public class BaseVillager : Character{
 
     void VillagerWork()
     {
-        //targetObject uses Interface to apply work, depending on what's needed, send entire stat list
+		I_Building building = targetObject.GetComponent<BaseBuilding>() as I_Building;
+
+		if (building != null) {
+			building.WorkBuilding (this);
+		}
     }
 
     public void SetTarget(GameObject newTarget)
