@@ -15,6 +15,9 @@ public class BaseManager : MonoBehaviour {
     GameObject heldBuilding;
 
 	public GameObject buildingMenu;
+	private GameObject buildingPanel;
+	private Vector3 buildingPanelPositionStart;
+	private Vector3 buildingPanelPositionEnd;
 	private bool buildingMenuOpen = true;
 
     bool isUnderAttack;
@@ -91,7 +94,22 @@ public class BaseManager : MonoBehaviour {
     private void Awake()
     {
         villagerList.AddRange(FindObjectsOfType<BaseVillager>());
+
+		buildingPanel = buildingMenu.GetComponentInChildren<HorizontalLayoutGroup> ().gameObject;
+		buildingPanelPositionStart = buildingPanel.transform.position;
+		buildingPanelPositionEnd = new Vector3 (buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y);
     }
+
+	public void ScrollBuildingMenu(Scrollbar scrollReference)
+	{
+		//Zero value = 60
+		//1 value = -820
+		float scrollValue = scrollReference.value;
+
+		Vector3 newPosition = Vector3.Lerp(buildingPanelPositionStart, buildingPanelPositionEnd, scrollValue);
+
+		buildingPanel.transform.position = newPosition;
+	}
 
     void PlaceBuilding()
     {
