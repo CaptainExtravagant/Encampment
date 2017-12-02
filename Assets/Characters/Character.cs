@@ -230,6 +230,8 @@ public class Character : MonoBehaviour{
             newName = FemaleFirstNames[Random.Range(0, FemaleFirstNames.Length)] + " " + CharacterLastNames[Random.Range(0, CharacterLastNames.Length)];
         }
 
+        Debug.Log(newName);
+
         return newName;
     }
     private float CreateHealth(Attributes newAttributes)

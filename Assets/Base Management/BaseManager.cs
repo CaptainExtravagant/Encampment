@@ -27,6 +27,9 @@ public class BaseManager : MonoBehaviour {
     public List<BaseBuilding> buildingList = new List<BaseBuilding>();
     public List<BaseEnemy> enemyList = new List<BaseEnemy>();
 
+    private Camera cameraReference;
+    private CameraMovement cameraMovement;
+
     public GameObject woodText;
     public GameObject stoneText;
     public GameObject foodText;
@@ -98,6 +101,9 @@ public class BaseManager : MonoBehaviour {
 		buildingPanel = buildingMenu.GetComponentInChildren<HorizontalLayoutGroup> ().gameObject;
 		buildingPanelPositionStart = buildingPanel.transform.position;
 		buildingPanelPositionEnd = new Vector3 (buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y);
+
+        cameraReference = Camera.main;
+        cameraMovement = cameraReference.GetComponent<CameraMovement>();
     }
 
 	public void ScrollBuildingMenu(Scrollbar scrollReference)
@@ -140,9 +146,11 @@ public class BaseManager : MonoBehaviour {
 		if (buildingMenuOpen) {
 			buildingMenu.SetActive (false);
 			buildingMenuOpen = false;
+            cameraMovement.SetCameraMovement(true);
 		} else {
 			buildingMenu.SetActive (true);
 			buildingMenuOpen = true;
+            cameraMovement.SetCameraMovement(false);
 		}
 	}
 

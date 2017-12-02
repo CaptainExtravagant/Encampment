@@ -53,12 +53,14 @@ public class PlayerController : MonoBehaviour {
 
                         villagerReference.SetSelected(true);
                         OpenCharacterInfoPanel();
+                        cameraMovement.SetCameraMovement(false);
                     }
                     else
                     {
                         villagerReference.SetSelected(false);
                         villagerReference = null;
                         CloseCharacterInfoPanel();
+                        cameraMovement.SetCameraMovement(true);
                     }
 				}
 				else if (selectedObject.GetComponent<ResourceTile> ()) {
@@ -72,6 +74,7 @@ public class PlayerController : MonoBehaviour {
 						villagerReference.SetSelected (false);
 						villagerReference = null;
                         CloseCharacterInfoPanel();
+                        cameraMovement.SetCameraMovement(true);
 					}
 
 					resourceReference = null;
@@ -89,6 +92,7 @@ public class PlayerController : MonoBehaviour {
 						villagerReference.SetSelected (false);
 						villagerReference = null;
                         CloseCharacterInfoPanel();
+                        cameraMovement.SetCameraMovement(true);
 					}
 				}
 			}
@@ -369,10 +373,12 @@ public class PlayerController : MonoBehaviour {
 	public void OpenInventory()
 	{
 		inventoryPanel.SetActive (true);
+        cameraMovement.SetCameraMovement(false);
 	}
 
 	public void CloseInventory()
 	{
 		inventoryPanel.SetActive (false);
+        cameraMovement.SetCameraMovement(true);
 	}
 }
