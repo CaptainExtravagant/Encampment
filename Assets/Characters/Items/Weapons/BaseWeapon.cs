@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseWeapon : BaseItem {
+public class BaseWeapon : BaseItem, I_Item {
 
     public enum WEAPON_TYPE
     {
@@ -16,6 +16,8 @@ public class BaseWeapon : BaseItem {
 
     private WEAPON_TYPE weaponType;
 
+	protected float baseWeaponValue;
+
     private float damage;
     private float defense;
 
@@ -23,13 +25,11 @@ public class BaseWeapon : BaseItem {
 
     private void Awake()
     {
-        itemType = ITEM_TYPE.ITEM_WEAPON;
+		SetItemType (ITEM_TYPE.ITEM_WEAPON);
     }
 
     public virtual void CalculateStats(Character characterReference)
 	{
-		SetItemName ("BaseWeapon");
-
 		//Calculate Attack Value
 		float attackValue;
 		float characterSkill = characterReference.GetCombatSkills().brawling;
@@ -45,9 +45,16 @@ public class BaseWeapon : BaseItem {
 		SetDefenseValue(defenseValue);
 	}
 
+	void I_Item.CalculateBaseStats(BaseVillager villagerReference)
+	{
+		float smithingBonus = baseWeaponValue + (1 + (villagerReference.GetTaskSkills ().weaponCrafting / 100)) * (villagerReference.GetTaskSkills().blacksmithing / 100) ;
+
+		SetBaseScore (smithingBonus);
+	}
+
     protected void SetBaseScore(float smithingSkill)
     {
-        baseAbility = smithingSkill / 10;
+        baseAbility = smithingSkill;
     }
 
     protected float GetBaseScore()

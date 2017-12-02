@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseItem : MonoBehaviour {
+public class BaseItem : MonoBehaviour, I_Item {
 
     protected float baseAbility;
     protected string itemName;
@@ -14,13 +14,33 @@ public class BaseItem : MonoBehaviour {
         ITEM_UTILITY
     }
 
-    public ITEM_TYPE itemType;
+	protected ITEM_TYPE itemType;
 
 	protected Sprite itemSprite;
-    
-	public Sprite GetSprite()
+
+	public Sprite GetItemSprite()
 	{
 		return itemSprite;
+	}
+
+	protected void SetItemSprite(Sprite spriteToSet)
+	{
+		itemSprite = spriteToSet;
+	}
+
+	protected void SetItemType(ITEM_TYPE typeToSet)
+	{
+		itemType = typeToSet;
+	}
+
+	public ITEM_TYPE GetItemType()
+	{
+		return itemType;
+	}
+
+	void I_Item.CalculateBaseStats(BaseVillager villagerReference)
+	{
+
 	}
 
 	protected void SetItemName(string nameToSet)

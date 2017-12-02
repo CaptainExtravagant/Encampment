@@ -8,6 +8,7 @@ public class Weapon_Sword : BaseWeapon {
     {
 		SetWeaponType(WEAPON_TYPE.WEAPON_SWORD);
 		SetItemName("Sword");
+		SetItemSprite(Resources.Load<Sprite>("Sprites/sword-sprite"));
     }
 
 	public override void CalculateStats(Character characterReference)

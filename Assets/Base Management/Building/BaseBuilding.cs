@@ -8,7 +8,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 	}
 
-	public GameObject infoPanel;
+	protected GameObject infoPanel;
 	protected bool infoPanelOpen;
 
     public enum BUILDING_TYPE
@@ -32,8 +32,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
     private bool placedInWorld;
     private bool isBuilt;
 
-    public int buildingCost;
-    public ResourceTile.RESOURCE_TYPE buildingResource;
+	protected int buildingCost;
+	protected ResourceTile.RESOURCE_TYPE buildingResource;
 
     private BUILDING_TYPE buildingType;
     private int buildingLevel;
@@ -50,6 +50,14 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
     private float buildTime;
 
+	protected float workTime;
+	protected float activeTimer;
+
+
+	protected float baseHealthValue;
+	private float maxHealth;
+	private float currentHealth;
+
     private void Start()
     {
         //SetMesh();
@@ -57,7 +65,24 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		CloseInfoPanel ();
 
         buildTime = 10;
+		baseHealthValue = 40;
     }
+
+	private void SetMaxHealth(float constructionSkill)
+	{
+		//Create building health value based off construction skill of the worker, percentage value is used to create the new value
+		maxHealth = baseHealthValue + (baseHealthValue * (constructionSkill / 100));
+	}
+
+	protected void UpdateCurrentHealth(float damage)
+	{
+		currentHealth -= damage;
+	}
+
+	protected void ResetCurrentHealth()
+	{
+		currentHealth = maxHealth;
+	}
 
 	virtual protected void InitInfoPanel()
 	{
@@ -170,10 +195,11 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         return isBuilt;
     }
 
-    private void CreateBuilding()
+	private void CreateBuilding(BaseVillager characterReference)
     {
         baseManager.toBeBuilt.Remove(this);
         baseManager.buildingList.Add(this);
+		SetMaxHealth (characterReference.GetTaskSkills().construction);
         isBuilt = true;
 
         //SetMesh();
@@ -184,12 +210,12 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         buildTime = newBuildTime;
     }
 
-    public void AddConstructionPoints(float points)
+	public void AddConstructionPoints(float points, BaseVillager characterReference)
     {
         buildTime -= points;
         if(buildTime <= 0)
         {
-            CreateBuilding();
+			CreateBuilding(characterReference);
         }
     }
 
@@ -198,8 +224,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         return buildTime;
     }
 
-    public void SetBaseManager(BaseManager newManager)
-    {
-        baseManager = newManager;
-    }
+	void I_Building.SetBaseManager(BaseManager managerReference)
+	{
+		baseManager = managerReference;
+	}
 }

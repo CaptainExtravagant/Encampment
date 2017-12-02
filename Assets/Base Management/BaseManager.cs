@@ -30,6 +30,8 @@ public class BaseManager : MonoBehaviour {
     private Camera cameraReference;
     private CameraMovement cameraMovement;
 
+	public InventoryBase inventoryReference;
+
     public GameObject woodText;
     public GameObject stoneText;
     public GameObject foodText;
@@ -56,10 +58,11 @@ public class BaseManager : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            PlaceBuilding();
-            
+			if (heldBuilding != null) {
+				PlaceBuilding ();
+			}
         }
 
         if(FindEnemies())
@@ -117,13 +120,20 @@ public class BaseManager : MonoBehaviour {
 		buildingPanel.transform.position = newPosition;
 	}
 
-    void PlaceBuilding()
+	public void SelectBuilding(GameObject selectedBuilding)
+	{
+		heldBuilding = (GameObject)Instantiate (selectedBuilding);
+		ToggleBuildingMenu ();
+		PlaceBuilding ();
+	}
+
+	void PlaceBuilding()
     {
         if (!placingBuilding)
         {
             //Create building reference to place
-            heldBuilding = (GameObject)Instantiate(Resources.Load("Buildings/BuildingActor"));
-            heldBuilding.GetComponent<BaseBuilding>().SetBaseManager(this);
+			I_Building buildingInterface = (I_Building)heldBuilding.GetComponent<BaseBuilding>();
+			buildingInterface.SetBaseManager (this);
 
             placingBuilding = true;
         }

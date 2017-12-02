@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseArmor : BaseItem {
+public class BaseArmor : BaseItem, I_Item {
     
     private float defense;
     private bool heavyArmor;
+
+	protected float baseArmorValue;
 
     private void Awake()
     {
         itemType = ITEM_TYPE.ITEM_ARMOR;
     }
 
+	void I_Item.CalculateBaseStats(BaseVillager villagerReference)
+	{
+		float smithingBonus = baseArmorValue + (1 + (villagerReference.GetTaskSkills ().armorCrafting / 100)) * (villagerReference.GetTaskSkills().blacksmithing / 100) ;
+
+		SetBaseScore (smithingBonus);
+	}
+
     protected void SetBaseScore(float smithingSkill)
     {
-        baseAbility = smithingSkill / 10;
+        baseAbility = smithingSkill;
     }
 
     protected float GetBaseScore()

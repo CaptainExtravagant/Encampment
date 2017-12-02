@@ -41,7 +41,6 @@ public class BaseVillager : Character{
     public override void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        CreateCharacter(new Vector3 (Random.value * 10, 1, Random.value * 10));
         SetTaskSkills();
 
 		managerReference = FindObjectOfType<BaseManager>();
@@ -53,6 +52,43 @@ public class BaseVillager : Character{
     {
         return taskSkills;
     }
+
+	public void ImproveTaskSkill(TaskSkills targetSkill, float bonusValue)
+	{
+		//targetSkill += bonusValue;
+	}
+
+	public void ImproveCombatSkill(BaseWeapon.WEAPON_TYPE targetSkill, float bonusValue)
+	{
+		switch (targetSkill) {
+		case BaseWeapon.WEAPON_TYPE.WEAPON_AXE:
+			characterInfo.characterCombatSkills.axe = (GetCombatSkills ().axe + bonusValue);
+			break;
+
+		case BaseWeapon.WEAPON_TYPE.WEAPON_BOW:
+			characterInfo.characterCombatSkills.bow = (GetCombatSkills ().bow + bonusValue);
+			break;
+
+		case BaseWeapon.WEAPON_TYPE.WEAPON_LONGSWORD:
+			characterInfo.characterCombatSkills.longsword = (GetCombatSkills ().longsword + bonusValue);
+			break;
+
+		case BaseWeapon.WEAPON_TYPE.WEAPON_POLEARM:
+			characterInfo.characterCombatSkills.polearm = (GetCombatSkills ().polearm + bonusValue);
+			break;
+
+		case BaseWeapon.WEAPON_TYPE.WEAPON_SHIELD:
+			characterInfo.characterCombatSkills.armor = (GetCombatSkills ().armor + bonusValue);
+			break;
+
+		case BaseWeapon.WEAPON_TYPE.WEAPON_SWORD:
+			characterInfo.characterCombatSkills.sword = (GetCombatSkills ().sword + bonusValue);
+			break;
+
+		default:
+			break;
+		}
+	}
 
     private void SetTaskSkills()
     {
@@ -291,7 +327,7 @@ public class BaseVillager : Character{
             if (timer >= buildTimer)
             {
                 //Add construction points to building
-                targetObject.GetComponent<BaseBuilding>().AddConstructionPoints(taskSkills.construction);
+				targetObject.GetComponent<BaseBuilding>().AddConstructionPoints(taskSkills.construction, this);
                 timer = 0;
             }
         }

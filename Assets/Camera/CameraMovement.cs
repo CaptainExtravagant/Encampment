@@ -53,15 +53,15 @@ public class CameraMovement : MonoBehaviour {
             }
 
             //=====================
-            //Click and Drag Movement with Left Mouse Button
+            //Click and Drag Movement with Right Mouse Button
             //=====================
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 holdMouseTimer += Time.deltaTime;
 
             }
 
-            if (Input.GetKey(KeyCode.Mouse0))
+            if (Input.GetKey(KeyCode.Mouse1))
             {
                 timer += Time.deltaTime;
 
@@ -79,7 +79,7 @@ public class CameraMovement : MonoBehaviour {
                 }
             }
 
-            if (Input.GetKeyUp(KeyCode.Mouse0))
+            if (Input.GetKeyUp(KeyCode.Mouse1))
             {
                 holdingMouse = false;
 

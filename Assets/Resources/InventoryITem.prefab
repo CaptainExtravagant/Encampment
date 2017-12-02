@@ -22,8 +22,9 @@ GameObject:
   - component: {fileID: 222543996992665112}
   - component: {fileID: 114017058716813190}
   - component: {fileID: 114532019543208488}
+  - component: {fileID: 114865409224659490}
   m_Layer: 5
-  m_Name: InventoryITem
+  m_Name: InventoryItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,6 +148,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Button
+--- !u!114 &114865409224659490
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1082787855606600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea2d6e295afd64b40abc7f89a819440d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!222 &222206467808553080
 CanvasRenderer:
   m_ObjectHideFlags: 1
