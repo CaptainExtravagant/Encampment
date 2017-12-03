@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+using System;
+
+[Serializable]
 public class Character : MonoBehaviour{
     
 
@@ -155,8 +158,8 @@ public class Character : MonoBehaviour{
     private Attributes CreateAttributes()
     {
         //Find Random values for Fitness and Nimbleness using the base value and a random percentage multiplier
-        float fitness = (baseAttributeValue * ((Random.value) + 1.0f));
-        float nimbleness = (baseAttributeValue * ((Random.value) + 1.0f));
+        float fitness = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
+		float nimbleness = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
 
         //If Fitness is higher than Nimbleness, lower Nimbleness by 13% of Fitness value
         if(fitness > nimbleness)
@@ -170,8 +173,8 @@ public class Character : MonoBehaviour{
         }
 
         //Find random values for Curiosity and Focus
-        float curiosity = (baseAttributeValue * ((Random.value) + 1.0f));
-        float focus = (baseAttributeValue * ((Random.value) + 1.0f));
+		float curiosity = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
+		float focus = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
 
         //If Curiosity is higher than Focus, lower by 13%
         if(curiosity > focus)
@@ -184,7 +187,7 @@ public class Character : MonoBehaviour{
         }
 
         //Find value for Charm
-        float charm = (baseAttributeValue * ((Random.value) + 1.0f));
+		float charm = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
         //Charm doesn't have a counter attribute so it can keep its new value
         
         //Return newly calculated attributes for assigning later
@@ -223,11 +226,11 @@ public class Character : MonoBehaviour{
         string newName = "";
         if(sex == 1)
         {
-            newName = MaleFirstNames[Random.Range(0, MaleFirstNames.Length)] + " " + CharacterLastNames[Random.Range(0, CharacterLastNames.Length)];
+			newName = MaleFirstNames[UnityEngine.Random.Range(0, MaleFirstNames.Length)] + " " + CharacterLastNames[UnityEngine.Random.Range(0, CharacterLastNames.Length)];
         }
         else if(sex == 2)
         {
-            newName = FemaleFirstNames[Random.Range(0, FemaleFirstNames.Length)] + " " + CharacterLastNames[Random.Range(0, CharacterLastNames.Length)];
+			newName = FemaleFirstNames[UnityEngine.Random.Range(0, FemaleFirstNames.Length)] + " " + CharacterLastNames[UnityEngine.Random.Range(0, CharacterLastNames.Length)];
         }
 
         Debug.Log(newName);
@@ -239,13 +242,13 @@ public class Character : MonoBehaviour{
         float newHealth = 0;
 
         //Create new health value based off Fitness and a random factor
-        newHealth = (newAttributes.fitness * ((Random.value) + 1.0f));
+		newHealth = (newAttributes.fitness * ((UnityEngine.Random.value) + 1.0f));
 
         return newHealth;
     }
     protected void CreateCharacter(Vector3 spawnPosition)
     {
-        int tempSex = Random.Range(1, 3);
+		int tempSex = UnityEngine.Random.Range(1, 3);
 
         Debug.Log(tempSex);
 
@@ -299,7 +302,7 @@ public class Character : MonoBehaviour{
     //Find random point in sphere
     protected Vector3 RandomNavSphere(Vector3 origin, float distance, int layerMask)
     {
-        Vector3 randomDirection = Random.insideUnitSphere * distance;
+		Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
 
         randomDirection += origin;
 

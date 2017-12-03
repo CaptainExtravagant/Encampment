@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System;
+
+[Serializable]
 public class BaseItem : MonoBehaviour, I_Item {
 
     protected float baseAbility;
@@ -53,4 +56,12 @@ public class BaseItem : MonoBehaviour, I_Item {
 		Debug.Log (itemName);
 		return itemName;
 	}
+}
+
+class ItemData
+{
+	public float baseAbility;
+	public string name;
+	public BaseItem.ITEM_TYPE itemType;
+	public Sprite sprite;
 }

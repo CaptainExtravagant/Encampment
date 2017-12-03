@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using UnityEngine.UI;
+
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class BaseManager : MonoBehaviour {
 
@@ -40,7 +45,7 @@ public class BaseManager : MonoBehaviour {
     {
         for (int i = 0; i < 5; i++)
         {
-            //Create some villagers
+            //Create some goblins
             GameObject newGoblin = (GameObject)Instantiate(Resources.Load("Characters/GoblinActor"));
 
             if (newGoblin != null)
@@ -105,7 +110,7 @@ public class BaseManager : MonoBehaviour {
 		buildingPanelPositionStart = buildingPanel.transform.position;
 		buildingPanelPositionEnd = new Vector3 (buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y);
 
-        cameraReference = Camera.main;
+		cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
     }
 
@@ -178,21 +183,6 @@ public class BaseManager : MonoBehaviour {
         supplyStone = 100;
         supplyWood = 100;
 
-        /*for (int i = 0; i < 5; i++)
-        {
-            //Create some villagers
-            GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
-
-            if (newVillager != null)
-            {
-                villagerList.Add(newVillager.GetComponent<BaseVillager>());
-                newVillager = null;
-            }
-        }*/
-    }
-
-    public void SpawnVillagers()
-    {
         for (int i = 0; i < 5; i++)
         {
             //Create some villagers
@@ -204,6 +194,22 @@ public class BaseManager : MonoBehaviour {
                 newVillager = null;
             }
         }
+
+		SaveGame ();
+    }
+
+    public void SpawnVillager()
+    {
+            //Create some villagers
+            GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
+
+            if (newVillager != null)
+            {
+                villagerList.Add(newVillager.GetComponent<BaseVillager>());
+                newVillager = null;
+            }
+
+		SaveGame ();
     }
 
     public void AddResources(int resourceValue, int resourceType)
@@ -268,4 +274,94 @@ public class BaseManager : MonoBehaviour {
         return false;
     }
 
+	public void SaveGame()
+	{
+		BinaryFormatter formatter = new BinaryFormatter ();
+		FileStream fileStream = File.Create (Application.persistentDataPath + "/baseInfo.dat");
+
+		GameData gameData = new GameData ();
+
+		gameData.supplyStone = supplyStone;
+		gameData.supplyWood = supplyWood;
+		gameData.supplyFood = supplyFood;
+		gameData.supplyMorale = supplyMorale;
+
+		gameData.villagerList = villagerList;
+
+
+		//Save Buildings
+		foreach (BaseBuilding building in toBeBuilt) {
+			gameData.toBeBuilt.Add (building.Save ());
+		}
+		foreach(BaseBuilding building in buildingList)
+		{
+			gameData.buildingList.Add(building.Save ());
+		}
+
+		gameData.inventoryReference = inventoryReference;
+
+		formatter.Serialize (fileStream, gameData);
+		fileStream.Close ();
+
+		Debug.Log ("Game Saved");
+	}
+
+	public bool LoadGame()
+	{
+		Debug.Log ("Loading Game");
+
+		if (File.Exists (Application.persistentDataPath + "/baseInfo.dat")) {
+			BinaryFormatter formatter = new BinaryFormatter ();
+			FileStream fileStream = File.Open (Application.persistentDataPath + "/baseInfo.dat", FileMode.Open);
+			GameData gameData = (GameData)formatter.Deserialize (fileStream);
+			fileStream.Close ();
+
+			supplyStone = gameData.supplyStone;
+			supplyWood = gameData.supplyWood;
+			supplyFood = gameData.supplyFood;
+			supplyMorale = gameData.supplyMorale;
+
+			villagerList = gameData.villagerList;
+
+			//Load Buildings
+			foreach (BuildingData building in gameData.toBeBuilt) {
+				BaseBuilding toAdd = new BaseBuilding ();
+				toAdd.Load (building);
+
+				toBeBuilt.Add(toAdd);
+			}
+			foreach (BuildingData building in gameData.buildingList) {
+				BaseBuilding toAdd = new BaseBuilding ();
+				toAdd.Load (building);
+
+				buildingList.Add(toAdd);
+
+			}
+
+			inventoryReference = gameData.inventoryReference;
+
+			Debug.Log ("Game Loaded");
+
+			return true;
+		}
+		Debug.Log ("Game Failed to Load");
+
+		return false;
+	}
+
+}
+
+[Serializable]
+class GameData
+{
+	public int supplyStone;
+	public int supplyWood;
+	public int supplyFood;
+	public int supplyMorale;
+
+	public List<BaseVillager> villagerList = new List<BaseVillager>();
+	public List<BuildingData> toBeBuilt = new List<BuildingData>();
+	public List<BuildingData> buildingList = new List<BuildingData>();
+
+	public InventoryBase inventoryReference;
 }

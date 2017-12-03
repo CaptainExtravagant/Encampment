@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using System;
+
+[Serializable]
 public class InventoryBase : MonoBehaviour, I_Inventory {
 
 	private GameObject itemButtonReference;

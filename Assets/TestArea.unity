@@ -10849,7 +10849,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1255207385}
-        m_MethodName: SpawnVillagers
+        m_MethodName: SpawnVillager
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

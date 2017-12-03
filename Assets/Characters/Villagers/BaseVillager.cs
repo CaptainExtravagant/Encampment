@@ -357,4 +357,45 @@ public class BaseVillager : Character{
         targetObject = newTarget;
     }
 
+	public VillagerData Save()
+	{
+		VillagerData villagerData = new VillagerData ();
+
+		villagerData.transform = transform;
+
+		villagerData.taskSkills = GetTaskSkills ();
+		villagerData.characterInfo = GetCharacterInfo ();
+
+		villagerData.currentHealth = GetCurrentHealth ();
+
+		villagerData.equippedWeapon = GetEquippedWeapon ();
+		villagerData.offhandWeapon = GetOffHandWeapon ();
+		villagerData.equippedArmor = GetEquippedArmor ();
+
+		return villagerData;
+	}
+
+	public void Load(VillagerData villagerData)
+	{
+		transform.position = villagerData.transform.position;
+		transform.rotation = villagerData.transform.rotation;
+		transform.localScale = villagerData.transform.localScale;
+
+
+	}
+}
+
+class VillagerData
+{
+	public Transform transform;
+
+	public BaseVillager.TaskSkills taskSkills;
+	public Character.CharacterInfo characterInfo;
+
+	public float currentHealth;
+
+	public BaseWeapon equippedWeapon;
+	public BaseWeapon offhandWeapon;
+	public BaseArmor equippedArmor;
+
 }

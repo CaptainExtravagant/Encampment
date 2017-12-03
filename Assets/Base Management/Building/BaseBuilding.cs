@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+
+
 public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public virtual void WorkBuilding(BaseVillager villagerReference)
@@ -228,4 +233,95 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 		baseManager = managerReference;
 	}
+
+	public void Load(BuildingData building)
+	{
+
+		transform.position = building.transform.position;
+		transform.rotation = building.transform.rotation;
+		transform.localScale = building.transform.localScale;
+
+		baseManager = building.baseManager;
+
+		isBuilt = building.isBuilt;
+		workTime = building.workTime;
+		buildTime = building.buildTime;
+		buildingCost = building.buildingCost;
+		buildingType = building.buildingType;
+		buildingResource = building.buildingResource;
+
+		buildingLevel = building.level;
+		baseHealthValue = building.baseHealthValue;
+		maxHealth = building.maxHealth;
+		currentHealth = building.currentHealth;
+
+		infoPanel = building.infoPanel;
+
+		workingVillagers = building.workingVillagers;
+		maxWorkingVillagers = building.maxWorkingVillagers;
+
+		buildingMesh = building.buildingMesh;
+		constructionMesh = building.constructionMesh;
+
+	}
+
+	public BuildingData Save()
+	{
+		BuildingData buildingData = new BuildingData ();
+
+		buildingData.transform = transform;
+
+		buildingData.baseManager = baseManager;
+
+		buildingData.isBuilt = isBuilt;
+		buildingData.workTime = workTime;
+		buildingData.buildTime = buildTime;
+		buildingData.buildingCost = buildingCost;
+		buildingData.buildingType = buildingType;
+		buildingData.buildingResource = buildingResource;
+
+		buildingData.level = buildingLevel;
+		buildingData.baseHealthValue = baseHealthValue;
+		buildingData.maxHealth = maxHealth;
+		buildingData.currentHealth = currentHealth;
+
+		buildingData.infoPanel = infoPanel;
+
+		buildingData.workingVillagers = workingVillagers;
+		buildingData.maxWorkingVillagers = maxWorkingVillagers;
+
+		buildingData.buildingMesh = buildingMesh;
+		buildingData.constructionMesh = constructionMesh;
+
+		return buildingData;
+	}
+
+}
+
+[Serializable]
+public class BuildingData
+{
+	public Transform transform;
+
+	public BaseManager baseManager;
+
+	public bool isBuilt;
+	public float workTime;
+	public float buildTime;
+	public int buildingCost;
+	public BaseBuilding.BUILDING_TYPE buildingType;
+	public ResourceTile.RESOURCE_TYPE buildingResource;
+
+	public int level;
+	public float baseHealthValue;
+	public float maxHealth;
+	public float currentHealth;
+
+	public GameObject infoPanel;
+
+	public BaseVillager[] workingVillagers;
+	public int maxWorkingVillagers;
+
+	public Mesh buildingMesh;
+	public Mesh constructionMesh;
 }
