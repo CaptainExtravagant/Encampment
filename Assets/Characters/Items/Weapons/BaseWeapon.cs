@@ -7,6 +7,7 @@ public class BaseWeapon : BaseItem, I_Item {
     public enum WEAPON_TYPE
     {
         WEAPON_SWORD = 0,
+        WEAPON_FISTS,
         WEAPON_AXE,
         WEAPON_POLEARM,
         WEAPON_BOW,
@@ -104,28 +105,32 @@ public class BaseWeapon : BaseItem, I_Item {
 
 	public WeaponData Save()
 	{
-		WeaponData weaponData = new WeaponData ();
+        WeaponData weaponData = new WeaponData
+        {
+            baseAbility = GetBaseScore(),
+            name = GetItemName(),
+            itemType = (int)GetItemType(),
+            weaponType = (int)GetWeaponType(),
+            sprite = GetItemSprite(),
 
-		weaponData.baseAbility = baseAbility;
-		weaponData.name = GetItemName();
-		weaponData.itemType = GetItemType();
-		weaponData.weaponType = GetWeaponType();
-		weaponData.sprite = GetItemSprite ();
+            damage = GetDamageValue(),
+            defense = GetDefenseValue(),
+            twoHanded = IsTwoHanded()
+        };
 
-		weaponData.damage = GetDamageValue ();
-		weaponData.defense = GetDefenseValue ();
-		weaponData.twoHanded = IsTwoHanded ();
+        if (weaponData == null)
+            Debug.Log("Data is null");
 
-		return weaponData;
+        return weaponData;
 	}
 
 	public void Load(WeaponData weaponData)
 	{
 
-		baseAbility = weaponData.baseAbility;
+		SetBaseScore(weaponData.baseAbility);
 		SetItemName(weaponData.name);
-		SetItemType (weaponData.itemType);
-		SetWeaponType (weaponData.weaponType);
+		SetItemType ((ITEM_TYPE)weaponData.itemType);
+		SetWeaponType ((WEAPON_TYPE)weaponData.weaponType);
 		SetItemSprite (weaponData.sprite);
 
 		SetDamageValue (weaponData.damage);
@@ -135,12 +140,13 @@ public class BaseWeapon : BaseItem, I_Item {
 	}
 }
 
+[System.Serializable]
 public class WeaponData
 {
 	public float baseAbility;
 	public string name;
-	public BaseItem.ITEM_TYPE itemType;
-	public BaseWeapon.WEAPON_TYPE weaponType;
+	public int itemType;
+	public int weaponType;
 	public Sprite sprite;
 
 	public float damage;

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-using System;
-
-[Serializable]
 public class Character : MonoBehaviour{
     
 
@@ -24,6 +21,7 @@ public class Character : MonoBehaviour{
     //=======
     //STRUCTS
     //=======
+    [System.Serializable]
     public struct Attributes
     {
         public float fitness;
@@ -50,6 +48,8 @@ public class Character : MonoBehaviour{
             charm = attributesIn.charm;
         }
     }
+
+    [System.Serializable]
     public struct CombatSkills
     {
         public float brawling;
@@ -85,6 +85,8 @@ public class Character : MonoBehaviour{
             longsword = skillsIn.longsword;
         }
     }
+
+    [System.Serializable]
     public struct CharacterInfo
     {
         public string characterName;

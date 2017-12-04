@@ -35,7 +35,7 @@ public class BaseManager : MonoBehaviour {
     private Camera cameraReference;
     private CameraMovement cameraMovement;
 
-	public InventoryBase inventoryReference;
+	InventoryBase inventoryReference;
 
     public GameObject woodText;
     public GameObject stoneText;
@@ -112,6 +112,13 @@ public class BaseManager : MonoBehaviour {
 
 		cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
+
+        inventoryReference = GetComponent<InventoryBase>();
+    }
+
+    public InventoryBase GetInventory()
+    {
+        return inventoryReference;
     }
 
 	public void ScrollBuildingMenu(Scrollbar scrollReference)
@@ -300,13 +307,18 @@ public class BaseManager : MonoBehaviour {
 			gameData.buildingList.Add(building.Save ());
 		}
 
-		gameData.inventoryReference = inventoryReference;
+        gameData.inventoryData = inventoryReference.Save();
 
 		formatter.Serialize (fileStream, gameData);
 		fileStream.Close ();
 
 		Debug.Log ("Game Saved");
 	}
+
+    public void Load()
+    {
+        LoadGame();
+    }
 
 	public bool LoadGame()
 	{
@@ -347,9 +359,9 @@ public class BaseManager : MonoBehaviour {
 
 			}
 
-			//Load Inventory
-
-			inventoryReference = gameData.inventoryReference;
+            //Load Inventory
+            inventoryReference.Load(gameData.inventoryData);
+            
 
 			Debug.Log ("Game Loaded");
 
@@ -370,9 +382,9 @@ class GameData
 	public int supplyFood;
 	public int supplyMorale;
 
-	public List<VillagerData> villagerList = new List<BaseVillager>();
+	public List<VillagerData> villagerList = new List<VillagerData>();
 	public List<BuildingData> toBeBuilt = new List<BuildingData>();
 	public List<BuildingData> buildingList = new List<BuildingData>();
 
-	public InventoryBase inventoryReference;
+    public InventoryData inventoryData;
 }

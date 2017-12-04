@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 
 
 public class BaseBuilding : MonoBehaviour, I_Building {
@@ -237,9 +235,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	public void Load(BuildingData building)
 	{
 
-		transform.position = building.transform.position;
-		transform.rotation = building.transform.rotation;
-		transform.localScale = building.transform.localScale;
+		transform.position.Set(building.positionX, building.positionY, building.positionZ);
 
 		baseManager = building.baseManager;
 
@@ -269,7 +265,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 		BuildingData buildingData = new BuildingData ();
 
-		buildingData.transform = transform;
+		buildingData.positionX = transform.position.x;
+        buildingData.positionY = transform.position.y;
+        buildingData.positionZ = transform.position.z;
 
 		buildingData.baseManager = baseManager;
 
@@ -301,7 +299,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 [Serializable]
 public class BuildingData
 {
-	public Transform transform;
+    public float positionX;
+    public float positionY;
+    public float positionZ;
 
 	public BaseManager baseManager;
 

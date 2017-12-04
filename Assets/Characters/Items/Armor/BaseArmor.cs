@@ -65,7 +65,7 @@ public class BaseArmor : BaseItem, I_Item {
 	{
 		SetBaseScore (armorData.baseAbility);
 		SetItemName (armorData.name);
-		SetItemType (armorData.itemType);
+		SetItemType ((ITEM_TYPE)armorData.itemType);
 		SetItemSprite (armorData.sprite);
 
 		SetDefenseValue (armorData.defense);
@@ -78,7 +78,7 @@ public class BaseArmor : BaseItem, I_Item {
 
 		armorData.baseAbility = GetBaseScore();
 		armorData.name = GetItemName ();
-		armorData.itemType = GetItemType ();
+		armorData.itemType = (int)GetItemType ();
 		armorData.sprite = GetItemSprite ();
 
 		armorData.defense = GetDefenseValue ();
@@ -88,11 +88,12 @@ public class BaseArmor : BaseItem, I_Item {
 	}
 }
 
+[System.Serializable]
 public class ArmorData
 {
 	public float baseAbility;
 	public string name;
-	public BaseItem.ITEM_TYPE itemType;
+	public int itemType;
 	public Sprite sprite;
 
 	public float defense;

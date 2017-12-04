@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class BaseVillager : Character{
 
+    [System.Serializable]
     public struct TaskSkills
     {
         public float mining;
@@ -44,6 +45,11 @@ public class BaseVillager : Character{
         CreateTaskSkills();
 
 		managerReference = FindObjectOfType<BaseManager>();
+
+        Weapon_Fists fists = new Weapon_Fists();
+
+        EquipWeaponToMainHand(fists);
+        EquipWeaponToOffHand(fists);
 
         timer = wanderTimer;
     }
@@ -370,52 +376,56 @@ public class BaseVillager : Character{
         targetObject = newTarget;
     }
 
-	public VillagerData Save()
-	{
-		VillagerData villagerData = new VillagerData ();
+    public VillagerData Save()
+    {
+        VillagerData villagerData = new VillagerData();
 
-		villagerData.transform = transform;
+        villagerData.positionX = transform.position.x;
+        villagerData.positionY = transform.position.y;
+        villagerData.positionZ = transform.position.z;
 
-		villagerData.taskSkills = GetTaskSkills ();
-		villagerData.characterInfo = GetCharacterInfo ();
+        villagerData.taskSkills = GetTaskSkills();
+        villagerData.characterInfo = GetCharacterInfo();
 
-		villagerData.currentHealth = GetCurrentHealth ();
+        villagerData.currentHealth = GetCurrentHealth();
 
-		villagerData.equippedWeapon = GetEquippedWeapon ();
-		villagerData.offhandWeapon = GetOffHandWeapon ();
-		villagerData.equippedArmor = GetEquippedArmor ();
+        villagerData.equippedWeapon = GetEquippedWeapon().Save();
+        villagerData.offhandWeapon = GetOffHandWeapon().Save();
+        villagerData.equippedArmor = GetEquippedArmor().Save();
 
 		return villagerData;
 	}
 
 	public void Load(VillagerData villagerData)
 	{
-		transform.position = villagerData.transform.position;
-		transform.rotation = villagerData.transform.rotation;
-		transform.localScale = villagerData.transform.localScale;
+		transform.position.Set(villagerData.positionX, villagerData.positionY, villagerData.positionZ);
 
 		SetTaskSkills (villagerData.taskSkills);
 		characterInfo = villagerData.characterInfo;
 
 		SetCurrentHealth (villagerData.currentHealth);
 
-		equippedWeapon = villagerData.equippedWeapon;
-		offHandWeapon = villagerData.offhandWeapon;
-		equippedArmor = villagerData.equippedArmor;
+		equippedWeapon.Load(villagerData.equippedWeapon);
+		offHandWeapon.Load(villagerData.offhandWeapon);
+		equippedArmor.Load(villagerData.equippedArmor);
 	}
 }
 
+[System.Serializable]
 public class VillagerData
 {
-	public Transform transform;
+    public float positionX;
+    public float positionY;
+    public float positionZ;
+    
 
 	public BaseVillager.TaskSkills taskSkills;
 	public Character.CharacterInfo characterInfo;
 
 	public float currentHealth;
 
-	public BaseWeapon equippedWeapon;
-	public BaseWeapon offhandWeapon;
-	public BaseArmor equippedArmor;
+	public WeaponData equippedWeapon;
+	public WeaponData offhandWeapon;
+	public ArmorData equippedArmor;
 
 }

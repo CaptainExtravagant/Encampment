@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 using System;
 
-[Serializable]
 public class InventoryBase : MonoBehaviour, I_Inventory {
 
 	private GameObject itemButtonReference;
@@ -116,8 +115,49 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 			}
 		}
 	}
+
+    public InventoryData Save()
+    {
+        InventoryData inventoryData = new InventoryData();
+
+        foreach(BaseWeapon weapon in weaponList)
+        {
+            if(weapon != null)
+                inventoryData.weaponDataList.Add(weapon.Save());
+        }
+
+        foreach(BaseArmor armor in armorList)
+        {
+            if(armor != null)
+                inventoryData.armorDataList.Add(armor.Save());
+        }
+
+        return inventoryData;
+    }
+
+    public void Load(InventoryData inventoryData)
+    {
+        foreach(WeaponData weapon in inventoryData.weaponDataList)
+        {
+            BaseWeapon newWeapon = new BaseWeapon();
+            newWeapon.Load(weapon);
+
+            AddItem(newWeapon);
+        }
+
+        foreach(ArmorData armor in inventoryData.armorDataList)
+        {
+            BaseArmor newArmor = new BaseArmor();
+            newArmor.Load(armor);
+
+            AddItem(newArmor);
+        }
+    }
+
+
 }
 
+[Serializable]
 public class InventoryData
 {
 	public List<WeaponData> weaponDataList = new List<WeaponData>();

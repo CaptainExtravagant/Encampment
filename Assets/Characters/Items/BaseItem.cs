@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using System;
-
-[Serializable]
 public class BaseItem : MonoBehaviour, I_Item {
 
     protected float baseAbility;

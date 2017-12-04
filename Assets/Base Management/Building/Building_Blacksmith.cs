@@ -47,7 +47,7 @@ public class Building_Blacksmith : BaseBuilding {
 
 		if (activeTimer <= 0.0f) {
 			
-			I_Inventory inventory = baseManager.inventoryReference;
+			I_Inventory inventory = baseManager.GetInventory();
 			
 			newObject = Instantiate (chosenItem.gameObject);
 
