@@ -117,3 +117,9 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 		}
 	}
 }
+
+public class InventoryData
+{
+	public List<WeaponData> weaponDataList = new List<WeaponData>();
+	public List<ArmorData> armorDataList = new List<ArmorData>();
+}

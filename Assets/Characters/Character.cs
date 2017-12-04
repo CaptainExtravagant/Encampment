@@ -495,6 +495,11 @@ public class Character : MonoBehaviour{
         return currentHealth;
     }
 
+	protected void SetCurrentHealth(float newHealth)
+	{
+		currentHealth = newHealth;
+	}
+
     //==============
     //EQUIPPED ITEMS
     //==============

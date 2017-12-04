@@ -41,7 +41,7 @@ public class BaseVillager : Character{
     public override void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        SetTaskSkills();
+        CreateTaskSkills();
 
 		managerReference = FindObjectOfType<BaseManager>();
 
@@ -90,7 +90,7 @@ public class BaseVillager : Character{
 		}
 	}
 
-    private void SetTaskSkills()
+    private void CreateTaskSkills()
     {
         taskSkills.mining = baseAttributeValue * (characterInfo.characterAttributes.fitness / 100);
 
@@ -110,6 +110,19 @@ public class BaseVillager : Character{
 
         taskSkills.sailing = baseAttributeValue * (((characterInfo.characterAttributes.focus / 100) + (characterInfo.characterAttributes.fitness / 100)) / 2);
     }
+
+	private void SetTaskSkills(TaskSkills newSkills)
+	{
+		taskSkills.mining = newSkills.mining;
+		taskSkills.woodcutting = newSkills.woodcutting;
+		taskSkills.blacksmithing = newSkills.blacksmithing;
+		taskSkills.weaponCrafting = newSkills.weaponCrafting;
+		taskSkills.armorCrafting = newSkills.armorCrafting;
+		taskSkills.tailoring = newSkills.tailoring;
+		taskSkills.farming = newSkills.farming;
+		taskSkills.construction = newSkills.construction;
+		taskSkills.sailing = newSkills.sailing;
+	}
 
     protected override void AIUpdate()
     {
@@ -381,11 +394,18 @@ public class BaseVillager : Character{
 		transform.rotation = villagerData.transform.rotation;
 		transform.localScale = villagerData.transform.localScale;
 
+		SetTaskSkills (villagerData.taskSkills);
+		characterInfo = villagerData.characterInfo;
 
+		SetCurrentHealth (villagerData.currentHealth);
+
+		equippedWeapon = villagerData.equippedWeapon;
+		offHandWeapon = villagerData.offhandWeapon;
+		equippedArmor = villagerData.equippedArmor;
 	}
 }
 
-class VillagerData
+public class VillagerData
 {
 	public Transform transform;
 

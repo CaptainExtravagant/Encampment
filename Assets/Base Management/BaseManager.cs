@@ -286,8 +286,10 @@ public class BaseManager : MonoBehaviour {
 		gameData.supplyFood = supplyFood;
 		gameData.supplyMorale = supplyMorale;
 
-		gameData.villagerList = villagerList;
-
+		//Save Villagers
+		foreach (BaseVillager villager in villagerList) {
+			gameData.villagerList.Add (villager.Save ());
+		}
 
 		//Save Buildings
 		foreach (BaseBuilding building in toBeBuilt) {
@@ -321,7 +323,14 @@ public class BaseManager : MonoBehaviour {
 			supplyFood = gameData.supplyFood;
 			supplyMorale = gameData.supplyMorale;
 
-			villagerList = gameData.villagerList;
+
+			//Load Villagers
+			foreach (VillagerData villager in gameData.villagerList) {
+				BaseVillager toAdd = new BaseVillager ();
+				toAdd.Load (villager);
+
+				villagerList.Add (toAdd);
+			}
 
 			//Load Buildings
 			foreach (BuildingData building in gameData.toBeBuilt) {
@@ -337,6 +346,8 @@ public class BaseManager : MonoBehaviour {
 				buildingList.Add(toAdd);
 
 			}
+
+			//Load Inventory
 
 			inventoryReference = gameData.inventoryReference;
 
@@ -359,7 +370,7 @@ class GameData
 	public int supplyFood;
 	public int supplyMorale;
 
-	public List<BaseVillager> villagerList = new List<BaseVillager>();
+	public List<VillagerData> villagerList = new List<BaseVillager>();
 	public List<BuildingData> toBeBuilt = new List<BuildingData>();
 	public List<BuildingData> buildingList = new List<BuildingData>();
 

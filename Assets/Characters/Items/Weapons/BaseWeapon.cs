@@ -101,4 +101,49 @@ public class BaseWeapon : BaseItem, I_Item {
     {
         twoHanded = isTwoHanded;
     }
+
+	public WeaponData Save()
+	{
+		WeaponData weaponData = new WeaponData ();
+
+		weaponData.baseAbility = baseAbility;
+		weaponData.name = GetItemName();
+		weaponData.itemType = GetItemType();
+		weaponData.weaponType = GetWeaponType();
+		weaponData.sprite = GetItemSprite ();
+
+		weaponData.damage = GetDamageValue ();
+		weaponData.defense = GetDefenseValue ();
+		weaponData.twoHanded = IsTwoHanded ();
+
+		return weaponData;
+	}
+
+	public void Load(WeaponData weaponData)
+	{
+
+		baseAbility = weaponData.baseAbility;
+		SetItemName(weaponData.name);
+		SetItemType (weaponData.itemType);
+		SetWeaponType (weaponData.weaponType);
+		SetItemSprite (weaponData.sprite);
+
+		SetDamageValue (weaponData.damage);
+		SetDefenseValue (weaponData.defense);
+		SetTwoHanded(weaponData.twoHanded);
+
+	}
+}
+
+public class WeaponData
+{
+	public float baseAbility;
+	public string name;
+	public BaseItem.ITEM_TYPE itemType;
+	public BaseWeapon.WEAPON_TYPE weaponType;
+	public Sprite sprite;
+
+	public float damage;
+	public float defense;
+	public bool twoHanded;
 }

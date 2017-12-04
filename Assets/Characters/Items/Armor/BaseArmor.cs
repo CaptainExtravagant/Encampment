@@ -60,4 +60,42 @@ public class BaseArmor : BaseItem, I_Item {
     {
         return heavyArmor;
     }
+
+	public void Load(ArmorData armorData)
+	{
+		SetBaseScore (armorData.baseAbility);
+		SetItemName (armorData.name);
+		SetItemType (armorData.itemType);
+		SetItemSprite (armorData.sprite);
+
+		SetDefenseValue (armorData.defense);
+		SetHeavyArmor (armorData.heavyArmor);
+	}
+
+	public ArmorData Save()
+	{
+		ArmorData armorData = new ArmorData ();
+
+		armorData.baseAbility = GetBaseScore();
+		armorData.name = GetItemName ();
+		armorData.itemType = GetItemType ();
+		armorData.sprite = GetItemSprite ();
+
+		armorData.defense = GetDefenseValue ();
+		armorData.heavyArmor = IsHeavyArmor ();
+
+		return armorData;
+	}
+}
+
+public class ArmorData
+{
+	public float baseAbility;
+	public string name;
+	public BaseItem.ITEM_TYPE itemType;
+	public Sprite sprite;
+
+	public float defense;
+	public bool heavyArmor;
+
 }

@@ -57,11 +57,3 @@ public class BaseItem : MonoBehaviour, I_Item {
 		return itemName;
 	}
 }
-
-class ItemData
-{
-	public float baseAbility;
-	public string name;
-	public BaseItem.ITEM_TYPE itemType;
-	public Sprite sprite;
-}
