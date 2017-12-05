@@ -273,6 +273,9 @@ public class Character : MonoBehaviour{
         //Set spawn position
         transform.position = spawnPosition;
         
+		UnequipMainHand ();
+		UnequipOffHand ();
+		UnequipArmor ();
 
     }
 
@@ -516,6 +519,22 @@ public class Character : MonoBehaviour{
         }
     }
 
+	protected void UnequipMainHand()
+	{
+		BaseWeapon emptyHand = new BaseWeapon ();
+		emptyHand.SetItemType (BaseItem.ITEM_TYPE.ITEM_EMPTY);
+
+		equippedWeapon = emptyHand;
+	}
+
+	protected void UnequipOffHand()
+	{
+		BaseWeapon emptyHand = new BaseWeapon ();
+		emptyHand.SetItemType (BaseItem.ITEM_TYPE.ITEM_EMPTY);
+
+		offHandWeapon = emptyHand;
+	}
+
     protected void EquipWeaponToOffHand(BaseWeapon weaponToEquip)
     {
         if (offHandEnabled)
@@ -528,6 +547,14 @@ public class Character : MonoBehaviour{
     {
 		equippedArmor = armorToEquip;
     }
+
+	protected void UnequipArmor()
+	{
+		BaseArmor emptyArmor = new BaseArmor ();
+		emptyArmor.SetItemType (BaseItem.ITEM_TYPE.ITEM_EMPTY);
+
+		equippedArmor = emptyArmor;
+	}
 
     public BaseWeapon GetEquippedWeapon()
     {

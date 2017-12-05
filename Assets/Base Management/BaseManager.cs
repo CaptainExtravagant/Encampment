@@ -65,6 +65,7 @@ public class BaseManager : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+			Debug.Log ("Base Manager Click");
 			if (heldBuilding != null) {
 				PlaceBuilding ();
 			}
@@ -132,9 +133,10 @@ public class BaseManager : MonoBehaviour {
 		buildingPanel.transform.position = newPosition;
 	}
 
-	public void SelectBuilding(GameObject selectedBuilding)
+	public void SelectBuilding(int buildingType)
 	{
-		heldBuilding = (GameObject)Instantiate (selectedBuilding);
+		heldBuilding = (GameObject)Instantiate (Resources.Load("Buildings/BuildingActor"));
+		heldBuilding.GetComponent<BaseBuilding>().InitBuilding ((BaseBuilding.BUILDING_TYPE)buildingType, this);
 		ToggleBuildingMenu ();
 		PlaceBuilding ();
 	}
@@ -151,11 +153,13 @@ public class BaseManager : MonoBehaviour {
         }
         else
         {
+			Debug.Log ("Place Construction Down");
             //Place construction site on mouse position and add to list of construction areas.
 
             if(heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld(this))
             {
                 toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
+				Debug.Log ("Building added to list");
             }
 
             placingBuilding = false;
@@ -201,11 +205,9 @@ public class BaseManager : MonoBehaviour {
                 newVillager = null;
             }
         }
-
-		SaveGame ();
     }
 
-    public void SpawnVillager()
+	public GameObject SpawnVillager()
     {
             //Create some villagers
             GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
@@ -213,10 +215,8 @@ public class BaseManager : MonoBehaviour {
             if (newVillager != null)
             {
                 villagerList.Add(newVillager.GetComponent<BaseVillager>());
-                newVillager = null;
             }
-
-		SaveGame ();
+		return newVillager;
     }
 
     public void AddResources(int resourceValue, int resourceType)
@@ -335,28 +335,42 @@ public class BaseManager : MonoBehaviour {
 			supplyFood = gameData.supplyFood;
 			supplyMorale = gameData.supplyMorale;
 
+			foreach (BaseVillager villager in villagerList) {
+				Destroy (villager.gameObject);
+			}
 
 			//Load Villagers
 			foreach (VillagerData villager in gameData.villagerList) {
-				BaseVillager toAdd = new BaseVillager ();
-				toAdd.Load (villager);
 
-				villagerList.Add (toAdd);
+				GameObject newVillager = SpawnVillager ();
+
+				BaseVillager toAdd = newVillager.GetComponent<BaseVillager> ();
+				toAdd.Load (villager);
+			}
+
+			foreach (BaseBuilding building in buildingList) {
+				Destroy (building.gameObject);
+			}
+			foreach (BaseBuilding building in toBeBuilt) {
+				Destroy (building.gameObject);
 			}
 
 			//Load Buildings
 			foreach (BuildingData building in gameData.toBeBuilt) {
-				BaseBuilding toAdd = new BaseBuilding ();
-				toAdd.Load (building);
+				GameObject newBuilding = Instantiate (Resources.Load ("BuildingActor")) as GameObject;
 
-				toBeBuilt.Add(toAdd);
+				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding>();
+				toAdd.Load (building, this);
 			}
 			foreach (BuildingData building in gameData.buildingList) {
-				BaseBuilding toAdd = new BaseBuilding ();
-				toAdd.Load (building);
+				GameObject newBuilding = Instantiate (Resources.Load ("BuildingActor")) as GameObject;
 
-				buildingList.Add(toAdd);
+				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding>();
+				toAdd.Load (building, this);
+			}
 
+			foreach (BaseItem item in inventoryReference.itemList) {
+				inventoryReference.RemoveItem (item);
 			}
 
             //Load Inventory

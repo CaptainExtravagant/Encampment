@@ -389,9 +389,12 @@ public class BaseVillager : Character{
 
         villagerData.currentHealth = GetCurrentHealth();
 
-        villagerData.equippedWeapon = GetEquippedWeapon().Save();
-        villagerData.offhandWeapon = GetOffHandWeapon().Save();
-        villagerData.equippedArmor = GetEquippedArmor().Save();
+		if(GetEquippedWeapon() != null)
+        	villagerData.equippedWeapon = GetEquippedWeapon().Save();
+		if(GetOffHandWeapon() != null)
+			villagerData.offhandWeapon = GetOffHandWeapon().Save();
+		if(GetEquippedArmor() != null)
+        	villagerData.equippedArmor = GetEquippedArmor().Save();
 
 		return villagerData;
 	}
@@ -405,9 +408,15 @@ public class BaseVillager : Character{
 
 		SetCurrentHealth (villagerData.currentHealth);
 
-		equippedWeapon.Load(villagerData.equippedWeapon);
-		offHandWeapon.Load(villagerData.offhandWeapon);
-		equippedArmor.Load(villagerData.equippedArmor);
+		if (villagerData.equippedWeapon != null) {
+			equippedWeapon.Load (villagerData.equippedWeapon);
+		}
+		if (villagerData.offhandWeapon != null) {
+			offHandWeapon.Load (villagerData.offhandWeapon);
+		}
+		if (villagerData.equippedArmor != null) {
+			equippedArmor.Load(villagerData.equippedArmor);
+		}
 	}
 }
 

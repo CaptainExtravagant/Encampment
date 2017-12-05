@@ -65,11 +65,59 @@ public class BaseBuilding : MonoBehaviour, I_Building {
     {
         //SetMesh();
 
-		CloseInfoPanel ();
+		//CloseInfoPanel ();
 
         buildTime = 10;
 		baseHealthValue = 40;
+
+		buildingCost = 50;
+		buildingResource = ResourceTile.RESOURCE_TYPE.WOOD;
     }
+
+	public void InitBuilding(BaseBuilding.BUILDING_TYPE newType, BaseManager manager)
+	{
+		SetBuildingType (newType);
+		baseManager = manager;
+
+		switch (buildingType) {
+		case BUILDING_TYPE.BUILDING_BARRACKS:
+			gameObject.AddComponent<Building_Barracks> ();
+			break;
+		case BUILDING_TYPE.BUILDING_BLACKSMITH:
+			gameObject.AddComponent<Building_Blacksmith> ();
+			break;
+		case BUILDING_TYPE.BUILDING_DOCK:
+			gameObject.AddComponent<Building_Dock> ();
+			break;
+		case BUILDING_TYPE.BUILDING_FARM:
+			gameObject.AddComponent<Building_Farm> ();
+			break;
+		case BUILDING_TYPE.BUILDING_HOUSE:
+			gameObject.AddComponent<Building_House> ();
+			break;
+		case BUILDING_TYPE.BUILDING_LUMBERCAMP:
+			gameObject.AddComponent<Building_LumberCamp> ();
+			break;
+		case BUILDING_TYPE.BUILDING_MILL:
+			gameObject.AddComponent<Building_Mill> ();
+			break;
+		case BUILDING_TYPE.BUILDING_MININGCAMP:
+			gameObject.AddComponent<Building_MiningCamp> ();
+			break;
+		case BUILDING_TYPE.BUILDING_OUTPOST:
+			gameObject.AddComponent<Building_Outpost> ();
+			break;
+		case BUILDING_TYPE.BUILDING_TOWNHALL:
+			gameObject.AddComponent<Building_TownHall> ();
+			break;
+		case BUILDING_TYPE.BUILDING_WALL:
+			gameObject.AddComponent<Building_Walls> ();
+			break;
+		}
+
+		baseManager.buildingList.Add (this);
+
+	}
 
 	private void SetMaxHealth(float constructionSkill)
 	{
@@ -178,6 +226,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
         if (managerReference.RemoveResources(buildingCost, (int)buildingResource))
         {
+			Debug.Log ("Place in World");
             placedInWorld = true;
             return true;
         }
@@ -232,33 +281,25 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		baseManager = managerReference;
 	}
 
-	public void Load(BuildingData building)
+	public void Load(BuildingData building, BaseManager manager)
 	{
-
 		transform.position.Set(building.positionX, building.positionY, building.positionZ);
-
-		baseManager = building.baseManager;
 
 		isBuilt = building.isBuilt;
 		workTime = building.workTime;
-		buildTime = building.buildTime;
+		SetBuildTime(building.buildTime);
 		buildingCost = building.buildingCost;
-		buildingType = building.buildingType;
-		buildingResource = building.buildingResource;
+		buildingResource = (ResourceTile.RESOURCE_TYPE)building.buildingResource;
 
 		buildingLevel = building.level;
 		baseHealthValue = building.baseHealthValue;
 		maxHealth = building.maxHealth;
 		currentHealth = building.currentHealth;
 
-		infoPanel = building.infoPanel;
-
 		workingVillagers = building.workingVillagers;
 		maxWorkingVillagers = building.maxWorkingVillagers;
 
-		buildingMesh = building.buildingMesh;
-		constructionMesh = building.constructionMesh;
-
+		InitBuilding ((BUILDING_TYPE)building.buildingType, manager);
 	}
 
 	public BuildingData Save()
@@ -269,27 +310,20 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         buildingData.positionY = transform.position.y;
         buildingData.positionZ = transform.position.z;
 
-		buildingData.baseManager = baseManager;
-
 		buildingData.isBuilt = isBuilt;
 		buildingData.workTime = workTime;
 		buildingData.buildTime = buildTime;
 		buildingData.buildingCost = buildingCost;
-		buildingData.buildingType = buildingType;
-		buildingData.buildingResource = buildingResource;
+		buildingData.buildingType = (int)buildingType;
+		buildingData.buildingResource = (int)buildingResource;
 
 		buildingData.level = buildingLevel;
 		buildingData.baseHealthValue = baseHealthValue;
 		buildingData.maxHealth = maxHealth;
 		buildingData.currentHealth = currentHealth;
 
-		buildingData.infoPanel = infoPanel;
-
 		buildingData.workingVillagers = workingVillagers;
 		buildingData.maxWorkingVillagers = maxWorkingVillagers;
-
-		buildingData.buildingMesh = buildingMesh;
-		buildingData.constructionMesh = constructionMesh;
 
 		return buildingData;
 	}
@@ -303,25 +337,18 @@ public class BuildingData
     public float positionY;
     public float positionZ;
 
-	public BaseManager baseManager;
-
 	public bool isBuilt;
 	public float workTime;
 	public float buildTime;
 	public int buildingCost;
-	public BaseBuilding.BUILDING_TYPE buildingType;
-	public ResourceTile.RESOURCE_TYPE buildingResource;
+	public int buildingType;
+	public int buildingResource;
 
 	public int level;
 	public float baseHealthValue;
 	public float maxHealth;
 	public float currentHealth;
 
-	public GameObject infoPanel;
-
 	public BaseVillager[] workingVillagers;
 	public int maxWorkingVillagers;
-
-	public Mesh buildingMesh;
-	public Mesh constructionMesh;
 }

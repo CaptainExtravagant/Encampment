@@ -11,7 +11,8 @@ public class BaseItem : MonoBehaviour, I_Item {
     {
         ITEM_WEAPON = 0,
         ITEM_ARMOR,
-        ITEM_UTILITY
+        ITEM_UTILITY,
+		ITEM_EMPTY
     }
 
 	protected ITEM_TYPE itemType;
@@ -28,7 +29,7 @@ public class BaseItem : MonoBehaviour, I_Item {
 		itemSprite = spriteToSet;
 	}
 
-	protected void SetItemType(ITEM_TYPE typeToSet)
+	public void SetItemType(ITEM_TYPE typeToSet)
 	{
 		itemType = typeToSet;
 	}

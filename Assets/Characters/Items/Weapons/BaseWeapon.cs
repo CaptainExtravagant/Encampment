@@ -111,7 +111,6 @@ public class BaseWeapon : BaseItem, I_Item {
             name = GetItemName(),
             itemType = (int)GetItemType(),
             weaponType = (int)GetWeaponType(),
-            sprite = GetItemSprite(),
 
             damage = GetDamageValue(),
             defense = GetDefenseValue(),
@@ -131,12 +130,10 @@ public class BaseWeapon : BaseItem, I_Item {
 		SetItemName(weaponData.name);
 		SetItemType ((ITEM_TYPE)weaponData.itemType);
 		SetWeaponType ((WEAPON_TYPE)weaponData.weaponType);
-		SetItemSprite (weaponData.sprite);
 
 		SetDamageValue (weaponData.damage);
 		SetDefenseValue (weaponData.defense);
 		SetTwoHanded(weaponData.twoHanded);
-
 	}
 }
 
@@ -147,7 +144,6 @@ public class WeaponData
 	public string name;
 	public int itemType;
 	public int weaponType;
-	public Sprite sprite;
 
 	public float damage;
 	public float defense;
