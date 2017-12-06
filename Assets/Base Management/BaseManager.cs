@@ -109,7 +109,7 @@ public class BaseManager : MonoBehaviour {
 
 		buildingPanel = buildingMenu.GetComponentInChildren<HorizontalLayoutGroup> ().gameObject;
 		buildingPanelPositionStart = buildingPanel.transform.position;
-		buildingPanelPositionEnd = new Vector3 (buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y);
+		buildingPanelPositionEnd = new Vector3 (buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
 
 		cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
