@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour {
     Ray cursorPosition;
     RaycastHit hit;
 
+	private bool equippingToMain;
+
     GameObject selectedObject;
 
     BaseVillager villagerReference;
@@ -33,6 +35,18 @@ public class PlayerController : MonoBehaviour {
         CloseCharacterInfoPanel();
 		CloseInventory ();
     }
+
+	public void Reset()
+	{
+		CloseCharacterInfoPanel ();
+		CloseInventory ();
+		selectedObject = null;
+
+		villagerReference = null;
+		resourceReference = null;
+		buildingReference = null;
+
+	}
 
     void Update()
     {
@@ -109,7 +123,7 @@ public class PlayerController : MonoBehaviour {
     //============================
     void OpenCharacterInfoPanel()
     {
-        selectedCharacterInfo = villagerReference.GetCharacterInfo();
+		selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
 
 		for (int i = 0; i < infoText.Length; i++) {
@@ -217,12 +231,25 @@ public class PlayerController : MonoBehaviour {
 			case 52:
 				infoText [i].text = selectedCharacterTaskSkills.sailing.ToString ();
 				break;
+
+			case 54:
+				infoText [i].text = villagerReference.GetEquippedWeapon ().GetItemName ();
+				break;
+
+			case 56:
+				infoText [i].text = villagerReference.GetOffHandWeapon ().GetItemName ();
+				break;
+
+			case 58:
+				infoText [i].text = villagerReference.GetEquippedArmor ().GetItemName ();
+				break;
 			}
 		}
 
         characterPanel.SetActive(true);
     }
-    void CloseCharacterInfoPanel()
+    
+	public void CloseCharacterInfoPanel()
     {
         characterPanel.SetActive(false);
     }
@@ -380,5 +407,62 @@ public class PlayerController : MonoBehaviour {
 	{
 		inventoryPanel.SetActive (false);
         cameraMovement.SetCameraMovement(true);
+	}
+
+	public void EquipWeaponButton()
+	{
+		equippingToMain = true;
+		OpenInventory ();
+		inventoryPanel.GetComponentInChildren<Dropdown> ().value = 1;
+	}
+
+	public void EquipOffhandButton()
+	{
+		equippingToMain = false;
+		OpenInventory ();
+		inventoryPanel.GetComponentInChildren<Dropdown> ().value = 1;
+	}
+
+	public void EquipArmorButton()
+	{
+		OpenInventory ();
+		inventoryPanel.GetComponentInChildren<Dropdown> ().value = 2;
+	}
+
+	public void InventoryButtonPressed(BaseItem item)
+	{
+		CloseInventory ();
+		if (villagerReference != null) {
+			Debug.Log ("Villager Reference is Valid");
+			if (item.GetItemType() == BaseItem.ITEM_TYPE.ITEM_WEAPON) {
+				if (item.GetComponent<Item_Shield> ()) {
+					villagerReference.UnequipOffHand ();
+					villagerReference.EquipWeaponToOffHand (item as BaseWeapon);
+					Debug.Log ("Shield Equipped");
+					OpenCharacterInfoPanel ();
+					return;
+				} else if (equippingToMain) {
+					villagerReference.UnequipMainHand ();
+					villagerReference.EquipWeaponToMainHand (item as BaseWeapon);
+					Debug.Log ("Main hand Equipped");
+					OpenCharacterInfoPanel ();
+					return;
+				} else if (!equippingToMain) {
+					villagerReference.UnequipOffHand ();
+					villagerReference.EquipWeaponToOffHand (item as BaseWeapon);
+					Debug.Log ("Offhand Equipped");
+					OpenCharacterInfoPanel ();
+					return;
+				}
+			} else if (item.GetItemType() == BaseItem.ITEM_TYPE.ITEM_ARMOR) {
+				villagerReference.UnequipArmor ();
+				villagerReference.EquipArmor (item as BaseArmor);
+				Debug.Log ("Armor Equipped");
+				OpenCharacterInfoPanel ();
+				return;
+			}
+		}
+
+		Debug.Log ("Nothing Equipped");
 	}
 }

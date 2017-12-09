@@ -19,6 +19,10 @@ public class BaseManager : MonoBehaviour {
 
     GameObject heldBuilding;
 
+	public PlayerController controller;
+
+	public GameObject questMenu;
+
 	public GameObject buildingMenu;
 	private GameObject buildingPanel;
 	private Vector3 buildingPanelPositionStart;
@@ -41,6 +45,14 @@ public class BaseManager : MonoBehaviour {
     public GameObject stoneText;
     public GameObject foodText;
 
+	private float attackTimer;
+	private bool attackTimerSet;
+
+	public void OpenQuestMenu()
+	{
+		ToggleQuestMenu ();
+	}
+
     public void LaunchAttack()
     {
         for (int i = 0; i < 5; i++)
@@ -55,6 +67,11 @@ public class BaseManager : MonoBehaviour {
             }
         }
     }
+
+	void OnApplicationQuit()
+	{
+		SaveGame ();
+	}
 
     protected BaseManager()
     {
@@ -78,7 +95,18 @@ public class BaseManager : MonoBehaviour {
         else
         {
             isUnderAttack = false;
+			if (!attackTimerSet) {
+				attackTimer = UnityEngine.Random.Range (2700.0f, 18000.0f);
+				attackTimerSet = true;
+			} else {
+				attackTimer -= Time.deltaTime;
+			}
+
         }
+
+		if (attackTimer <= 0.0f) {
+			LaunchAttack ();
+		}
 
         UIUpdate();
     }
@@ -104,7 +132,8 @@ public class BaseManager : MonoBehaviour {
     }
 
     private void Awake()
-    {
+	{
+		inventoryReference = GetComponent<InventoryBase>();
         villagerList.AddRange(FindObjectsOfType<BaseVillager>());
 
 		buildingPanel = buildingMenu.GetComponentInChildren<HorizontalLayoutGroup> ().gameObject;
@@ -113,8 +142,6 @@ public class BaseManager : MonoBehaviour {
 
 		cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
-
-        inventoryReference = GetComponent<InventoryBase>();
     }
 
     public InventoryBase GetInventory()
@@ -133,10 +160,10 @@ public class BaseManager : MonoBehaviour {
 		buildingPanel.transform.position = newPosition;
 	}
 
-	public void SelectBuilding(int buildingType)
+	public void SelectBuilding(GameObject buildingType)
 	{
-		heldBuilding = (GameObject)Instantiate (Resources.Load("Buildings/BuildingActor"));
-		heldBuilding.GetComponent<BaseBuilding>().InitBuilding ((BaseBuilding.BUILDING_TYPE)buildingType, this);
+		heldBuilding = Instantiate (buildingType);
+		heldBuilding.GetComponent<BaseBuilding>().InitBuilding (this);
 		ToggleBuildingMenu ();
 		PlaceBuilding ();
 	}
@@ -145,10 +172,7 @@ public class BaseManager : MonoBehaviour {
     {
         if (!placingBuilding)
         {
-            //Create building reference to place
-			I_Building buildingInterface = (I_Building)heldBuilding.GetComponent<BaseBuilding>();
-			buildingInterface.SetBaseManager (this);
-
+            //Set placingBuilding to true
             placingBuilding = true;
         }
         else
@@ -156,11 +180,18 @@ public class BaseManager : MonoBehaviour {
 			Debug.Log ("Place Construction Down");
             //Place construction site on mouse position and add to list of construction areas.
 
-            if(heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld(this))
-            {
-                toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
-				Debug.Log ("Building added to list");
-            }
+			List<I_Building> buildingInterfaceList = new List<I_Building> ();
+
+			buildingInterfaceList.AddRange(heldBuilding.GetComponentsInChildren<I_Building> ());
+
+			foreach(I_Building interfaceRef in buildingInterfaceList)
+			{
+				if(interfaceRef.PlaceInWorld())
+            	{
+            	    toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
+					Debug.Log ("Building added to list");
+            	}
+			}
 
             placingBuilding = false;
             heldBuilding = null;
@@ -180,6 +211,15 @@ public class BaseManager : MonoBehaviour {
 		}
 	}
 
+	public void ToggleQuestMenu()
+	{
+		if (questMenu.activeSelf) {
+			questMenu.SetActive (false);
+		} else {
+			questMenu.SetActive (true);
+		}
+	}
+
     public bool GetUnderAttack()
     {
         return isUnderAttack;
@@ -188,6 +228,7 @@ public class BaseManager : MonoBehaviour {
     private void Start()
     {
 		ToggleBuildingMenu ();
+		ToggleQuestMenu ();
 
         supplyFood = 100;
         supplyMorale = 50;
@@ -197,13 +238,7 @@ public class BaseManager : MonoBehaviour {
         for (int i = 0; i < 5; i++)
         {
             //Create some villagers
-            GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
-
-            if (newVillager != null)
-            {
-                villagerList.Add(newVillager.GetComponent<BaseVillager>());
-                newVillager = null;
-            }
+			SpawnVillager();
         }
     }
 
@@ -309,6 +344,8 @@ public class BaseManager : MonoBehaviour {
 
         gameData.inventoryData = inventoryReference.Save();
 
+		gameData.attackTimer = attackTimer;
+
 		formatter.Serialize (fileStream, gameData);
 		fileStream.Close ();
 
@@ -323,6 +360,8 @@ public class BaseManager : MonoBehaviour {
 	public bool LoadGame()
 	{
 		Debug.Log ("Loading Game");
+
+		controller.Reset ();
 
 		if (File.Exists (Application.persistentDataPath + "/baseInfo.dat")) {
 			BinaryFormatter formatter = new BinaryFormatter ();
@@ -339,6 +378,8 @@ public class BaseManager : MonoBehaviour {
 				Destroy (villager.gameObject);
 			}
 
+			villagerList.Clear ();
+
 			//Load Villagers
 			foreach (VillagerData villager in gameData.villagerList) {
 
@@ -351,31 +392,33 @@ public class BaseManager : MonoBehaviour {
 			foreach (BaseBuilding building in buildingList) {
 				Destroy (building.gameObject);
 			}
+			buildingList.Clear ();
 			foreach (BaseBuilding building in toBeBuilt) {
 				Destroy (building.gameObject);
 			}
+			toBeBuilt.Clear ();
 
 			//Load Buildings
 			foreach (BuildingData building in gameData.toBeBuilt) {
-				GameObject newBuilding = Instantiate (Resources.Load ("BuildingActor")) as GameObject;
+				GameObject newBuilding = Instantiate (Resources.Load (building.loadPath)) as GameObject;
 
 				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding>();
 				toAdd.Load (building, this);
 			}
 			foreach (BuildingData building in gameData.buildingList) {
-				GameObject newBuilding = Instantiate (Resources.Load ("BuildingActor")) as GameObject;
+				GameObject newBuilding = Instantiate (Resources.Load (building.loadPath)) as GameObject;
 
 				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding>();
 				toAdd.Load (building, this);
 			}
 
-			foreach (BaseItem item in inventoryReference.itemList) {
-				inventoryReference.RemoveItem (item);
-			}
+			inventoryReference.ClearInventory ();
 
             //Load Inventory
             inventoryReference.Load(gameData.inventoryData);
-            
+
+			attackTimer = gameData.attackTimer;
+			attackTimerSet = true;
 
 			Debug.Log ("Game Loaded");
 
@@ -399,6 +442,8 @@ class GameData
 	public List<VillagerData> villagerList = new List<VillagerData>();
 	public List<BuildingData> toBeBuilt = new List<BuildingData>();
 	public List<BuildingData> buildingList = new List<BuildingData>();
+
+	public float attackTimer;
 
     public InventoryData inventoryData;
 }

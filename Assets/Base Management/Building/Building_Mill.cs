@@ -2,13 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building_Mill : BaseBuilding {
+public class Building_Mill : BaseBuilding, I_Building {
+
+	bool I_Building.PlaceInWorld()
+	{
+		BaseBuilding buildingParent = GetComponent<BaseBuilding> ();
+
+		if (buildingParent.IsPlaced ()) {
+			SetPlacedInWorld (true);
+		}
+
+		return false;
+	}
 
 	// Use this for initialization
 	void Awake()
 	{
 		SetBuildingType (BUILDING_TYPE.BUILDING_MILL);
-
+		loadPath = "Buildings/BuildingMill";
 		workTime = 15.0f;
 		activeTimer = workTime;
 	}

@@ -20,7 +20,7 @@ public class BaseEnemy : Character {
         switch (currentState)
         {
             case CHARACTER_STATE.CHARACTER_MOVING:
-                base.AIMoveToTarget();
+                AIMoveToTarget();
                 break;
 
             case CHARACTER_STATE.CHARACTER_DEAD:
@@ -37,12 +37,38 @@ public class BaseEnemy : Character {
         }
     }
 
+	protected override void AIMoveToTarget ()
+	{
+		if(targetObject == null)
+		{
+			currentState = CHARACTER_STATE.CHARACTER_WANDER;
+			Debug.Log ("Target is null");
+			AIFindTarget();
+
+			return;
+		}
+
+		if (targetObject != null) {
+			targetPosition = targetObject.transform.position;
+
+			agent.SetDestination(targetPosition);
+
+			currentState = CHARACTER_STATE.CHARACTER_MOVING;
+
+
+			if (targetObject.GetComponent<BaseBuilding> () && AICheckRange ()) {
+				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
+			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
+				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
+			}
+		}
+	}
+
     protected override void AIFindTarget()
     {
         if(targetObject == null)
         {
-            for (int i = 0; i < managerReference.villagerList.Count; i++)
-            {
+			for (int i = 0; i < managerReference.villagerList.Count; i++) {
 				if (managerReference.villagerList [i] != null) {
 					if (i == 0) {
 						targetPosition = managerReference.villagerList [i].transform.position;
@@ -50,6 +76,23 @@ public class BaseEnemy : Character {
 					} else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.villagerList [i].transform.position)) {
 						targetPosition = managerReference.villagerList [i].transform.position;
 						targetObject = managerReference.villagerList [i].gameObject;
+					}
+				}
+			}
+			for (int i = 0; i < managerReference.buildingList.Count; i++) {
+				if (managerReference.buildingList [i] != null) {
+					if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.buildingList [i].transform.position)) {
+						targetPosition = managerReference.buildingList [i].transform.position;
+						targetObject = managerReference.buildingList [i].gameObject;
+					}
+				}
+			}
+			for(int i = 0; i < managerReference.toBeBuilt.Count; i++)
+			{
+				if (managerReference.toBeBuilt [i] != null) {
+					if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.toBeBuilt [i].transform.position)) {
+						targetPosition = managerReference.toBeBuilt [i].transform.position;
+						targetObject = managerReference.toBeBuilt [i].gameObject;
 					}
 				}
             }

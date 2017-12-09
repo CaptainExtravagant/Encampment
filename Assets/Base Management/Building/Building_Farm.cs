@@ -2,12 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building_Farm : BaseBuilding {
+public class Building_Farm : BaseBuilding, I_Building {
+
+	bool I_Building.PlaceInWorld()
+	{
+		BaseBuilding buildingParent = GetComponent<BaseBuilding> ();
+
+		if (buildingParent.IsPlaced ()) {
+			SetPlacedInWorld (true);
+		}
+
+		return false;
+	}
 
 	void Awake()
 	{
 		SetBuildingType (BUILDING_TYPE.BUILDING_FARM);
-
+		loadPath = "Buildings/BuildingFarm";
 		workTime = 20.0f;
 		activeTimer = workTime;
 	}

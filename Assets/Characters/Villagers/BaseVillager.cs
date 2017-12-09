@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class BaseVillager : Character{
 
-    [System.Serializable]
+	[System.Serializable]
     public struct TaskSkills
     {
         public float mining;
@@ -32,27 +32,30 @@ public class BaseVillager : Character{
     
     private bool isBuilding;
 
-    private BaseManager managerReference;
-
     private ResourceTile workingResource;
     private BaseBuilding workingBuilding;
     private bool isWorking;
     private float workTimer;
 
-    public override void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        CreateTaskSkills();
+	protected override void Awake()
+	{
+		base.Awake ();
 
-		managerReference = FindObjectOfType<BaseManager>();
+		Debug.Log ("Villager Start");
 
-        Weapon_Fists fists = new Weapon_Fists();
+		agent = GetComponent<NavMeshAgent>();
+		CreateCharacter(new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)));
+		CreateTaskSkills();
 
-        EquipWeaponToMainHand(fists);
-        EquipWeaponToOffHand(fists);
+		Weapon_Fists fists = new GameObject ("Fists").AddComponent<Weapon_Fists> ();
+		BaseArmor armor = new GameObject ("No Armor").AddComponent<BaseArmor> ();
 
-        timer = wanderTimer;
-    }
+		EquipWeaponToMainHand(fists);
+		EquipWeaponToOffHand(fists);
+		EquipArmor (armor);
+
+		timer = wanderTimer;
+	}
 
     public TaskSkills GetTaskSkills()
     {
@@ -149,7 +152,7 @@ public class BaseVillager : Character{
                 break;
 
             case CHARACTER_STATE.CHARACTER_MOVING:
-                base.AIMoveToTarget();
+                AIMoveToTarget();
                 break;
 
             case CHARACTER_STATE.CHARACTER_WANDER:
@@ -260,6 +263,40 @@ public class BaseVillager : Character{
         AIFindTarget();
     }
 
+	protected override void AIMoveToTarget ()
+	{
+		if(targetObject == null)
+		{
+			currentState = CHARACTER_STATE.CHARACTER_WANDER;
+			Debug.Log ("Target is null");
+			AIFindTarget();
+
+			return;
+		}
+
+		if (targetObject != null) {
+			targetPosition = targetObject.transform.position;
+
+			agent.SetDestination(targetPosition);
+
+			currentState = CHARACTER_STATE.CHARACTER_MOVING;
+
+
+			if (targetObject.GetComponent<BaseBuilding> () && AICheckRange ()) {
+				if (targetObject.GetComponent<BaseBuilding> ().IsBuilt () == false) {
+					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+				} else {
+					targetObject = null;
+					currentState = CHARACTER_STATE.CHARACTER_WANDER;
+				}
+			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
+				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
+			} else if (targetObject.GetComponent<ResourceTile> () && AICheckRange ()) {
+				currentState = CHARACTER_STATE.CHARACTER_COLLECTING;
+			}
+		}
+	}
+
     protected override void AIFindTarget()
     {
         //print("Trying to find target");
@@ -269,22 +306,22 @@ public class BaseVillager : Character{
             //print("Target Object is null");
 
             //Is the base currently under attack?
-            if (managerReference.GetUnderAttack())
+			if (manager.GetUnderAttack())
             {
                 //Find all enemies in the world and target the closest one
 
-                for (int i = 0; i < managerReference.enemyList.Count; i++)
+                for (int i = 0; i < manager.enemyList.Count; i++)
                 {
-                    //If this is the first item, set it to be the current target
-                    if (i == 0)
-                    {
-                        SetTarget(managerReference.enemyList[i].gameObject);
-                    }
+					if (manager.enemyList [i] != null) {
+						//If this is the first item, set it to be the current target
+						if (i == 0) {
+							SetTarget (manager.enemyList [i].gameObject);
+						}
                     //If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
-                    else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, managerReference.enemyList[i].transform.position))
-                    {
-                        SetTarget(managerReference.enemyList[i].gameObject);
-                    }
+                    else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, manager.enemyList [i].transform.position)) {
+							SetTarget (manager.enemyList [i].gameObject);
+						}
+					}
                 }
             }
             else
@@ -292,7 +329,7 @@ public class BaseVillager : Character{
 
                 //print("Finding build targets");
                 //If there aren't any construction targets, continue to wander
-                if (managerReference.toBeBuilt.Count <= 0)
+                if (manager.toBeBuilt.Count <= 0)
                 {
                     //print("No Build Targets");
                     currentState = CHARACTER_STATE.CHARACTER_WANDER;
@@ -300,19 +337,21 @@ public class BaseVillager : Character{
                 else //If at least one target has been found, set it as the current target and set the character state to build
                 {
                     //print("Target found");
-                    for (int i = 0; i < managerReference.toBeBuilt.Count; i++)
+                    for (int i = 0; i < manager.toBeBuilt.Count; i++)
                     {
                         //print("Check target");
                         //If this is the first item, set it to be the current target
                         if (i == 0)
                         {
-                            SetTarget(managerReference.toBeBuilt[i].gameObject);
+                            SetTarget(manager.toBeBuilt[i].gameObject);
                         }//If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
-                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, managerReference.toBeBuilt[i].transform.position))
+                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, manager.toBeBuilt[i].transform.position))
                         {
                             //Does this site have a build slot available?
-                            
-                            SetTarget(managerReference.toBeBuilt[i].gameObject);
+							if (manager.toBeBuilt [i].BuildSlotAvailable ()) {
+								SetTarget (manager.toBeBuilt [i].gameObject);
+								manager.toBeBuilt [i].AddVillagerToWork (this);
+							}
                         }
                     }
                 }
@@ -401,7 +440,8 @@ public class BaseVillager : Character{
 
 	public void Load(VillagerData villagerData)
 	{
-		transform.position.Set(villagerData.positionX, villagerData.positionY, villagerData.positionZ);
+		Debug.Log ("Villager Load");
+		transform.position = new Vector3(villagerData.positionX, villagerData.positionY, villagerData.positionZ);
 
 		SetTaskSkills (villagerData.taskSkills);
 		characterInfo = villagerData.characterInfo;
@@ -409,13 +449,13 @@ public class BaseVillager : Character{
 		SetCurrentHealth (villagerData.currentHealth);
 
 		if (villagerData.equippedWeapon != null) {
-			equippedWeapon.Load (villagerData.equippedWeapon);
+			GetEquippedWeapon().Load (villagerData.equippedWeapon);
 		}
 		if (villagerData.offhandWeapon != null) {
-			offHandWeapon.Load (villagerData.offhandWeapon);
+			GetOffHandWeapon().Load (villagerData.offhandWeapon);
 		}
 		if (villagerData.equippedArmor != null) {
-			equippedArmor.Load(villagerData.equippedArmor);
+			GetEquippedArmor().Load(villagerData.equippedArmor);
 		}
 	}
 }

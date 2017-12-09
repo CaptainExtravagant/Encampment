@@ -29,10 +29,12 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         BUILDING_BLACKSMITH
     }
 
-    protected BaseVillager[] workingVillagers;
+	protected List <BaseVillager> workingVillagers = new List <BaseVillager>();
     protected int maxWorkingVillagers;
 
-    private bool placedInWorld;
+	protected string loadPath;
+
+	protected bool placedInWorld;
     private bool isBuilt;
 
 	protected int buildingCost;
@@ -43,8 +45,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
     private MeshFilter meshFilterReference;
 
-    private Mesh buildingMesh;
-    private Mesh constructionMesh;
+    protected Mesh buildingMesh;
+    protected Mesh constructionMesh;
 
     protected BaseManager baseManager;
 
@@ -71,63 +73,52 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		baseHealthValue = 40;
 
 		buildingCost = 50;
+		currentHealth = baseHealthValue;
 		buildingResource = ResourceTile.RESOURCE_TYPE.WOOD;
     }
 
-	public void InitBuilding(BaseBuilding.BUILDING_TYPE newType, BaseManager manager)
+	public void InitBuilding(BaseManager manager)
 	{
-		SetBuildingType (newType);
+		SetBaseManager (manager);
+		meshFilterReference = GetComponent<MeshFilter> ();
+	}
+
+	protected MeshFilter GetMeshFilter()
+	{
+		return meshFilterReference;
+	}
+
+	protected void SetBaseManager(BaseManager manager)
+	{
 		baseManager = manager;
-
-		switch (buildingType) {
-		case BUILDING_TYPE.BUILDING_BARRACKS:
-			gameObject.AddComponent<Building_Barracks> ();
-			break;
-		case BUILDING_TYPE.BUILDING_BLACKSMITH:
-			gameObject.AddComponent<Building_Blacksmith> ();
-			break;
-		case BUILDING_TYPE.BUILDING_DOCK:
-			gameObject.AddComponent<Building_Dock> ();
-			break;
-		case BUILDING_TYPE.BUILDING_FARM:
-			gameObject.AddComponent<Building_Farm> ();
-			break;
-		case BUILDING_TYPE.BUILDING_HOUSE:
-			gameObject.AddComponent<Building_House> ();
-			break;
-		case BUILDING_TYPE.BUILDING_LUMBERCAMP:
-			gameObject.AddComponent<Building_LumberCamp> ();
-			break;
-		case BUILDING_TYPE.BUILDING_MILL:
-			gameObject.AddComponent<Building_Mill> ();
-			break;
-		case BUILDING_TYPE.BUILDING_MININGCAMP:
-			gameObject.AddComponent<Building_MiningCamp> ();
-			break;
-		case BUILDING_TYPE.BUILDING_OUTPOST:
-			gameObject.AddComponent<Building_Outpost> ();
-			break;
-		case BUILDING_TYPE.BUILDING_TOWNHALL:
-			gameObject.AddComponent<Building_TownHall> ();
-			break;
-		case BUILDING_TYPE.BUILDING_WALL:
-			gameObject.AddComponent<Building_Walls> ();
-			break;
-		}
-
-		baseManager.buildingList.Add (this);
-
 	}
 
 	private void SetMaxHealth(float constructionSkill)
 	{
 		//Create building health value based off construction skill of the worker, percentage value is used to create the new value
 		maxHealth = baseHealthValue + (baseHealthValue * (constructionSkill / 100));
+		ResetCurrentHealth ();
 	}
 
-	protected void UpdateCurrentHealth(float damage)
+	public void UpdateCurrentHealth(float damage)
 	{
+		Debug.Log ("Building Health: " + currentHealth);
 		currentHealth -= damage;
+
+		if (currentHealth <= 0) {
+			DestroyBuilding();
+		}
+	}
+
+	protected void DestroyBuilding()
+	{
+		if (isBuilt) {
+			baseManager.buildingList.Remove (this);
+			Destroy (gameObject);
+		} else {
+			baseManager.toBeBuilt.Remove (this);
+			Destroy (gameObject);
+		}
 	}
 
 	protected void ResetCurrentHealth()
@@ -151,8 +142,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	}
 
     private void Update()
-    {
-        if (!placedInWorld)
+	{
+		if (!placedInWorld)
         {
             BindToMouse();
         }
@@ -163,17 +154,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
     }
 
-    protected bool AddVillagerToWork(BaseVillager selectedVillager)
+	public void AddVillagerToWork(BaseVillager selectedVillager)
     {
-        for(int i = 0; i < maxWorkingVillagers; i++)
-        {
-            if(workingVillagers[i] == null)
-            {
-                workingVillagers[i] = selectedVillager;
-                return true;
-            }
-        }
-        return false;
+		workingVillagers.Add(selectedVillager);
     }
 
     protected void SetBuildingType(BUILDING_TYPE newBuildingType)
@@ -207,7 +190,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
     }
     
-    void BindToMouse()
+    private void BindToMouse()
     {
         //Get the current mouse position in the world
         Vector3 currentPosition = transform.position;
@@ -221,21 +204,26 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         }
     }
 
-    public bool PlaceInWorld(BaseManager managerReference)
-    {
-
-        if (managerReference.RemoveResources(buildingCost, (int)buildingResource))
-        {
+	bool I_Building.PlaceInWorld()
+	{
+		if (baseManager.RemoveResources(buildingCost, (int)buildingResource))
+		{
 			Debug.Log ("Place in World");
-            placedInWorld = true;
-            return true;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return false;
-        }
-    }
+			SetPlacedInWorld (true);
+			return true;
+		}
+		else
+		{
+			Debug.Log ("Failed to place in world");
+			Destroy(gameObject);
+			return false;
+		}
+	}
+
+	protected void SetPlacedInWorld(bool isPlaced)
+	{
+		placedInWorld = isPlaced;
+	}
 
     public bool IsPlaced()
     {
@@ -246,6 +234,14 @@ public class BaseBuilding : MonoBehaviour, I_Building {
     {
         return isBuilt;
     }
+
+	public bool BuildSlotAvailable()
+	{
+		if (workingVillagers.Count < maxWorkingVillagers) {
+			return true;
+		}
+		return false;
+	}
 
 	private void CreateBuilding(BaseVillager characterReference)
     {
@@ -283,7 +279,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public void Load(BuildingData building, BaseManager manager)
 	{
-		transform.position.Set(building.positionX, building.positionY, building.positionZ);
+		transform.position = new Vector3(building.positionX, building.positionY, building.positionZ);
+
+		loadPath = building.loadPath;
 
 		isBuilt = building.isBuilt;
 		workTime = building.workTime;
@@ -299,7 +297,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		workingVillagers = building.workingVillagers;
 		maxWorkingVillagers = building.maxWorkingVillagers;
 
-		InitBuilding ((BUILDING_TYPE)building.buildingType, manager);
+		SetPlacedInWorld (true);
+
+		InitBuilding (manager);
 	}
 
 	public BuildingData Save()
@@ -309,6 +309,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		buildingData.positionX = transform.position.x;
         buildingData.positionY = transform.position.y;
         buildingData.positionZ = transform.position.z;
+
+		buildingData.loadPath = loadPath;
 
 		buildingData.isBuilt = isBuilt;
 		buildingData.workTime = workTime;
@@ -337,6 +339,8 @@ public class BuildingData
     public float positionY;
     public float positionZ;
 
+	public string loadPath;
+
 	public bool isBuilt;
 	public float workTime;
 	public float buildTime;
@@ -349,6 +353,6 @@ public class BuildingData
 	public float maxHealth;
 	public float currentHealth;
 
-	public BaseVillager[] workingVillagers;
+	public List <BaseVillager> workingVillagers;
 	public int maxWorkingVillagers;
 }

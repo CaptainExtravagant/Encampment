@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building_TownHall : BaseBuilding {
-
-	void Awake()
+public class Building_TownHall : BaseBuilding, I_Building {
+	
+	void Awake ()
 	{
-		SetBuildingType (BUILDING_TYPE.BUILDING_TOWNHALL);
-
+		loadPath = "Buildings/BuildingTownHall";
 	}
-
 }

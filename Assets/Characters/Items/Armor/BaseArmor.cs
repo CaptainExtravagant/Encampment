@@ -11,7 +11,7 @@ public class BaseArmor : BaseItem, I_Item {
 
     private void Awake()
     {
-        itemType = ITEM_TYPE.ITEM_ARMOR;
+		SetItemType (ITEM_TYPE.ITEM_ARMOR);
     }
 
 	void I_Item.CalculateBaseStats(BaseVillager villagerReference)

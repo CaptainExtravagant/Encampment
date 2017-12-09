@@ -21,7 +21,7 @@ public class Character : MonoBehaviour{
     //=======
     //STRUCTS
     //=======
-    [System.Serializable]
+	[System.Serializable]
     public struct Attributes
     {
         public float fitness;
@@ -49,7 +49,7 @@ public class Character : MonoBehaviour{
         }
     }
 
-    [System.Serializable]
+	[System.Serializable]
     public struct CombatSkills
     {
         public float brawling;
@@ -86,7 +86,7 @@ public class Character : MonoBehaviour{
         }
     }
 
-    [System.Serializable]
+	[System.Serializable]
     public struct CharacterInfo
     {
         public string characterName;
@@ -122,6 +122,8 @@ public class Character : MonoBehaviour{
     protected bool isAttacking;
 
     protected NavMeshAgent agent;
+	protected InventoryBase inventory;
+	protected BaseManager manager;
 
     protected Vector3 targetPosition;
     protected GameObject targetObject;
@@ -136,10 +138,16 @@ public class Character : MonoBehaviour{
     private string[] CharacterLastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson" };
     private string[] FemaleFirstNames = {"Emma", "Olivia", "Ava", "Sophia", "Isabella", "Mia", "Charlotte", "Abigail", "Emily", "Kelley" };
 
+	protected virtual void Awake()
+	{
+		manager = FindObjectOfType<BaseManager>();
+		inventory = manager.GetInventory ();
+	}
+
     public virtual void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        CreateCharacter(new Vector3(0, 1, 0));
+		//CreateCharacter(new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)));
 
 
     }
@@ -273,9 +281,6 @@ public class Character : MonoBehaviour{
         //Set spawn position
         transform.position = spawnPosition;
         
-		UnequipMainHand ();
-		UnequipOffHand ();
-		UnequipArmor ();
 
     }
 
@@ -326,7 +331,7 @@ public class Character : MonoBehaviour{
         for(int i = 0; i < targetList.Length; i++)
         {
             //If this is the first item, set it to be the current target
-            if(i == targetList.Length)
+            if(i == 0)
             {
                 targetPosition = targetList[i].transform.position;
                 targetObject = targetList[i].gameObject;
@@ -350,31 +355,32 @@ public class Character : MonoBehaviour{
     }
 
     //If there's no target set, find a target, then set the destination using the NavMeshAgent
-    protected void AIMoveToTarget()
+	protected virtual void AIMoveToTarget()
     {
         if(targetObject == null)
-        {
+		{
+			currentState = CHARACTER_STATE.CHARACTER_WANDER;
+			Debug.Log ("Target is null");
             AIFindTarget();
+
+			return;
         }
 
+		if (targetObject != null) {
         targetPosition = targetObject.transform.position;
 
         agent.SetDestination(targetPosition);
 
         currentState = CHARACTER_STATE.CHARACTER_MOVING;
 
-		if (targetObject == null) {
-			Debug.Log ("Target is null");
-		}
 
-
-		if (targetObject != null) {
 			if (targetObject.GetComponent<BaseBuilding> () && AICheckRange ()) {
-				if(!targetObject.GetComponent<BaseBuilding>().IsBuilt())
-					{
-				currentState = CHARACTER_STATE.CHARACTER_BUILDING;
-					}
-
+				if (targetObject.GetComponent<BaseBuilding> ().IsBuilt () == false) {
+					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+				} else {
+					targetObject = null;
+					currentState = CHARACTER_STATE.CHARACTER_WANDER;
+				}
 			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
 			} else if (targetObject.GetComponent<ResourceTile> () && AICheckRange ()) {
@@ -406,12 +412,17 @@ public class Character : MonoBehaviour{
         {
             attackTimer += Time.deltaTime;
 
-            if(attackTimer >= attackCooldownTime)
-            {
-                //Attack the target
-                DealDamage(targetObject.GetComponent<Character>());
-                attackTimer = 0;
-            }
+			if (attackTimer >= attackCooldownTime) {
+				
+				//Attack the target
+					
+				if (targetObject.GetComponent<Character> ()) {
+						DealDamage (targetObject.GetComponent<Character> ());
+					} else if (targetObject.GetComponent<BaseBuilding> ()) {
+					DamageBuilding (targetObject.GetComponent<BaseBuilding> ());
+					}
+					attackTimer = 0;
+			}
         }
         else if(!isAttacking && targetObject != null)
         {
@@ -421,9 +432,17 @@ public class Character : MonoBehaviour{
         }
     }
 
+	protected void DamageBuilding(BaseBuilding targetBuilding)
+	{
+		if (equippedWeapon != null) {
+			targetBuilding.UpdateCurrentHealth (equippedWeapon.GetDamageValue ());
+		} else {
+			targetBuilding.UpdateCurrentHealth (GetCombatSkills ().brawling);
+		}
+	}
+
     protected void DealDamage(Character targetCharacter)
     {
-
         if (equippedWeapon != null)
         {
             //Deal damage to target character
@@ -453,8 +472,10 @@ public class Character : MonoBehaviour{
             totalDefense += offHandWeapon.GetDefenseValue();
         }
 
-        totalDefense += equippedWeapon.GetDefenseValue();
-        
+		if (equippedWeapon != null) {
+			totalDefense += equippedWeapon.GetDefenseValue ();
+		}
+
         totalDamage = inDamage - totalDefense;
 
         if(totalDamage < 0)
@@ -509,8 +530,11 @@ public class Character : MonoBehaviour{
     //EQUIPPED ITEMS
     //==============
 
-	protected void EquipWeaponToMainHand(BaseWeapon weaponToEquip)
+	public void EquipWeaponToMainHand(BaseWeapon weaponToEquip)
     {
+		if(inventory.itemList.Contains(weaponToEquip))
+			inventory.RemoveItem (weaponToEquip);
+
 		equippedWeapon = weaponToEquip;
 
         if(equippedWeapon.IsTwoHanded())
@@ -519,37 +543,50 @@ public class Character : MonoBehaviour{
         }
     }
 
-	protected void UnequipMainHand()
+	public void UnequipMainHand()
 	{
+		if(GetEquippedWeapon() != null)
+			inventory.AddItem (GetEquippedWeapon ());
+
 		BaseWeapon emptyHand = new BaseWeapon ();
 		emptyHand.SetItemType (BaseItem.ITEM_TYPE.ITEM_EMPTY);
 
 		equippedWeapon = emptyHand;
 	}
 
-	protected void UnequipOffHand()
+	public void UnequipOffHand()
 	{
+		if(GetOffHandWeapon() != null)
+			inventory.AddItem (GetOffHandWeapon ());
+
 		BaseWeapon emptyHand = new BaseWeapon ();
 		emptyHand.SetItemType (BaseItem.ITEM_TYPE.ITEM_EMPTY);
 
 		offHandWeapon = emptyHand;
 	}
 
-    protected void EquipWeaponToOffHand(BaseWeapon weaponToEquip)
+	public void EquipWeaponToOffHand(BaseWeapon weaponToEquip)
     {
         if (offHandEnabled)
         {
+			if(inventory.itemList.Contains(weaponToEquip))
+				inventory.RemoveItem (weaponToEquip);
             offHandWeapon = weaponToEquip;
         }
     }
 
-	protected void EquipArmor(BaseArmor armorToEquip)
+	public void EquipArmor(BaseArmor armorToEquip)
     {
+		if(inventory.itemList.Contains(armorToEquip))
+			inventory.RemoveItem (armorToEquip);
 		equippedArmor = armorToEquip;
     }
 
-	protected void UnequipArmor()
+	public void UnequipArmor()
 	{
+		if(GetEquippedArmor() != null)
+			inventory.AddItem (GetEquippedArmor ());
+
 		BaseArmor emptyArmor = new BaseArmor ();
 		emptyArmor.SetItemType (BaseItem.ITEM_TYPE.ITEM_EMPTY);
 

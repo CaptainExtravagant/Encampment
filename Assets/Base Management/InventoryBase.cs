@@ -7,17 +7,18 @@ using System;
 
 public class InventoryBase : MonoBehaviour, I_Inventory {
 
+	public PlayerController controller;
+
 	private GameObject itemButtonReference;
 	private GameObject[] itemButtonList = new GameObject[itemCap];
 
-	public BaseItem[] itemList = new BaseItem[itemCap];
+	public List<BaseItem> itemList = new List <BaseItem>(itemCap);
 
-	private BaseItem[] displayItems = new BaseItem[itemCap];
+	private List<BaseItem> displayItems = new List <BaseItem>(itemCap);
 
-	private BaseWeapon[] weaponList = new BaseWeapon[itemCap];
-	private BaseArmor[] armorList = new BaseArmor[itemCap];
+	private List <BaseWeapon> weaponList = new List <BaseWeapon>(itemCap);
+	private List <BaseArmor> armorList = new List <BaseArmor>(itemCap);
 
-	public Image[] imageList = new Image[itemCap];
 	private static int itemCap = 10;
 
 	public GameObject inventoryScrollBox;
@@ -31,11 +32,14 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 	public void SortItems()
 	{
 		if (inventoryDropdown.value == 0) {
-			displayItems = itemList;
+			displayItems.Clear ();
+			displayItems.AddRange(itemList);
 		} else if (inventoryDropdown.value == 1) {
-			displayItems = weaponList;
+			displayItems.Clear ();
+			displayItems.AddRange(weaponList.ToArray());
 		} else if (inventoryDropdown.value == 2) {
-			displayItems = armorList;
+			displayItems.Clear ();
+			displayItems.AddRange(armorList.ToArray());
 		}
 	}
 
@@ -46,16 +50,32 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 		inventoryInterface.AddItem (itemToAdd);
 	}
 
+	public void ClearInventory()
+	{
+		for (int i = 0; i < itemList.Count; i++) {
+			if(itemList[i] != null)
+				Destroy(itemList [i]);
+		}
+
+		for (int i = 0; i < itemButtonList.Length; i++) {
+			if (itemButtonList [i] != null)
+				Destroy (itemButtonList [i]);
+		}
+	}
+
 	bool I_Inventory.AddItem(BaseItem itemToAdd)
     {
         //Run through entire inventory
-        for(int i = 0; i < itemList.Length; i++)
+		for(int i = 0; i < itemList.Capacity; i++)
         {
             //Find the next empty slot
             if(itemList[i] == null)
             {
+				Debug.Log ("Spawned Sword");
+				GameObject newItem = new GameObject();
+				newItem.AddComponent(itemToAdd.GetType ());
 
-				itemList [i] = Instantiate(itemToAdd);
+				itemList.Insert(i, newItem.GetComponent<BaseItem>());
 
                 //Add the item to the inventory, the object itself is somewhere in the world when it's picked up/created
 				itemButtonList[i] = 
@@ -65,15 +85,18 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
                 //Create the button for the inventory
 				itemButtonList [i].GetComponent<InventoryButton> ().Init (itemList[i].GetItemType(),
 					itemList[i].GetItemName(),
-					itemList[i].GetItemSprite());
+					itemList[i].GetItemSprite(),
+					this,
+					newItem.GetComponent<BaseItem>(),
+					controller);
 
 				switch (itemList [i].GetItemType ()) {
 				case BaseItem.ITEM_TYPE.ITEM_WEAPON:
-					weaponList [i] = itemList [i].GetComponent<BaseWeapon>();
+					weaponList.Insert(i, itemList [i].GetComponent<BaseWeapon>());
 					break;
 
 				case BaseItem.ITEM_TYPE.ITEM_ARMOR:
-					armorList [i] = itemList [i].GetComponent<BaseArmor>();
+					armorList.Insert(i, itemList [i].GetComponent<BaseArmor>());
 					break;
 				}
 				
@@ -86,7 +109,7 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 	bool I_Inventory.RemoveItem(BaseItem itemToRemove)
     {
         //Go through entire inventory
-        for (int i = 0; i < itemList.Length; i++)
+		for (int i = 0; i < itemList.Capacity; i++)
         {
             //Find the item that needs to be removed
             if(itemList[i] == itemToRemove)
@@ -105,15 +128,16 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 
     public void RemoveItem(BaseItem itemToRemove)
 	{
-		for (int i = 0; i < itemList.Length; i++) {
-			if (itemList [i] == itemToRemove) {
-				itemList [i] = null;
-				imageList [i].sprite = null;
-				imageList [i].enabled = false;
+		int i = itemList.IndexOf (itemToRemove);
+		Destroy (itemButtonList [i]);
+		itemButtonList[i] = null;
 
-                itemButtonList[i] = null;
-			}
+		if (weaponList.Contains(itemToRemove as BaseWeapon)) {
+			weaponList.Remove (itemToRemove as BaseWeapon);
+		} else if (armorList.Contains(itemToRemove as BaseArmor)) {
+			armorList.Remove (itemToRemove as BaseArmor);
 		}
+		itemList.Remove (itemToRemove);
 	}
 
     public InventoryData Save()
@@ -139,10 +163,38 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
     {
         foreach(WeaponData weapon in inventoryData.weaponDataList)
         {
-            BaseWeapon newWeapon = new BaseWeapon();
-            newWeapon.Load(weapon);
+			BaseWeapon newWeapon;
 
-            AddItem(newWeapon);
+			switch (weapon.weaponType) {
+			case 0:
+				newWeapon = new Weapon_Sword ();
+				break;
+			case 1:
+				newWeapon = new Weapon_Fists();
+				break;
+			case 2:
+				newWeapon = new Weapon_Axe ();
+				break;
+			case 3:
+				newWeapon = new Weapon_Polearm ();
+				break;
+			case 4:
+				newWeapon = new Weapon_Bow ();
+				break;
+			case 5:
+				newWeapon = new Weapon_Longsword();
+				break;
+			case 6:
+				newWeapon = new Item_Shield ();
+				break;
+
+			default:
+				newWeapon = new Weapon_Fists ();
+				break;
+			}
+			newWeapon.Load(weapon);
+
+			AddItem(newWeapon);
         }
 
         foreach(ArmorData armor in inventoryData.armorDataList)
@@ -150,7 +202,7 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
             BaseArmor newArmor = new BaseArmor();
             newArmor.Load(armor);
 
-            AddItem(newArmor);
+			AddItem(newArmor);
         }
     }
 

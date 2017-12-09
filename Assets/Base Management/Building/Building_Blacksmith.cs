@@ -2,11 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building_Blacksmith : BaseBuilding {
+public class Building_Blacksmith : BaseBuilding, I_Building {
 
 	private float itemValue;
 
 	public BaseItem chosenItem;
+
+	bool I_Building.PlaceInWorld()
+	{
+		BaseBuilding buildingParent = GetComponent<BaseBuilding> ();
+
+		if (buildingParent.IsPlaced ()) {
+			SetPlacedInWorld (true);
+		}
+
+		return false;
+	}
 
 	protected override void InitInfoPanel ()
 	{
@@ -16,6 +27,9 @@ public class Building_Blacksmith : BaseBuilding {
     private void Awake()
     {
         SetBuildingType(BUILDING_TYPE.BUILDING_BLACKSMITH);
+
+		loadPath = "Buildings/BuildingBlacksmith";
+
         maxWorkingVillagers = 2;
 
 		workTime = 120.0f;
@@ -26,8 +40,9 @@ public class Building_Blacksmith : BaseBuilding {
     {
 		if (selectedVillager != null) {
 			if (IsBuilt ()) {
-				if (AddVillagerToWork (selectedVillager)) {
+				if (BuildSlotAvailable()) {
 					selectedVillager.SetTarget (this.gameObject);
+					AddVillagerToWork (selectedVillager);
 				}
 			}
 		} else if (!infoPanelOpen) {
