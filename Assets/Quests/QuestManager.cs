@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class QuestManager : MonoBehaviour {
 
-	public List<Image> imageList = new List<Image>();
+	public List<Sprite> imageList = new List<Sprite>();
 
 	public List<string> missionNamesStart = new List<string> ();
 	public List<string> missionNamesEnd = new List<string> ();
@@ -18,7 +18,17 @@ public class QuestManager : MonoBehaviour {
 
 	void Awake()
 	{
+		Debug.Log ("QuestManager start");
 		questPanel = (GameObject)Resources.Load ("UI/QuestPanel");
+
+
+	}
+
+	void Start()
+	{
+			for (int i = 0; i < 3; i++) {
+				AddQuest ();
+			}
 	}
 
 	public void ToggleQuestMenu()
@@ -32,7 +42,9 @@ public class QuestManager : MonoBehaviour {
 
 	void AddQuest()
 	{
-		GameObject newPanel = Instantiate (questPanel, questMenu.transform);
+		//Debug.Log ("Add Quest");
+
+		GameObject newPanel = Instantiate (questPanel, questScroll.transform);
 
 		newPanel.GetComponent<Quest> ().Init (RandomName(), RandomSlots(), RandomImage());
 		questList.Add (newPanel.GetComponent<Quest>());
@@ -48,10 +60,10 @@ public class QuestManager : MonoBehaviour {
 
 	int RandomSlots()
 	{
-		return Random.Range (1, 4);
+		return Random.Range (1, 3);
 	}
 
-	Image RandomImage()
+	Sprite RandomImage()
 	{
 		return imageList [Random.Range (0, imageList.Count)];
 	}

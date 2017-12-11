@@ -117,8 +117,8 @@ public class BaseWeapon : BaseItem, I_Item {
             twoHanded = IsTwoHanded()
         };
 
-        if (weaponData == null)
-            Debug.Log("Data is null");
+        //if (weaponData == null)
+            //Debug.Log("Data is null");
 
         return weaponData;
 	}

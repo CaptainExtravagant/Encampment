@@ -51,7 +51,7 @@ public class BaseItem : MonoBehaviour, I_Item {
 
 	public string GetItemName()
 	{
-		Debug.Log (itemName);
+		//Debug.Log (itemName);
 		return itemName;
 	}
 }

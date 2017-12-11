@@ -243,7 +243,7 @@ public class Character : MonoBehaviour{
 			newName = FemaleFirstNames[UnityEngine.Random.Range(0, FemaleFirstNames.Length)] + " " + CharacterLastNames[UnityEngine.Random.Range(0, CharacterLastNames.Length)];
         }
 
-        Debug.Log(newName);
+        //Debug.Log(newName);
 
         return newName;
     }
@@ -260,7 +260,7 @@ public class Character : MonoBehaviour{
     {
 		int tempSex = UnityEngine.Random.Range(1, 3);
 
-        Debug.Log(tempSex);
+        //Debug.Log(tempSex);
 
         //Create base Attributes and Combat Skills
         Attributes characterAttributes = new Attributes(CreateAttributes());
@@ -360,7 +360,7 @@ public class Character : MonoBehaviour{
         if(targetObject == null)
 		{
 			currentState = CHARACTER_STATE.CHARACTER_WANDER;
-			Debug.Log ("Target is null");
+			//Debug.Log ("Target is null");
             AIFindTarget();
 
 			return;
@@ -596,7 +596,7 @@ public class Character : MonoBehaviour{
     public BaseWeapon GetEquippedWeapon()
     {
 		if (equippedWeapon == null) {
-			Debug.Log ("No weapon equipped");
+			//Debug.Log ("No weapon equipped");
 		}
         return equippedWeapon;
     }
@@ -605,7 +605,7 @@ public class Character : MonoBehaviour{
     {
         if(offHandWeapon == null)
         {
-            Debug.Log("No offhand weapon equipped");
+            //Debug.Log("No offhand weapon equipped");
         }
         return offHandWeapon;
     }

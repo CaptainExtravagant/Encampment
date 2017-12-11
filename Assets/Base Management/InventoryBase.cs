@@ -71,7 +71,7 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
             //Find the next empty slot
             if(itemList[i] == null)
             {
-				Debug.Log ("Spawned Sword");
+				//Debug.Log ("Spawned Sword");
 				GameObject newItem = new GameObject();
 				newItem.AddComponent(itemToAdd.GetType ());
 

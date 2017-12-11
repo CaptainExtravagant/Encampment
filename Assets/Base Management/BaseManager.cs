@@ -22,6 +22,8 @@ public class BaseManager : MonoBehaviour {
 	public PlayerController controller;
 
 	public GameObject questMenu;
+	public GameObject characterMenu;
+	public GameObject characterScroll;
 
 	public GameObject buildingMenu;
 	private GameObject buildingPanel;
@@ -30,6 +32,7 @@ public class BaseManager : MonoBehaviour {
 	private bool buildingMenuOpen = true;
 
     bool isUnderAttack;
+	bool settingUpQuest;
 
     public List<BaseVillager> villagerList = new List<BaseVillager>();
     public List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
@@ -82,7 +85,7 @@ public class BaseManager : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-			Debug.Log ("Base Manager Click");
+			//Debug.Log ("Base Manager Click");
 			if (heldBuilding != null) {
 				PlaceBuilding ();
 			}
@@ -177,7 +180,7 @@ public class BaseManager : MonoBehaviour {
         }
         else
         {
-			Debug.Log ("Place Construction Down");
+			//Debug.Log ("Place Construction Down");
             //Place construction site on mouse position and add to list of construction areas.
 
 			List<I_Building> buildingInterfaceList = new List<I_Building> ();
@@ -189,7 +192,7 @@ public class BaseManager : MonoBehaviour {
 				if(interfaceRef.PlaceInWorld())
             	{
             	    toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
-					Debug.Log ("Building added to list");
+					//Debug.Log ("Building added to list");
             	}
 			}
 
@@ -211,6 +214,35 @@ public class BaseManager : MonoBehaviour {
 		}
 	}
 
+	public void ToggleCharacterMenu()
+	{
+		if (characterMenu.activeSelf) {
+			characterMenu.SetActive (false);
+		} else {
+			characterMenu.SetActive (true);
+		}	
+	}
+
+	public void SettingUpQuest(Quest activeQuest)
+	{
+		ToggleQuestMenu ();
+		characterScroll.GetComponent<CharacterDisplay> ().OpenMenuForQuests (activeQuest);
+		ToggleCharacterMenu ();
+		settingUpQuest = true;
+	}
+
+	public void SelectCharacter(BaseVillager chosenVillager)
+	{
+		if (settingUpQuest) {
+			characterScroll.GetComponent<CharacterDisplay> ().GetActiveQuest().AddCharacter (chosenVillager);
+			ToggleQuestMenu ();
+			ToggleCharacterMenu ();
+			settingUpQuest = false;
+		} else {
+			ToggleCharacterMenu ();
+		}
+	}
+
 	public void ToggleQuestMenu()
 	{
 		if (questMenu.activeSelf) {
@@ -229,6 +261,7 @@ public class BaseManager : MonoBehaviour {
     {
 		ToggleBuildingMenu ();
 		ToggleQuestMenu ();
+		ToggleCharacterMenu ();
 
         supplyFood = 100;
         supplyMorale = 50;
@@ -240,6 +273,9 @@ public class BaseManager : MonoBehaviour {
             //Create some villagers
 			SpawnVillager();
         }
+
+		LoadGame ();
+
     }
 
 	public GameObject SpawnVillager()
@@ -251,6 +287,8 @@ public class BaseManager : MonoBehaviour {
             {
                 villagerList.Add(newVillager.GetComponent<BaseVillager>());
             }
+		characterScroll.GetComponent<CharacterDisplay> ().Init (newVillager);
+
 		return newVillager;
     }
 
@@ -359,7 +397,7 @@ public class BaseManager : MonoBehaviour {
 
 	public bool LoadGame()
 	{
-		Debug.Log ("Loading Game");
+		//Debug.Log ("Loading Game");
 
 		controller.Reset ();
 

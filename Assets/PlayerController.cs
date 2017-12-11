@@ -56,10 +56,10 @@ public class PlayerController : MonoBehaviour {
 			selectedObject = FindObjectUnderMouse ();
 
 			if (selectedObject != null) {
-				Debug.Log ("Object Selected");
+				//Debug.Log ("Object Selected");
 
 				if (selectedObject.GetComponent<BaseVillager> ()) {
-					Debug.Log ("Villager Found");
+					//Debug.Log ("Villager Found");
 
                     if (villagerReference == null)
                     {
@@ -78,12 +78,12 @@ public class PlayerController : MonoBehaviour {
                     }
 				}
 				else if (selectedObject.GetComponent<ResourceTile> ()) {
-					Debug.Log ("Resources Found");
+					//Debug.Log ("Resources Found");
 					resourceReference = selectedObject.GetComponent<ResourceTile> ();
 
 					if (villagerReference != null)
 					{
-						Debug.Log ("Setting Work Area (Controller)");
+						//Debug.Log ("Setting Work Area (Controller)");
 						villagerReference.SelectWorkArea (resourceReference.gameObject);
 						villagerReference.SetSelected (false);
 						villagerReference = null;
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour {
 					resourceReference = null;
 				} else if (selectedObject.GetComponent<BaseBuilding> ()) {
 
-					Debug.Log ("Building Found");
+					//Debug.Log ("Building Found");
 
 					buildingReference = selectedObject.GetComponent<BaseBuilding> ();
 					//Assign villagers to buildings, open building menu
@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour {
 			}
 			else
 			{
-				Debug.Log ("Object is null");
+				//Debug.Log ("Object is null");
 			}
            
         }
@@ -433,36 +433,36 @@ public class PlayerController : MonoBehaviour {
 	{
 		CloseInventory ();
 		if (villagerReference != null) {
-			Debug.Log ("Villager Reference is Valid");
+			//Debug.Log ("Villager Reference is Valid");
 			if (item.GetItemType() == BaseItem.ITEM_TYPE.ITEM_WEAPON) {
 				if (item.GetComponent<Item_Shield> ()) {
 					villagerReference.UnequipOffHand ();
 					villagerReference.EquipWeaponToOffHand (item as BaseWeapon);
-					Debug.Log ("Shield Equipped");
+					//Debug.Log ("Shield Equipped");
 					OpenCharacterInfoPanel ();
 					return;
 				} else if (equippingToMain) {
 					villagerReference.UnequipMainHand ();
 					villagerReference.EquipWeaponToMainHand (item as BaseWeapon);
-					Debug.Log ("Main hand Equipped");
+					//Debug.Log ("Main hand Equipped");
 					OpenCharacterInfoPanel ();
 					return;
 				} else if (!equippingToMain) {
 					villagerReference.UnequipOffHand ();
 					villagerReference.EquipWeaponToOffHand (item as BaseWeapon);
-					Debug.Log ("Offhand Equipped");
+					//Debug.Log ("Offhand Equipped");
 					OpenCharacterInfoPanel ();
 					return;
 				}
 			} else if (item.GetItemType() == BaseItem.ITEM_TYPE.ITEM_ARMOR) {
 				villagerReference.UnequipArmor ();
 				villagerReference.EquipArmor (item as BaseArmor);
-				Debug.Log ("Armor Equipped");
+				//Debug.Log ("Armor Equipped");
 				OpenCharacterInfoPanel ();
 				return;
 			}
 		}
 
-		Debug.Log ("Nothing Equipped");
+		//Debug.Log ("Nothing Equipped");
 	}
 }

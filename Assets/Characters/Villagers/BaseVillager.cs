@@ -19,6 +19,8 @@ public class BaseVillager : Character{
         public float sailing;
     }
 
+	protected Sprite characterPortrait;
+
     private bool isSelected;
 
     private TaskSkills taskSkills;
@@ -41,7 +43,7 @@ public class BaseVillager : Character{
 	{
 		base.Awake ();
 
-		Debug.Log ("Villager Start");
+		//Debug.Log ("Villager Start");
 
 		agent = GetComponent<NavMeshAgent>();
 		CreateCharacter(new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)));
@@ -61,6 +63,21 @@ public class BaseVillager : Character{
     {
         return taskSkills;
     }
+
+	public Sprite GetPortrait()
+	{
+		return characterPortrait;
+	}
+
+	public string GetName()
+	{
+		return characterInfo.characterName;
+	}
+
+	public int GetLevel()
+	{
+		return characterInfo.characterLevel;
+	}
 
 	public void ImproveTaskSkill(TaskSkills targetSkill, float bonusValue)
 	{
@@ -212,7 +229,7 @@ public class BaseVillager : Character{
 
     public void SelectWorkArea(GameObject objectReference)
     {
-        Debug.Log("Work Area Selected");
+        //Debug.Log("Work Area Selected");
 
         targetObject = objectReference;
 
@@ -230,11 +247,11 @@ public class BaseVillager : Character{
     {
         if (newValue)
         {
-            Debug.Log("Character selected");
+            //Debug.Log("Character selected");
         }
         else
         {
-            Debug.Log("Character Deselected");
+            //Debug.Log("Character Deselected");
         }
         isSelected = newValue;
     }
@@ -268,7 +285,7 @@ public class BaseVillager : Character{
 		if(targetObject == null)
 		{
 			currentState = CHARACTER_STATE.CHARACTER_WANDER;
-			Debug.Log ("Target is null");
+			//Debug.Log ("Target is null");
 			AIFindTarget();
 
 			return;
@@ -440,7 +457,7 @@ public class BaseVillager : Character{
 
 	public void Load(VillagerData villagerData)
 	{
-		Debug.Log ("Villager Load");
+		//Debug.Log ("Villager Load");
 		transform.position = new Vector3(villagerData.positionX, villagerData.positionY, villagerData.positionZ);
 
 		SetTaskSkills (villagerData.taskSkills);

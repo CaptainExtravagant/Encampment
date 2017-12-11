@@ -42,7 +42,7 @@ public class BaseEnemy : Character {
 		if(targetObject == null)
 		{
 			currentState = CHARACTER_STATE.CHARACTER_WANDER;
-			Debug.Log ("Target is null");
+			//Debug.Log ("Target is null");
 			AIFindTarget();
 
 			return;

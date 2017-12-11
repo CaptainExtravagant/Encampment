@@ -102,7 +102,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public void UpdateCurrentHealth(float damage)
 	{
-		Debug.Log ("Building Health: " + currentHealth);
+		//Debug.Log ("Building Health: " + currentHealth);
 		currentHealth -= damage;
 
 		if (currentHealth <= 0) {
@@ -208,7 +208,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 		if (baseManager.RemoveResources(buildingCost, (int)buildingResource))
 		{
-			Debug.Log ("Place in World");
+			//Debug.Log ("Place in World");
 			SetPlacedInWorld (true);
 			return true;
 		}
