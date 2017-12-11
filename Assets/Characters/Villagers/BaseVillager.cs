@@ -19,6 +19,9 @@ public class BaseVillager : Character{
         public float sailing;
     }
 
+    private bool onQuest;
+    private int activeQuest;
+
 	protected Sprite characterPortrait;
 
     private bool isSelected;
@@ -452,6 +455,9 @@ public class BaseVillager : Character{
 		if(GetEquippedArmor() != null)
         	villagerData.equippedArmor = GetEquippedArmor().Save();
 
+        villagerData.onQuest = onQuest;
+        villagerData.questNumber = activeQuest;
+
 		return villagerData;
 	}
 
@@ -474,7 +480,23 @@ public class BaseVillager : Character{
 		if (villagerData.equippedArmor != null) {
 			GetEquippedArmor().Load(villagerData.equippedArmor);
 		}
+
+        onQuest = villagerData.onQuest;
+
+        if(onQuest)
+        {
+            activeQuest = villagerData.questNumber;
+            manager.gameObject.GetComponent<QuestManager>().GetQuestList()[activeQuest].AddCharacter(this);
+        }
+
+        manager.characterScroll.GetComponent<CharacterDisplay>().Init(this.gameObject);
 	}
+
+    public void SendOnQuest(int questNumber)
+    {
+        onQuest = true;
+        activeQuest = questNumber;
+    }
 }
 
 [System.Serializable]
@@ -494,4 +516,6 @@ public class VillagerData
 	public WeaponData offhandWeapon;
 	public ArmorData equippedArmor;
 
+    public bool onQuest;
+    public int questNumber;
 }

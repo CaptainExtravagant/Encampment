@@ -20,16 +20,15 @@ public class QuestManager : MonoBehaviour {
 	{
 		Debug.Log ("QuestManager start");
 		questPanel = (GameObject)Resources.Load ("UI/QuestPanel");
-
-
 	}
 
-	void Start()
-	{
-			for (int i = 0; i < 3; i++) {
-				AddQuest ();
-			}
-	}
+    public void Init()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            AddQuest();
+        }
+    }
 
 	public void ToggleQuestMenu()
 	{
@@ -46,7 +45,7 @@ public class QuestManager : MonoBehaviour {
 
 		GameObject newPanel = Instantiate (questPanel, questScroll.transform);
 
-		newPanel.GetComponent<Quest> ().Init (RandomName(), RandomSlots(), RandomImage());
+		newPanel.GetComponent<Quest> ().Init (RandomName(), RandomSlots(), RandomImage(), RandomTime(), this);
 		questList.Add (newPanel.GetComponent<Quest>());
 	}
 
@@ -67,4 +66,53 @@ public class QuestManager : MonoBehaviour {
 	{
 		return imageList [Random.Range (0, imageList.Count)];
 	}
+
+    float RandomTime()
+    {
+        return Random.Range(900, 21600);
+    }
+    
+    public List<Quest> GetQuestList()
+    {
+        return questList;
+    }
+
+    public void ActivateQuest(Quest questRef)
+    {
+        if(questRef.GetVillagerList().Count > 1)
+        {
+            foreach(BaseVillager villager in questRef.GetVillagerList())
+            {
+                villager.SendOnQuest(questList.IndexOf(questRef));
+            }
+
+            foreach(Button buttonRef in questRef.GetComponentsInChildren<Button>())
+            {
+                buttonRef.interactable = false;
+            }
+        }
+    }
+
+    public void Load(List<QuestData> data)
+    {
+
+        Debug.Log(questList.Count);
+
+        foreach(Quest quest in questList)
+        {
+            Destroy(quest.gameObject);
+        }
+
+        questList.Clear();
+
+        foreach(QuestData questData in data)
+        {
+            GameObject newPanel = Instantiate(questPanel, questScroll.transform);
+
+            newPanel.GetComponent<Quest>().Load(questData, this);
+            questList.Add(newPanel.GetComponent<Quest>());
+        }
+
+    }
+
 }

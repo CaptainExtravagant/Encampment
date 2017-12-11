@@ -11,6 +11,7 @@ public class Quest : MonoBehaviour {
 
 	protected string questName;
 	protected int characterSlots;
+    protected float time;
 
 	protected Sprite questImage;
 
@@ -19,17 +20,23 @@ public class Quest : MonoBehaviour {
 
 	public GameObject characterButton;
 	private BaseManager manager;
+    private QuestManager questManager;
+
+    private bool active;
 
 	void Awake () {
 		//characterButton = (GameObject)Resources.Load ("UI/QuestCharacterButton");
 		manager = FindObjectOfType<BaseManager>();
 	}
 
-	public void Init(string name, int slot, Sprite image)
+	public void Init(string name, int slot, Sprite image, float newTime, QuestManager newManager)
 	{
 		SetQuestName (name);
 		SetCharacterSlots (slot);
 		SetImage (image);
+        SetTime(newTime);
+
+        questManager = newManager;
 
 		for (int i = 0; i < characterSlots; i++) {
 			buttonList.Add(Instantiate (
@@ -45,24 +52,47 @@ public class Quest : MonoBehaviour {
 		questImageSlot.sprite = questImage;
 	}
 
-	private void UpdateButton(int value, BaseVillager villager)
+    public void ActivateQuest()
+    {
+        questManager.ActivateQuest(this);
+    }
+
+    private void Update()
+    {
+        if(active)
+        {
+            time -= Time.deltaTime;
+        }
+    }
+
+    private void UpdateButton(int value, BaseVillager villager)
 	{
 		buttonList [value].GetComponentInChildren<Image> ().sprite = villager.GetPortrait ();
 		buttonList [value].GetComponentsInChildren<Text> () [0].text = villager.GetName ();
 		buttonList [value].GetComponentsInChildren<Text> () [1].text = villager.GetLevel ().ToString();
 	}
+
+    protected void SetTime(float newTime)
+    {
+        time = newTime;
+    }
 	
-	public void SetQuestName(string newName)
+	protected void SetQuestName(string newName)
 	{
 		questName = newName;
 	}
 
-	public void SetCharacterSlots(int maxCharacters)
+	protected void SetCharacterSlots(int maxCharacters)
 	{
 		characterSlots = maxCharacters;
 	}
 
-	public void SetImage(Sprite newImage)
+    public List<BaseVillager> GetVillagerList()
+    {
+        return activeVillagers;
+    }
+
+	protected void SetImage(Sprite newImage)
 	{
 		questImage = newImage;
 	}
@@ -74,4 +104,39 @@ public class Quest : MonoBehaviour {
 			UpdateButton (activeVillagers.IndexOf(chosenVillager), chosenVillager);
 		}
 	}
+
+    public QuestData Save()
+    {
+        QuestData dataToSave = new QuestData();
+
+        dataToSave.time = time;
+        dataToSave.name = questName;
+        dataToSave.slots = characterSlots;
+        dataToSave.active = active;
+        //dataToSave.image = questImage;
+        
+        return dataToSave;
+    }
+
+    public void Load(QuestData dataToLoad, QuestManager questManager)
+    {
+        Debug.Log("Quest Load");
+        active = dataToLoad.active;
+        Init(dataToLoad.name, dataToLoad.slots, null, dataToLoad.time, questManager);
+        
+        if(active)
+        {
+            questManager.ActivateQuest(this);
+        }
+    }
+}
+
+[System.Serializable]
+public class QuestData
+{
+    public float time;
+    public string name;
+    public int slots;
+    public bool active;
+    //public Sprite image;
 }

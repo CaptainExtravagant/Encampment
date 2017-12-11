@@ -271,8 +271,12 @@ public class BaseManager : MonoBehaviour {
         for (int i = 0; i < 5; i++)
         {
             //Create some villagers
-			SpawnVillager();
+
+            characterScroll.GetComponent<CharacterDisplay>().Init(SpawnVillager());
         }
+
+        //Create new quests
+        //GetComponent<QuestManager>().Init();
 
 		LoadGame ();
 
@@ -287,7 +291,6 @@ public class BaseManager : MonoBehaviour {
             {
                 villagerList.Add(newVillager.GetComponent<BaseVillager>());
             }
-		characterScroll.GetComponent<CharacterDisplay> ().Init (newVillager);
 
 		return newVillager;
     }
@@ -380,9 +383,17 @@ public class BaseManager : MonoBehaviour {
 			gameData.buildingList.Add(building.Save ());
 		}
 
+        //Save Inventory
         gameData.inventoryData = inventoryReference.Save();
 
+        //Save timer for next attack
 		gameData.attackTimer = attackTimer;
+
+        //Save quests
+        foreach(Quest quest in GetComponent<QuestManager>().GetQuestList())
+        {
+            gameData.questList.Add(quest.Save());
+        }
 
 		formatter.Serialize (fileStream, gameData);
 		fileStream.Close ();
@@ -412,11 +423,17 @@ public class BaseManager : MonoBehaviour {
 			supplyFood = gameData.supplyFood;
 			supplyMorale = gameData.supplyMorale;
 
-			foreach (BaseVillager villager in villagerList) {
+            //Load Quests
+            GetComponent<QuestManager>().Load(gameData.questList);
+
+            foreach (BaseVillager villager in villagerList) {
 				Destroy (villager.gameObject);
 			}
 
-			villagerList.Clear ();
+            villagerList.Clear();
+
+            //Clear Character Menu
+            characterScroll.GetComponent<CharacterDisplay>().RemoveAllButtons();
 
 			//Load Villagers
 			foreach (VillagerData villager in gameData.villagerList) {
@@ -450,6 +467,7 @@ public class BaseManager : MonoBehaviour {
 				toAdd.Load (building, this);
 			}
 
+
 			inventoryReference.ClearInventory ();
 
             //Load Inventory
@@ -480,6 +498,7 @@ class GameData
 	public List<VillagerData> villagerList = new List<VillagerData>();
 	public List<BuildingData> toBeBuilt = new List<BuildingData>();
 	public List<BuildingData> buildingList = new List<BuildingData>();
+    public List<QuestData> questList = new List<QuestData>();
 
 	public float attackTimer;
 

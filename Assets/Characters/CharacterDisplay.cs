@@ -8,6 +8,9 @@ public class CharacterDisplay : MonoBehaviour {
 	public BaseManager manager;
 
 	private GameObject characterPanel;
+
+    private List<GameObject> buttonList = new List<GameObject>();
+
 	private Sprite characterPortrait;
 	private string characterName;
 	private int characterLevel;
@@ -56,20 +59,29 @@ public class CharacterDisplay : MonoBehaviour {
 
 	public void Init(GameObject villager)
 	{
-		characterPortrait = villager.GetComponent<BaseVillager>().GetPortrait();
-		characterName = villager.GetComponent<BaseVillager>().GetName();
-		characterLevel = villager.GetComponent<BaseVillager>().GetLevel();
-
 		UpdateValues (villager.GetComponent<BaseVillager>());
 
 		CharacterButton button = Instantiate (characterPanel, panelParent.transform).GetComponent<CharacterButton>();
 
 		button.SetVillager (villager);
 
+        buttonList.Add(button.gameObject);
+
 		parentEnd = new Vector3(parentEnd.x, parentEnd.y + 168, parentEnd.z);
 	}
 
-	void UpdateValues(BaseVillager villager)
+    public void RemoveAllButtons()
+    {
+        foreach(GameObject buttonObject in buttonList)
+        {
+            Destroy(buttonObject);
+        }
+
+        buttonList.Clear();
+
+    }
+
+	public void UpdateValues(BaseVillager villager)
 	{
 		characterPortrait = villager.GetPortrait();
 		characterName = villager.GetName();
