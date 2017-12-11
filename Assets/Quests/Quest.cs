@@ -8,6 +8,7 @@ public class Quest : MonoBehaviour {
 	public Text nameText;
 	public GameObject characterPanel;
 	public Image questImageSlot;
+    public Text questTimeText;
 
 	protected string questName;
 	protected int characterSlots;
@@ -16,13 +17,14 @@ public class Quest : MonoBehaviour {
 	protected Sprite questImage;
 
 	protected List<BaseVillager> activeVillagers = new List<BaseVillager> ();
+    protected List<int> villagerIndexes = new List<int>();
 	protected List<Button> buttonList = new List<Button> ();
 
 	public GameObject characterButton;
 	private BaseManager manager;
     private QuestManager questManager;
 
-    private bool active;
+    public bool active;
 
 	void Awake () {
 		//characterButton = (GameObject)Resources.Load ("UI/QuestCharacterButton");
@@ -50,6 +52,7 @@ public class Quest : MonoBehaviour {
 
 		nameText.text = questName;
 		questImageSlot.sprite = questImage;
+        questTimeText.text = System.TimeSpan.FromSeconds(time).ToString();
 	}
 
     public void ActivateQuest()
@@ -62,6 +65,13 @@ public class Quest : MonoBehaviour {
         if(active)
         {
             time -= Time.deltaTime;
+            questTimeText.text = System.TimeSpan.FromSeconds(time).ToString();
+        }
+
+        if(time <= 0)
+        {
+            active = false;
+            questManager.QuestComplete(this);
         }
     }
 
@@ -71,6 +81,16 @@ public class Quest : MonoBehaviour {
 		buttonList [value].GetComponentsInChildren<Text> () [0].text = villager.GetName ();
 		buttonList [value].GetComponentsInChildren<Text> () [1].text = villager.GetLevel ().ToString();
 	}
+
+    public void AddVillagerIndex(int i)
+    {
+        villagerIndexes.Add(i);
+    }
+
+    public List<int> GetVillagerIndexes()
+    {
+        return villagerIndexes;
+    }
 
     protected void SetTime(float newTime)
     {
@@ -113,6 +133,8 @@ public class Quest : MonoBehaviour {
         dataToSave.name = questName;
         dataToSave.slots = characterSlots;
         dataToSave.active = active;
+
+        dataToSave.villagerIndexes = villagerIndexes;
         //dataToSave.image = questImage;
         
         return dataToSave;
@@ -122,11 +144,25 @@ public class Quest : MonoBehaviour {
     {
         Debug.Log("Quest Load");
         active = dataToLoad.active;
+
+        villagerIndexes = dataToLoad.villagerIndexes;
+
         Init(dataToLoad.name, dataToLoad.slots, null, dataToLoad.time, questManager);
         
         if(active)
         {
             questManager.ActivateQuest(this);
+            foreach(Button button in buttonList)
+            {
+                button.interactable = false;
+            }
+
+            foreach(BaseVillager villager in activeVillagers)
+            {
+                villager.gameObject.SetActive(false);
+            }
+
+            //Disable character button
         }
     }
 }
@@ -138,5 +174,7 @@ public class QuestData
     public string name;
     public int slots;
     public bool active;
+
+    public List<int> villagerIndexes;
     //public Sprite image;
 }

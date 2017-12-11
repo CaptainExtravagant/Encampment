@@ -16,8 +16,12 @@ public class QuestManager : MonoBehaviour {
 	public GameObject questScroll;
 	protected GameObject questPanel;
 
+    private BaseManager baseManager;
+
 	void Awake()
 	{
+        baseManager = GetComponent<BaseManager>();
+
 		Debug.Log ("QuestManager start");
 		questPanel = (GameObject)Resources.Load ("UI/QuestPanel");
 	}
@@ -69,7 +73,7 @@ public class QuestManager : MonoBehaviour {
 
     float RandomTime()
     {
-        return Random.Range(900, 21600);
+        return Random.Range(30, 60);
     }
     
     public List<Quest> GetQuestList()
@@ -79,18 +83,59 @@ public class QuestManager : MonoBehaviour {
 
     public void ActivateQuest(Quest questRef)
     {
-        if(questRef.GetVillagerList().Count > 1)
+        if(questRef.GetVillagerList().Count > 0)
         {
+            //Set quest to active - Starts timer
+            questRef.active = true;
+
+            //Remove villagers from scene
             foreach(BaseVillager villager in questRef.GetVillagerList())
             {
                 villager.SendOnQuest(questList.IndexOf(questRef));
+                villager.gameObject.SetActive(false);
             }
 
+            //Save character indexes from BaseManager list
+            foreach(BaseVillager villager in questRef.GetVillagerList())
+            {
+                questRef.AddVillagerIndex(baseManager.villagerList.IndexOf(villager));
+            }
+
+            //Disable character buttons for villagers
+            for(int i = 0; i < questRef.GetVillagerList().Count; i++)
+            {
+                baseManager.characterScroll.GetComponentsInChildren<Button>()[questRef.GetVillagerIndexes()[i]].interactable = false;
+            }
+
+            //Change the buttons to uninteractable
             foreach(Button buttonRef in questRef.GetComponentsInChildren<Button>())
             {
                 buttonRef.interactable = false;
             }
         }
+    }
+
+    public void QuestComplete(Quest finishedQuest)
+    {
+        //Create loot==
+
+        //Enable villagers
+        foreach(BaseVillager villager in finishedQuest.GetVillagerList())
+        {
+            villager.gameObject.SetActive(true);
+            //Enable villagers buttons==
+            for (int i = 0; i < finishedQuest.GetVillagerList().Count; i++)
+            {
+                baseManager.characterScroll.GetComponentsInChildren<Button>()[finishedQuest.GetVillagerIndexes()[i]].interactable = true;
+            }
+        }
+
+        //Remove quest
+        questList.Remove(finishedQuest);
+        Destroy(finishedQuest.gameObject);
+
+        //Create new quest
+        AddQuest();
     }
 
     public void Load(List<QuestData> data)

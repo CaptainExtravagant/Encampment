@@ -275,10 +275,13 @@ public class BaseManager : MonoBehaviour {
             characterScroll.GetComponent<CharacterDisplay>().Init(SpawnVillager());
         }
 
-        //Create new quests
-        //GetComponent<QuestManager>().Init();
+        LoadGame();
 
-		LoadGame ();
+
+        //Create new quests
+        if(GetComponent<QuestManager>().GetQuestList().Count < 1)
+            GetComponent<QuestManager>().Init();
+
 
     }
 
