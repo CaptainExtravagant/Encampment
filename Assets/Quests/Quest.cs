@@ -163,6 +163,10 @@ public class Quest : MonoBehaviour {
             }
 
             //Disable character button
+            for (int i = 0; i < GetVillagerList().Count; i++)
+            {
+                FindObjectOfType<BaseManager>().characterScroll.GetComponentsInChildren<Button>()[villagerIndexes[i]].interactable = false;
+            }
         }
     }
 }
