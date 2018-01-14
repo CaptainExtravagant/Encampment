@@ -461,12 +461,14 @@ public class BaseManager : MonoBehaviour {
 
 				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding>();
 				toAdd.Load (building, this);
+                toBeBuilt.Add(toAdd);
 			}
 			foreach (BuildingData building in gameData.buildingList) {
 				GameObject newBuilding = Instantiate (Resources.Load (building.loadPath)) as GameObject;
 
 				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding>();
 				toAdd.Load (building, this);
+                buildingList.Add(toAdd);
 			}
 
 
