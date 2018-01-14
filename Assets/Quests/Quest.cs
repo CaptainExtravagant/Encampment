@@ -26,14 +26,11 @@ public class Quest : MonoBehaviour {
 
     public bool active;
 
-	void Awake () {
-		//characterButton = (GameObject)Resources.Load ("UI/QuestCharacterButton");
-		manager = FindObjectOfType<BaseManager>();
-	}
-
 	public void Init(string name, int slot, Sprite image, float newTime, QuestManager newManager)
 	{
-		SetQuestName (name);
+        manager = FindObjectOfType<BaseManager>();
+
+        SetQuestName (name);
 		SetCharacterSlots (slot);
 		SetImage (image);
         SetTime(newTime);
@@ -66,13 +63,16 @@ public class Quest : MonoBehaviour {
         {
             time -= Time.deltaTime;
             questTimeText.text = System.TimeSpan.FromSeconds(time).ToString();
-        }
 
-        if(time <= 0)
+            if (time <= 0)
         {
             active = false;
             questManager.QuestComplete(this);
         }
+
+        }
+
+        
     }
 
     private void UpdateButton(int value, BaseVillager villager)
@@ -122,6 +122,7 @@ public class Quest : MonoBehaviour {
 		if (activeVillagers.Count < characterSlots) {
 			activeVillagers.Add (chosenVillager);
 			UpdateButton (activeVillagers.IndexOf(chosenVillager), chosenVillager);
+            //AddVillagerIndex(activeVillagers.IndexOf(chosenVillager));
 		}
 	}
 
@@ -143,30 +144,25 @@ public class Quest : MonoBehaviour {
     public void Load(QuestData dataToLoad, QuestManager questManager)
     {
         Debug.Log("Quest Load");
-        active = dataToLoad.active;
 
+        //Set the villager indexes
         villagerIndexes = dataToLoad.villagerIndexes;
 
+        //Init the quest with the loaded data
         Init(dataToLoad.name, dataToLoad.slots, null, dataToLoad.time, questManager);
-        
-        if(active)
+        if (manager == null)
+            Debug.Log("Manager is null");
+
+        if (dataToLoad.active)
         {
+            //Add each villager from the index
+            for(int i = 0; i < villagerIndexes.Count; i++)
+            {
+                AddCharacter(manager.villagerList[villagerIndexes[i]]);
+            }
+
+            //Activate the quest properly
             questManager.ActivateQuest(this);
-            foreach(Button button in buttonList)
-            {
-                button.interactable = false;
-            }
-
-            foreach(BaseVillager villager in activeVillagers)
-            {
-                villager.gameObject.SetActive(false);
-            }
-
-            //Disable character button
-            for (int i = 0; i < GetVillagerList().Count; i++)
-            {
-                FindObjectOfType<BaseManager>().characterScroll.GetComponentsInChildren<Button>()[villagerIndexes[i]].interactable = false;
-            }
         }
     }
 }

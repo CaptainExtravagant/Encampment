@@ -26,7 +26,7 @@ public class BaseManager : MonoBehaviour {
 	public GameObject characterScroll;
 
 	public GameObject buildingMenu;
-	private GameObject buildingPanel;
+	public GameObject buildingPanel;
 	private Vector3 buildingPanelPositionStart;
 	private Vector3 buildingPanelPositionEnd;
 	private bool buildingMenuOpen = true;
@@ -138,8 +138,7 @@ public class BaseManager : MonoBehaviour {
 	{
 		inventoryReference = GetComponent<InventoryBase>();
         villagerList.AddRange(FindObjectsOfType<BaseVillager>());
-
-		buildingPanel = buildingMenu.GetComponentInChildren<HorizontalLayoutGroup> ().gameObject;
+        
 		buildingPanelPositionStart = buildingPanel.transform.position;
 		buildingPanelPositionEnd = new Vector3 (buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
 
@@ -404,35 +403,31 @@ public class BaseManager : MonoBehaviour {
 		Debug.Log ("Game Saved");
 	}
 
-    public void Load()
-    {
-        LoadGame();
-    }
-
 	public bool LoadGame()
 	{
 		//Debug.Log ("Loading Game");
 
 		controller.Reset ();
 
+        //Load file
 		if (File.Exists (Application.persistentDataPath + "/baseInfo.dat")) {
 			BinaryFormatter formatter = new BinaryFormatter ();
 			FileStream fileStream = File.Open (Application.persistentDataPath + "/baseInfo.dat", FileMode.Open);
 			GameData gameData = (GameData)formatter.Deserialize (fileStream);
 			fileStream.Close ();
 
+            //Set supply values
 			supplyStone = gameData.supplyStone;
 			supplyWood = gameData.supplyWood;
 			supplyFood = gameData.supplyFood;
 			supplyMorale = gameData.supplyMorale;
 
-            //Load Quests
-            GetComponent<QuestManager>().Load(gameData.questList);
-
+            //Remove villagers from world
             foreach (BaseVillager villager in villagerList) {
 				Destroy (villager.gameObject);
 			}
 
+            //Clear villager array
             villagerList.Clear();
 
             //Clear Character Menu
@@ -447,7 +442,11 @@ public class BaseManager : MonoBehaviour {
 				toAdd.Load (villager);
 			}
 
-			foreach (BaseBuilding building in buildingList) {
+            //Load Quests
+            GetComponent<QuestManager>().Load(gameData.questList);
+
+            //Destroy all buildings in world ready to load
+            foreach (BaseBuilding building in buildingList) {
 				Destroy (building.gameObject);
 			}
 			buildingList.Clear ();

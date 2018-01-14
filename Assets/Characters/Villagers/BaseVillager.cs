@@ -486,7 +486,7 @@ public class BaseVillager : Character{
         if(onQuest)
         {
             activeQuest = villagerData.questNumber;
-            manager.gameObject.GetComponent<QuestManager>().GetQuestList()[activeQuest].AddCharacter(this);
+            //manager.gameObject.GetComponent<QuestManager>().GetQuestList()[activeQuest].AddCharacter(this);
         }
 
         manager.characterScroll.GetComponent<CharacterDisplay>().Init(this.gameObject);

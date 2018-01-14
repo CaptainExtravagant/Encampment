@@ -9,7 +9,7 @@ public class CharacterDisplay : MonoBehaviour {
 
 	private GameObject characterPanel;
 
-    private List<GameObject> buttonList = new List<GameObject>();
+    public List<GameObject> buttonList = new List<GameObject>();
 
 	private Sprite characterPortrait;
 	private string characterName;
@@ -67,7 +67,8 @@ public class CharacterDisplay : MonoBehaviour {
 
         buttonList.Add(button.gameObject);
 
-		parentEnd = new Vector3(parentEnd.x, parentEnd.y + 168, parentEnd.z);
+        if(buttonList.Count > 4)
+		    parentEnd = new Vector3(parentEnd.x, parentEnd.y + 168, parentEnd.z);
 	}
 
     public void RemoveAllButtons()

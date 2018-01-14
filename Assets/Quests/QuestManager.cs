@@ -101,13 +101,17 @@ public class QuestManager : MonoBehaviour {
                 questRef.AddVillagerIndex(baseManager.villagerList.IndexOf(villager));
             }
 
-            //Disable character buttons for villagers
+            if (baseManager.characterScroll == null)
+                    Debug.Log("Activate Quest - Character Scroll null");
+
+            //Disable display buttons for villagers
             for(int i = 0; i < questRef.GetVillagerList().Count; i++)
             {
-                baseManager.characterScroll.GetComponentsInChildren<Button>()[questRef.GetVillagerIndexes()[i]].interactable = false;
+                Debug.Log("Disable character button for " + questRef.GetVillagerList()[i].GetName());
+                baseManager.characterScroll.GetComponent<CharacterDisplay>().buttonList[questRef.GetVillagerIndexes()[i]].GetComponent<Button>().interactable = false;
             }
 
-            //Change the buttons to uninteractable
+            //Change all buttons to uninteractable
             foreach(Button buttonRef in questRef.GetComponentsInChildren<Button>())
             {
                 buttonRef.interactable = false;
@@ -143,19 +147,24 @@ public class QuestManager : MonoBehaviour {
 
         Debug.Log(questList.Count);
 
+        //Remove any quests that currently exist
         foreach(Quest quest in questList)
         {
             Destroy(quest.gameObject);
         }
 
+        //Clear the quest list array
         questList.Clear();
 
+        //Add each quest in the loaded data to the UI
         foreach(QuestData questData in data)
         {
+            //Create a quest panel
             GameObject newPanel = Instantiate(questPanel, questScroll.transform);
 
-            newPanel.GetComponent<Quest>().Load(questData, this);
+            //Update the quest values based on the loaded data
             questList.Add(newPanel.GetComponent<Quest>());
+            newPanel.GetComponent<Quest>().Load(questData, this);
         }
 
     }
