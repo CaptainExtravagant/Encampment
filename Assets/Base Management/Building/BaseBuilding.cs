@@ -125,21 +125,21 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 		currentHealth = maxHealth;
 	}
+    
+    public int GetBuildingLevel()
+    {
+        return buildingLevel;
+    }
 
-	virtual protected void InitInfoPanel()
-	{
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
 
-	}
-
-	public void OpenInfoPanel()
-	{
-		infoPanel.SetActive (true);
-	}
-
-	public void CloseInfoPanel()
-	{
-		infoPanel.SetActive (false);
-	}
+    public float GetMaxHealth()
+    {
+        return maxHealth;
+    }
 
     private void Update()
 	{

@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 
 	public GameObject inventoryPanel;
     public GameObject characterPanel;
+    public GameObject buildingPanel;
     Text[] infoText;
 
     private void Awake()
@@ -76,7 +77,12 @@ public class PlayerController : MonoBehaviour {
                         CloseCharacterInfoPanel();
                         cameraMovement.SetCameraMovement(true);
                     }
-				}
+
+                    if (buildingReference != null)
+                    {
+                        CloseBuildingInfoPanel();
+                    }
+                }
 				else if (selectedObject.GetComponent<ResourceTile> ()) {
 					//Debug.Log ("Resources Found");
 					resourceReference = selectedObject.GetComponent<ResourceTile> ();
@@ -91,22 +97,36 @@ public class PlayerController : MonoBehaviour {
                         cameraMovement.SetCameraMovement(true);
 					}
 
+                    if(buildingReference != null)
+                    {
+                        CloseBuildingInfoPanel();
+                    }
+
 					resourceReference = null;
 				} else if (selectedObject.GetComponent<BaseBuilding> ()) {
 
-					//Debug.Log ("Building Found");
+                    //Debug.Log ("Building Found");
 
-					buildingReference = selectedObject.GetComponent<BaseBuilding> ();
-					//Assign villagers to buildings, open building menu
+                    if (buildingReference != null)
+                    {
+                        //Close panel and remove reference
+                        CloseBuildingInfoPanel();
+                    }
+                    else
+                    {
+                        //Set building reference and open info panel
+                        buildingReference = selectedObject.GetComponent<BaseBuilding>();
+                        OpenBuildingInfoPanel();
+                    }
+                    
+                    if (villagerReference != null) {
 
-					if (villagerReference != null) {
-
-                        buildingReference.OnClicked(villagerReference);
+                        //buildingReference.OnClicked(villagerReference);
 
 						villagerReference.SetSelected (false);
 						villagerReference = null;
                         CloseCharacterInfoPanel();
-                        cameraMovement.SetCameraMovement(true);
+                        //cameraMovement.SetCameraMovement(true);
 					}
 				}
 			}
@@ -118,10 +138,25 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    GameObject FindObjectUnderMouse()
+    {
+		GameObject foundObject;
+
+		cursorPosition = Camera.main.ScreenPointToRay (Input.mousePosition);
+
+		if (Physics.Raycast (cursorPosition, out hit, Mathf.Infinity)) {
+			foundObject = hit.collider.gameObject;
+		} else {
+			foundObject = null;
+		}
+
+		return foundObject;
+    }
+
     //============================
     //CHARACTER INFO PANEL METHODS
     //============================
-    void OpenCharacterInfoPanel()
+        void OpenCharacterInfoPanel()
     {
 		selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
@@ -248,13 +283,13 @@ public class PlayerController : MonoBehaviour {
 
         characterPanel.SetActive(true);
     }
-    
-	public void CloseCharacterInfoPanel()
+        
+	    public void CloseCharacterInfoPanel()
     {
         characterPanel.SetActive(false);
     }
 
-    string AttributeTextLoop()
+        string AttributeTextLoop()
     {
         string attributeString = "";
 
@@ -286,7 +321,7 @@ public class PlayerController : MonoBehaviour {
         return attributeString;
     }
 
-    string CombatTextLoop()
+        string CombatTextLoop()
     {
         string skillString = "";
 
@@ -331,7 +366,7 @@ public class PlayerController : MonoBehaviour {
         return skillString;
     }
 
-    string TaskTextLoop()
+        string TaskTextLoop()
     {
         string taskString = "";
 
@@ -382,54 +417,65 @@ public class PlayerController : MonoBehaviour {
     //============================
 
 
-    GameObject FindObjectUnderMouse()
+
+    //===========================
+    //BUILDING INFO PANEL METHODS
+    //===========================
+
+    void OpenBuildingInfoPanel()
     {
-		GameObject foundObject;
+        buildingPanel.GetComponent<BuildingDisplay>().SetInformation(buildingReference);
 
-		cursorPosition = Camera.main.ScreenPointToRay (Input.mousePosition);
-
-		if (Physics.Raycast (cursorPosition, out hit, Mathf.Infinity)) {
-			foundObject = hit.collider.gameObject;
-		} else {
-			foundObject = null;
-		}
-
-		return foundObject;
+        buildingPanel.SetActive(true);
+        cameraMovement.SetCameraMovement(false);
     }
 
-	public void OpenInventory()
+    public void CloseBuildingInfoPanel()
+    {
+        buildingPanel.SetActive(false);
+        cameraMovement.SetCameraMovement(true);
+        buildingReference = null;
+    }
+
+    //===========================
+
+
+    //=======================
+    //INVENTORY AND EQUIPPING
+    //=======================
+	    public void OpenInventory()
 	{
 		inventoryPanel.SetActive (true);
         cameraMovement.SetCameraMovement(false);
 	}
 
-	public void CloseInventory()
+	    public void CloseInventory()
 	{
 		inventoryPanel.SetActive (false);
         cameraMovement.SetCameraMovement(true);
 	}
 
-	public void EquipWeaponButton()
+	    public void EquipWeaponButton()
 	{
 		equippingToMain = true;
 		OpenInventory ();
 		inventoryPanel.GetComponentInChildren<Dropdown> ().value = 1;
 	}
 
-	public void EquipOffhandButton()
+	    public void EquipOffhandButton()
 	{
 		equippingToMain = false;
 		OpenInventory ();
 		inventoryPanel.GetComponentInChildren<Dropdown> ().value = 1;
 	}
 
-	public void EquipArmorButton()
+	    public void EquipArmorButton()
 	{
 		OpenInventory ();
 		inventoryPanel.GetComponentInChildren<Dropdown> ().value = 2;
 	}
 
-	public void InventoryButtonPressed(BaseItem item)
+	    public void InventoryButtonPressed(BaseItem item)
 	{
 		CloseInventory ();
 		if (villagerReference != null) {
@@ -463,6 +509,9 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
+        //If no villager reference open dialog box to destroy or sell item
+
 		//Debug.Log ("Nothing Equipped");
 	}
+    //=======================
 }
