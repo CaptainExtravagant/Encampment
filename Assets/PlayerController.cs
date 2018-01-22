@@ -424,7 +424,7 @@ public class PlayerController : MonoBehaviour {
 
     void OpenBuildingInfoPanel()
     {
-        buildingPanel.GetComponent<BuildingDisplay>().SetInformation(buildingReference);
+        buildingPanel.GetComponent<BuildingDisplay>().SetInformation(buildingReference, buildingPanel);
 
         buildingPanel.SetActive(true);
         cameraMovement.SetCameraMovement(false);

@@ -141,6 +141,11 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         return maxHealth;
     }
 
+    public GameObject GetInfoPanel()
+    {
+        return infoPanel;
+    }
+
     private void Update()
 	{
 		if (!placedInWorld)

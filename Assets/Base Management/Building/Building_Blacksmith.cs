@@ -19,11 +19,6 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 		return false;
 	}
 
-	protected override void InitInfoPanel ()
-	{
-		
-	}
-
     private void Awake()
     {
         SetBuildingType(BUILDING_TYPE.BUILDING_BLACKSMITH);
@@ -45,12 +40,6 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 					AddVillagerToWork (selectedVillager);
 				}
 			}
-		} else if (!infoPanelOpen) {
-			OpenInfoPanel ();
-			infoPanelOpen = true;
-		} else if (infoPanelOpen) {
-			CloseInfoPanel ();
-			infoPanelOpen = false;
 		}
     }
 

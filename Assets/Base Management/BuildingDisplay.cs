@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildingDisplay : MonoBehaviour {
 
@@ -12,10 +13,14 @@ public class BuildingDisplay : MonoBehaviour {
     private BaseBuilding buildingInformation;
     private BaseBuilding.BUILDING_TYPE buildingType;
 
-	public void SetInformation(BaseBuilding baseBuilding)
+    private GameObject uniquePanel;
+
+	public void SetInformation(BaseBuilding baseBuilding, GameObject infoPanel)
     {
         buildingInformation = baseBuilding;
         buildingType = baseBuilding.GetBuildingType();
+
+        uniquePanel = baseBuilding.GetInfoPanel();
 
         switch(baseBuilding.GetBuildingType())
         {
@@ -73,5 +78,12 @@ public class BuildingDisplay : MonoBehaviour {
         buildingMaxHealth = (int)baseBuilding.GetMaxHealth();
 
         buildingType = baseBuilding.GetBuildingType();
+
+        GetComponentsInChildren<Text>()[0].text = buildingName;
+        GetComponentsInChildren<Text>()[2].text = buildingLevel.ToString();
+
+        GetComponentInChildren<Slider>().value = buildingHealth / buildingMaxHealth;
+
+        Instantiate(uniquePanel, gameObject.transform);
     }
 }
