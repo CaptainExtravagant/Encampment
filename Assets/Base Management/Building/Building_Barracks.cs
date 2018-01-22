@@ -29,8 +29,13 @@ public class Building_Barracks : BaseBuilding, I_Building {
 
 		workTime = 10.0f;
 		activeTimer = workTime;
-		skillBonus = 0.01f;
+        GetSkillBonus();
 	}
+
+    private void GetSkillBonus()
+    {
+        skillBonus = Mathf.Ceil(10 * Mathf.Pow(GetBuildingLevel(), 10));
+    }
 
 	public void SetTrainingWeapon(BaseWeapon.WEAPON_TYPE newWeapon)
 	{
@@ -53,16 +58,17 @@ public class Building_Barracks : BaseBuilding, I_Building {
 		    &&
 		    activeTimer <= activeTimer - villagerReference.GetCharacterInfo ().characterAttributes.curiosity / 100) {
 
-			villagerReference.ImproveCombatSkill (trainedWeapon, skillBonus);
+            GetSkillBonus();
+            villagerReference.AddExperience ((int)skillBonus);
 			activeTimer = workTime;
 
 		}
 		else if(activeTimer <= 0.0f)
 		{
+            GetSkillBonus();
+            bonusValue = skillBonus + (villagerReference.GetCharacterInfo ().characterAttributes.focus / 100);
 
-			bonusValue = skillBonus + (villagerReference.GetCharacterInfo ().characterAttributes.focus / 100);
-
-			villagerReference.ImproveCombatSkill (trainedWeapon, bonusValue);
+			villagerReference.AddExperience ((int)bonusValue);
 			activeTimer = workTime;
 		}
 	}

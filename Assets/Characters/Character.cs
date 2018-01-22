@@ -93,15 +93,17 @@ public class Character : MonoBehaviour{
         public float characterHealth;
         public int characterSex;
         public int characterLevel;
+        public int characterExperience;
         public Attributes characterAttributes;
         public CombatSkills characterCombatSkills;
 
-        public CharacterInfo(int sex, string name, float health,  int level, Attributes attributes, CombatSkills combatSkills)
+        public CharacterInfo(int sex, string name, float health,  int level, int experience, Attributes attributes, CombatSkills combatSkills)
         {
             characterName = name;
             characterHealth = health;
             characterSex = sex;
             characterLevel = level;
+            characterExperience = experience;
             characterAttributes = attributes;
             characterCombatSkills = combatSkills;
         }
@@ -116,6 +118,8 @@ public class Character : MonoBehaviour{
     public BaseWeapon offHandWeapon;
     protected bool offHandEnabled = true;
 	public BaseArmor equippedArmor;
+
+    protected int experienceNextLevel;
     
     private float currentHealth;
 
@@ -147,9 +151,9 @@ public class Character : MonoBehaviour{
     public virtual void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-		//CreateCharacter(new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)));
+        //CreateCharacter(new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)));
 
-
+        CalculateNextLevelExperience();
     }
 
     public virtual void Update ()
@@ -160,6 +164,51 @@ public class Character : MonoBehaviour{
     public CombatSkills GetCombatSkills()
     {
         return characterInfo.characterCombatSkills;
+    }
+
+    protected int GetExperience()
+    {
+        return characterInfo.characterExperience;
+    }
+
+    public void AddExperience(int experienceValue)
+    {
+        characterInfo.characterExperience += experienceValue;
+        CheckExperience();
+    }
+
+    protected void CheckExperience()
+    {
+        if(characterInfo.characterExperience >= experienceNextLevel)
+        {
+            LevelUp();
+        }
+    }
+
+    protected void LevelUp()
+    {
+
+        characterInfo.characterCombatSkills.armor += ((characterInfo.characterCombatSkills.armor / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+        characterInfo.characterCombatSkills.axe += ((characterInfo.characterCombatSkills.axe / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+        characterInfo.characterCombatSkills.bow += ((characterInfo.characterCombatSkills.bow / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+        characterInfo.characterCombatSkills.brawling += ((characterInfo.characterCombatSkills.brawling / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+        characterInfo.characterCombatSkills.dodge += ((characterInfo.characterCombatSkills.dodge / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+        characterInfo.characterCombatSkills.longsword += ((characterInfo.characterCombatSkills.longsword / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+        characterInfo.characterCombatSkills.polearm += ((characterInfo.characterCombatSkills.polearm / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+        characterInfo.characterCombatSkills.sword += ((characterInfo.characterCombatSkills.sword / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
+
+        characterInfo.characterLevel++;
+        GetNextLevelExperience();
+    }
+
+    protected int GetNextLevelExperience()
+    {
+        return experienceNextLevel;
+    }
+
+    protected void CalculateNextLevelExperience()
+    {
+        experienceNextLevel = (int)Mathf.Ceil(60 * Mathf.Pow(characterInfo.characterLevel, 2.8f) - 60);
     }
 
     //==========================
@@ -267,7 +316,7 @@ public class Character : MonoBehaviour{
         CombatSkills combatSkills = new CombatSkills(CreateCombatSkills(characterAttributes));
 
         //Create Character Info using previous stats, start characters at level 1
-        characterInfo = new CharacterInfo(tempSex, CreateName(tempSex), CreateHealth(characterAttributes), 1, characterAttributes, combatSkills);
+        characterInfo = new CharacterInfo(tempSex, CreateName(tempSex), CreateHealth(characterAttributes), 1, 0, characterAttributes, combatSkills);
 
         //Set attack rate
         attackCooldownTime = 5 - (characterInfo.characterAttributes.nimbleness / 10);
