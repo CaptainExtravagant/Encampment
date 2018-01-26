@@ -31,6 +31,8 @@ public class BaseManager : MonoBehaviour {
 	private Vector3 buildingPanelPositionEnd;
 	private bool buildingMenuOpen = true;
 
+	public GameObject buildingInfo;
+
     bool isUnderAttack;
 	bool settingUpQuest;
 
@@ -251,6 +253,15 @@ public class BaseManager : MonoBehaviour {
 		}
 	}
 
+	public void ToggleBuildingInfo()
+	{
+		if (buildingInfo.activeSelf) {
+			buildingInfo.SetActive (false);
+		} else {
+			buildingInfo.SetActive (true);
+		}
+	}
+
     public bool GetUnderAttack()
     {
         return isUnderAttack;
@@ -258,9 +269,14 @@ public class BaseManager : MonoBehaviour {
 
     private void Start()
     {
-		ToggleBuildingMenu ();
-		ToggleQuestMenu ();
-		ToggleCharacterMenu ();
+		//ToggleBuildingMenu ();
+		buildingMenu.SetActive (false);
+		//ToggleQuestMenu ();
+		questMenu.SetActive (false);
+		//ToggleCharacterMenu ();
+		characterMenu.SetActive (false);
+		//ToggleBuildingInfo ();
+		buildingInfo.SetActive (false);
 
         supplyFood = 100;
         supplyMorale = 50;
