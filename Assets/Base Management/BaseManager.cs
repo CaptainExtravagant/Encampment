@@ -29,7 +29,6 @@ public class BaseManager : MonoBehaviour {
 	public GameObject buildingPanel;
 	private Vector3 buildingPanelPositionStart;
 	private Vector3 buildingPanelPositionEnd;
-	private bool buildingMenuOpen = true;
 
 	public GameObject buildingInfo;
 
@@ -49,11 +48,109 @@ public class BaseManager : MonoBehaviour {
     public GameObject woodText;
     public GameObject stoneText;
     public GameObject foodText;
+    public GameObject attackTimerText;
 
 	private float attackTimer;
 	private bool attackTimerSet;
+    
+    //====================//
+    //Awake, Start, Update//
+    //====================//
 
-	public void OpenQuestMenu()
+    private void Awake()
+    {
+        inventoryReference = GetComponent<InventoryBase>();
+        villagerList.AddRange(FindObjectsOfType<BaseVillager>());
+
+        buildingPanelPositionStart = buildingPanel.transform.position;
+        buildingPanelPositionEnd = new Vector3(buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
+
+        cameraReference = Camera.main;
+        cameraMovement = cameraReference.GetComponent<CameraMovement>();
+    }
+
+    private void Start()
+    {
+        //Make sure all menus are running so init values can be set
+        buildingMenu.SetActive(true);
+        questMenu.SetActive(true);
+        characterMenu.SetActive(true);
+        buildingInfo.SetActive(true);
+
+        supplyFood = 100;
+        supplyMorale = 50;
+        supplyStone = 100;
+        supplyWood = 100;
+
+        for (int i = 0; i < 5; i++)
+        {
+            //Create some villagers
+
+            characterScroll.GetComponent<CharacterDisplay>().Init(SpawnVillager());
+        }
+
+        LoadGame();
+
+
+        //Create new quests
+        if (GetComponent<QuestManager>().GetQuestList().Count < 1)
+            GetComponent<QuestManager>().Init();
+
+        //Close all menus after init
+        buildingMenu.SetActive(false);
+        questMenu.SetActive(false);
+        characterMenu.SetActive(false);
+        buildingInfo.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            //Debug.Log ("Base Manager Click");
+            if (heldBuilding != null)
+            {
+                PlaceBuilding();
+            }
+        }
+
+        if (FindEnemies())
+        {
+            isUnderAttack = true;
+        }
+        else
+        {
+            isUnderAttack = false;
+            if (!attackTimerSet)
+            {
+                attackTimer = UnityEngine.Random.Range(60.0f, 300.0f);
+                attackTimerSet = true;
+            }
+            else
+            {
+                attackTimer -= Time.deltaTime;
+            }
+
+        }
+
+        if (attackTimer <= 0.0f)
+        {
+            LaunchAttack();
+        }
+
+        UIUpdate();
+    }
+
+    private void UIUpdate()
+    {
+        woodText.GetComponent<Text>().text = "Wood: " + supplyWood;
+        stoneText.GetComponent<Text>().text = "Stone: " + supplyStone;
+        foodText.GetComponent<Text>().text = "Food: " + supplyFood;
+        attackTimerText.GetComponent<Text>().text = "Attack: " + attackTimer;
+    }
+    //===============//
+
+    public void OpenQuestMenu()
 	{
 		ToggleQuestMenu ();
 	}
@@ -78,51 +175,7 @@ public class BaseManager : MonoBehaviour {
 		SaveGame ();
 	}
 
-    protected BaseManager()
-    {
-        placingBuilding = false;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-			//Debug.Log ("Base Manager Click");
-			if (heldBuilding != null) {
-				PlaceBuilding ();
-			}
-        }
-
-        if(FindEnemies())
-        {
-            isUnderAttack = true;
-        }
-        else
-        {
-            isUnderAttack = false;
-			if (!attackTimerSet) {
-				attackTimer = UnityEngine.Random.Range (2700.0f, 18000.0f);
-				attackTimerSet = true;
-			} else {
-				attackTimer -= Time.deltaTime;
-			}
-
-        }
-
-		if (attackTimer <= 0.0f) {
-			LaunchAttack ();
-		}
-
-        UIUpdate();
-    }
-
-    private void UIUpdate()
-    {
-        woodText.GetComponent<Text>().text = "Wood: " + supplyWood;
-        stoneText.GetComponent<Text>().text = "Stone: " + supplyStone;
-        foodText.GetComponent<Text>().text = "Food: " + supplyFood;
-    }
-
+    
     private bool FindEnemies()
     {
         enemyList.Clear();
@@ -136,17 +189,6 @@ public class BaseManager : MonoBehaviour {
         return false;
     }
 
-    private void Awake()
-	{
-		inventoryReference = GetComponent<InventoryBase>();
-        villagerList.AddRange(FindObjectsOfType<BaseVillager>());
-        
-		buildingPanelPositionStart = buildingPanel.transform.position;
-		buildingPanelPositionEnd = new Vector3 (buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
-
-		cameraReference = Camera.main;
-        cameraMovement = cameraReference.GetComponent<CameraMovement>();
-    }
 
     public InventoryBase GetInventory()
     {
@@ -181,22 +223,12 @@ public class BaseManager : MonoBehaviour {
         }
         else
         {
-			//Debug.Log ("Place Construction Down");
+            //Debug.Log ("Place Construction Down");
             //Place construction site on mouse position and add to list of construction areas.
 
-			List<I_Building> buildingInterfaceList = new List<I_Building> ();
-
-			buildingInterfaceList.AddRange(heldBuilding.GetComponentsInChildren<I_Building> ());
-
-			foreach(I_Building interfaceRef in buildingInterfaceList)
-			{
-				if(interfaceRef.PlaceInWorld())
-            	{
-            	    toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
-					//Debug.Log ("Building added to list");
-            	}
-			}
-
+            if(heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld())
+                toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
+            
             placingBuilding = false;
             heldBuilding = null;
         }
@@ -204,13 +236,11 @@ public class BaseManager : MonoBehaviour {
 
 	public void ToggleBuildingMenu()
 	{
-		if (buildingMenuOpen) {
+		if (buildingMenu.activeSelf) {
 			buildingMenu.SetActive (false);
-			buildingMenuOpen = false;
             cameraMovement.SetCameraMovement(true);
 		} else {
 			buildingMenu.SetActive (true);
-			buildingMenuOpen = true;
             cameraMovement.SetCameraMovement(false);
 		}
 	}
@@ -266,40 +296,7 @@ public class BaseManager : MonoBehaviour {
     {
         return isUnderAttack;
     }
-
-    private void Start()
-    {
-		//ToggleBuildingMenu ();
-		buildingMenu.SetActive (false);
-		//ToggleQuestMenu ();
-		questMenu.SetActive (false);
-		//ToggleCharacterMenu ();
-		characterMenu.SetActive (false);
-		//ToggleBuildingInfo ();
-		buildingInfo.SetActive (false);
-
-        supplyFood = 100;
-        supplyMorale = 50;
-        supplyStone = 100;
-        supplyWood = 100;
-
-        for (int i = 0; i < 5; i++)
-        {
-            //Create some villagers
-
-            characterScroll.GetComponent<CharacterDisplay>().Init(SpawnVillager());
-        }
-
-        LoadGame();
-
-
-        //Create new quests
-        if(GetComponent<QuestManager>().GetQuestList().Count < 1)
-            GetComponent<QuestManager>().Init();
-
-
-    }
-
+    
 	public GameObject SpawnVillager()
     {
             //Create some villagers
@@ -312,6 +309,8 @@ public class BaseManager : MonoBehaviour {
 
 		return newVillager;
     }
+
+    //Resource Management//
 
     public void AddResources(int resourceValue, int resourceType)
     {
@@ -374,6 +373,8 @@ public class BaseManager : MonoBehaviour {
 
         return false;
     }
+
+    //Saving and Loading//
 
 	public void SaveGame()
 	{

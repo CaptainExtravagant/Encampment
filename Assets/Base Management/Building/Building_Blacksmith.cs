@@ -8,17 +8,6 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 
 	public BaseItem chosenItem;
 
-	bool I_Building.PlaceInWorld()
-	{
-		BaseBuilding buildingParent = GetComponent<BaseBuilding> ();
-
-		if (buildingParent.IsPlaced ()) {
-			SetPlacedInWorld (true);
-		}
-
-		return false;
-	}
-
     private void Awake()
     {
         SetBuildingType(BUILDING_TYPE.BUILDING_BLACKSMITH);
@@ -43,8 +32,10 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 		}
     }
 
-	void Update()
+	new void Update()
 	{
+        base.Update();
+
 		if (workingVillagers.Count > 0) {
 			activeTimer -= Time.deltaTime;
 

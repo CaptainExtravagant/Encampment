@@ -63,7 +63,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	private float maxHealth;
 	private float currentHealth;
 
-    private void Start()
+    protected void Start()
     {
         //SetMesh();
 
@@ -93,7 +93,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		baseManager = manager;
 	}
 
-	private void SetMaxHealth(float constructionSkill)
+	protected void SetMaxHealth(float constructionSkill)
 	{
 		//Create building health value based off construction skill of the worker, percentage value is used to create the new value
 		maxHealth = baseHealthValue + (baseHealthValue * (constructionSkill / 100));
@@ -141,17 +141,12 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         return maxHealth;
     }
 
-    public GameObject GetInfoPanel()
-    {
-        return infoPanel;
-    }
-
 	public virtual void SetUpInfoPanel()
 	{
 
 	}
 
-    private void Update()
+    protected void Update()
 	{
 		if (!placedInWorld)
         {
@@ -179,7 +174,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         return buildingType;
     }
 
-    private void SetMesh()
+    protected void SetMesh()
     {
         if(placedInWorld && !isBuilt)
         {
@@ -214,7 +209,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         }
     }
 
-	bool I_Building.PlaceInWorld()
+	public bool PlaceInWorld()
 	{
 		if (baseManager.RemoveResources(buildingCost, (int)buildingResource))
 		{
@@ -253,7 +248,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		return false;
 	}
 
-	private void CreateBuilding(BaseVillager characterReference)
+	protected void CreateBuilding(BaseVillager characterReference)
     {
         baseManager.toBeBuilt.Remove(this);
         baseManager.buildingList.Add(this);

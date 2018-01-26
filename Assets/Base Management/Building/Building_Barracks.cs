@@ -9,18 +9,7 @@ public class Building_Barracks : BaseBuilding, I_Building {
 
 	private List<Text> textList = new List<Text> ();
 	private List<Slider> sliderList = new List<Slider>();
-
-	bool I_Building.PlaceInWorld()
-	{
-		BaseBuilding buildingParent = GetComponent<BaseBuilding> ();
-
-		if (buildingParent.IsPlaced ()) {
-			SetPlacedInWorld (true);
-		}
-
-		return false;
-	}
-
+    
 	void Awake()
 	{
 		SetBuildingType (BUILDING_TYPE.BUILDING_BARRACKS);
@@ -34,8 +23,10 @@ public class Building_Barracks : BaseBuilding, I_Building {
         GetSkillBonus();
 	}
 
-	void Update()
+	new void Update()
 	{
+        base.Update();
+
 		if (workingVillagers.Count > 0) {
 			activeTimer -= Time.deltaTime;
 
@@ -83,11 +74,11 @@ public class Building_Barracks : BaseBuilding, I_Building {
 
 		//Set values for the info panel, skip the first text entry as this isn't button text
 		for (int i = 1; i <= textList.Count; i++) {
-			if (workingVillagers [i - 1] != null) {
+			if (workingVillagers.Count >= i) {
 				textList [i].text = workingVillagers [i - 1].GetCharacterInfo ().characterName;
 				sliderList [i - 1].value = workingVillagers [i - 1].GetExperience () / workingVillagers [i - 1].GetNextLevelExperience ();
 			} else {
-				textList [i].text = "Select";
+				//textList [i].text = "Select";
 			}
 		}
 	}

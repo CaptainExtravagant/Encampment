@@ -116,7 +116,10 @@ public class PlayerController : MonoBehaviour {
                     {
                         //Set building reference and open info panel
                         buildingReference = selectedObject.GetComponent<BaseBuilding>();
-                        OpenBuildingInfoPanel();
+                        if (buildingReference.IsBuilt() == true)
+                            OpenBuildingInfoPanel();
+                        else
+                            buildingReference = null;
                     }
                     
                     if (villagerReference != null) {
@@ -424,7 +427,7 @@ public class PlayerController : MonoBehaviour {
 
     void OpenBuildingInfoPanel()
     {
-        buildingPanel.GetComponent<BuildingDisplay>().SetInformation(buildingReference, buildingPanel);
+        buildingPanel.GetComponentInChildren<BuildingDisplay>().SetInformation(buildingReference, buildingPanel);
 
         buildingPanel.SetActive(true);
         cameraMovement.SetCameraMovement(false);
@@ -432,11 +435,12 @@ public class PlayerController : MonoBehaviour {
 
     public void CloseBuildingInfoPanel()
     {
-		buildingPanel.GetComponent<BuildingDisplay> ().ClosePanel ();
+        buildingReference = null;
+
+        buildingPanel.GetComponentInChildren<BuildingDisplay> ().ClosePanel ();
 
         buildingPanel.SetActive(false);
         cameraMovement.SetCameraMovement(true);
-        buildingReference = null;
     }
 
     //===========================

@@ -3,17 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Building_Dock : BaseBuilding, I_Building {
-
-	bool I_Building.PlaceInWorld()
-	{
-		BaseBuilding buildingParent = GetComponent<BaseBuilding> ();
-
-		if (buildingParent.IsPlaced ()) {
-			SetPlacedInWorld (true);
-		}
-
-		return false;
-	}
+    
 
 	private void Awake()
 	{
@@ -28,8 +18,10 @@ public class Building_Dock : BaseBuilding, I_Building {
 
 	}
 
-	void Update()
+	new void Update()
 	{
+        base.Update();
+
 		if (workingVillagers.Count > 0) {
 			activeTimer -= Time.deltaTime;
 

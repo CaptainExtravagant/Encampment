@@ -6,5 +6,4 @@ public interface I_Building{
 
 	void WorkBuilding ();
 	void SetBaseManager (BaseManager managerReference);
-	bool PlaceInWorld ();
 }
