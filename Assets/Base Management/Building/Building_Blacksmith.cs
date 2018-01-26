@@ -43,25 +43,30 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 		}
     }
 
-	override public void WorkBuilding(BaseVillager villagerReference)
+	void Update()
+	{
+		if (workingVillagers.Count > 0) {
+			activeTimer -= Time.deltaTime;
+
+			if (activeTimer <= 0)
+				WorkBuilding ();
+		}
+	}
+
+	override public void WorkBuilding()
 	{
 		GameObject newObject;
-		activeTimer -= Time.deltaTime;
 
-
-		if (activeTimer <= 0.0f) {
+		I_Inventory inventory = baseManager.GetInventory();
 			
-			I_Inventory inventory = baseManager.GetInventory();
-			
-			newObject = Instantiate (chosenItem.gameObject);
+		newObject = Instantiate (chosenItem.gameObject);
 
-			I_Item itemInterface = (I_Item)newObject.GetComponent<BaseItem> ();
+		I_Item itemInterface = (I_Item)newObject.GetComponent<BaseItem> ();
 
-			itemInterface.CalculateBaseStats (villagerReference);
+		itemInterface.CalculateBaseStats (workingVillagers[0]);
 
-			inventory.AddItem (newObject.GetComponent<BaseItem>());
+		inventory.AddItem (newObject.GetComponent<BaseItem>());
 
-			activeTimer = workTime;
-		}
+		activeTimer = workTime;
 	}
 }

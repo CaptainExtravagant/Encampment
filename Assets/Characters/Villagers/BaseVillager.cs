@@ -422,11 +422,7 @@ public class BaseVillager : Character{
 
     void VillagerWork()
     {
-		I_Building building = targetObject.GetComponent<BaseBuilding>() as I_Building;
-
-		if (building != null) {
-			building.WorkBuilding (this);
-		}
+		
     }
 
     public void SetTarget(GameObject newTarget)

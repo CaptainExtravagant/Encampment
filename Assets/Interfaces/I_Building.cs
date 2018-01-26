@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface I_Building{
 
-	void WorkBuilding (BaseVillager workingVillager);
+	void WorkBuilding ();
 	void SetBaseManager (BaseManager managerReference);
 	bool PlaceInWorld ();
 }

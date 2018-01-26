@@ -7,11 +7,11 @@ using System;
 
 public class BaseBuilding : MonoBehaviour, I_Building {
 
-	public virtual void WorkBuilding(BaseVillager villagerReference)
+	public virtual void WorkBuilding()
 	{
 	}
 
-	protected GameObject infoPanel;
+	public GameObject infoPanel;
 	protected bool infoPanelOpen;
 
     public enum BUILDING_TYPE
@@ -145,6 +145,11 @@ public class BaseBuilding : MonoBehaviour, I_Building {
     {
         return infoPanel;
     }
+
+	public virtual void SetUpInfoPanel()
+	{
+
+	}
 
     private void Update()
 	{

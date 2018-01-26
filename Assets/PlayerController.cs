@@ -432,6 +432,8 @@ public class PlayerController : MonoBehaviour {
 
     public void CloseBuildingInfoPanel()
     {
+		buildingPanel.GetComponent<BuildingDisplay> ().ClosePanel ();
+
         buildingPanel.SetActive(false);
         cameraMovement.SetCameraMovement(true);
         buildingReference = null;

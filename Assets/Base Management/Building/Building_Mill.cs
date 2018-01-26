@@ -24,17 +24,28 @@ public class Building_Mill : BaseBuilding, I_Building {
 		activeTimer = workTime;
 	}
 
-	override public void WorkBuilding(BaseVillager villagerReference)
+	void Update()
 	{
-		activeTimer -= Time.deltaTime;
+		if (workingVillagers.Count > 0) {
+			activeTimer -= Time.deltaTime;
 
-		if (activeTimer <= 0.0f) {
-			float resourceValue = villagerReference.GetTaskSkills().farming;
-			resourceValue *= 1 + (villagerReference.GetTaskSkills().farming / 100);
-
-			baseManager.AddResources((int)resourceValue, 2);
-
-			activeTimer = workTime;
+			if (activeTimer <= 0)
+				WorkBuilding ();
 		}
+	}
+
+	override public void WorkBuilding()
+	{
+		float resourceValue = 0;
+
+		for (int i = 0; i < workingVillagers.Count; i++) {
+			resourceValue += workingVillagers [i].GetTaskSkills ().farming;
+		}
+
+		resourceValue = resourceValue / workingVillagers.Count;
+
+		baseManager.AddResources((int)resourceValue, 2);
+
+		activeTimer = workTime;
 	}
 }

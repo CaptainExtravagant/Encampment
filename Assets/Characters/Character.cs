@@ -166,7 +166,7 @@ public class Character : MonoBehaviour{
         return characterInfo.characterCombatSkills;
     }
 
-    protected int GetExperience()
+	public int GetExperience()
     {
         return characterInfo.characterExperience;
     }
@@ -201,7 +201,7 @@ public class Character : MonoBehaviour{
         GetNextLevelExperience();
     }
 
-    protected int GetNextLevelExperience()
+	public int GetNextLevelExperience()
     {
         return experienceNextLevel;
     }

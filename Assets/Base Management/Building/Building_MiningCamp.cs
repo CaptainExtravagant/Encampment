@@ -23,16 +23,28 @@ public class Building_MiningCamp : BaseBuilding, I_Building{
 		activeTimer = workTime;
 	}
 
-	override public void WorkBuilding(BaseVillager villagerReference)
+	void Update()
 	{
-		activeTimer -= Time.deltaTime;
+		if (workingVillagers.Count > 0) {
+			activeTimer -= Time.deltaTime;
 
-		if (activeTimer <= 0.0f) {
-			float resourceValue = villagerReference.GetTaskSkills ().mining;
-
-			baseManager.AddResources ((int)resourceValue, 0);
-
-			activeTimer = workTime;
+			if (activeTimer <= 0)
+				WorkBuilding ();
 		}
+	}
+
+	override public void WorkBuilding()
+	{
+		float resourceValue = 0;
+
+		for (int i = 0; i < workingVillagers.Count; i++) {
+			resourceValue += workingVillagers [i].GetTaskSkills ().mining;
+		}
+
+		resourceValue = resourceValue / workingVillagers.Count;
+
+		baseManager.AddResources ((int)resourceValue, 0);
+
+		activeTimer = workTime;
 	}
 }
