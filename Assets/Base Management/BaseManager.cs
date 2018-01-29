@@ -117,13 +117,15 @@ public class BaseManager : MonoBehaviour {
         if (FindEnemies())
         {
             isUnderAttack = true;
+            attackTimer = 1.0f;
+            attackTimerSet = false;
         }
         else
         {
             isUnderAttack = false;
             if (!attackTimerSet)
             {
-                attackTimer = UnityEngine.Random.Range(60.0f, 300.0f);
+                attackTimer = UnityEngine.Random.Range(60.0f, 120.0f);
                 attackTimerSet = true;
             }
             else
@@ -494,8 +496,8 @@ public class BaseManager : MonoBehaviour {
             //Load Inventory
             inventoryReference.Load(gameData.inventoryData);
 
-			attackTimer = gameData.attackTimer;
-			attackTimerSet = true;
+			//attackTimer = gameData.attackTimer;
+			//attackTimerSet = true;
 
 			Debug.Log ("Game Loaded");
 
