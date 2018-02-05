@@ -34,6 +34,7 @@ public class BaseManager : MonoBehaviour {
 
     bool isUnderAttack;
 	bool settingUpQuest;
+	bool addingToBuilding;
 
     public List<BaseVillager> villagerList = new List<BaseVillager>();
     public List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
@@ -264,14 +265,26 @@ public class BaseManager : MonoBehaviour {
 		settingUpQuest = true;
 	}
 
+	public void AddingCharacter()
+	{
+		ToggleBuildingInfo ();
+		ToggleCharacterMenu ();
+		addingToBuilding = true;
+	}
+
 	public void SelectCharacter(BaseVillager chosenVillager)
 	{
 		if (settingUpQuest) {
-			characterScroll.GetComponent<CharacterDisplay> ().GetActiveQuest().AddCharacter (chosenVillager);
+			characterScroll.GetComponent<CharacterDisplay> ().GetActiveQuest ().AddCharacter (chosenVillager);
 			ToggleQuestMenu ();
 			ToggleCharacterMenu ();
 			settingUpQuest = false;
-		} else {
+		} else if (addingToBuilding) {
+			buildingInfo.GetComponent<BuildingDisplay> ().AddCharacter (chosenVillager);
+			ToggleCharacterMenu ();
+			ToggleBuildingInfo ();
+			addingToBuilding = false;
+		}else {
 			ToggleCharacterMenu ();
 		}
 	}

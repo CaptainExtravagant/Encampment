@@ -120,4 +120,9 @@ public class BuildingDisplay : MonoBehaviour {
 	{
 		uniquePanel.SetActive (false);
 	}
+
+	public void AddCharacter(BaseVillager newVillager)
+	{
+
+	}
 }
