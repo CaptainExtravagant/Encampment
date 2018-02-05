@@ -68,14 +68,12 @@ public class PlayerController : MonoBehaviour {
 
                         villagerReference.SetSelected(true);
                         OpenCharacterInfoPanel();
-                        cameraMovement.SetCameraMovement(false);
                     }
                     else
                     {
                         villagerReference.SetSelected(false);
                         villagerReference = null;
                         CloseCharacterInfoPanel();
-                        cameraMovement.SetCameraMovement(true);
                     }
 
                     if (buildingReference != null)
@@ -94,7 +92,6 @@ public class PlayerController : MonoBehaviour {
 						villagerReference.SetSelected (false);
 						villagerReference = null;
                         CloseCharacterInfoPanel();
-                        cameraMovement.SetCameraMovement(true);
 					}
 
                     if(buildingReference != null)
@@ -129,7 +126,6 @@ public class PlayerController : MonoBehaviour {
 						villagerReference.SetSelected (false);
 						villagerReference = null;
                         CloseCharacterInfoPanel();
-                        //cameraMovement.SetCameraMovement(true);
 					}
 				}
 			}
@@ -430,7 +426,6 @@ public class PlayerController : MonoBehaviour {
         buildingPanel.GetComponentInChildren<BuildingDisplay>().SetInformation(buildingReference, buildingPanel);
 
         buildingPanel.SetActive(true);
-        cameraMovement.SetCameraMovement(false);
     }
 
     public void CloseBuildingInfoPanel()
@@ -440,7 +435,6 @@ public class PlayerController : MonoBehaviour {
         buildingPanel.GetComponentInChildren<BuildingDisplay> ().ClosePanel ();
 
         buildingPanel.SetActive(false);
-        cameraMovement.SetCameraMovement(true);
     }
 
     //===========================
@@ -452,13 +446,11 @@ public class PlayerController : MonoBehaviour {
 	    public void OpenInventory()
 	{
 		inventoryPanel.SetActive (true);
-        cameraMovement.SetCameraMovement(false);
 	}
 
 	    public void CloseInventory()
 	{
 		inventoryPanel.SetActive (false);
-        cameraMovement.SetCameraMovement(true);
 	}
 
 	    public void EquipWeaponButton()

@@ -496,8 +496,8 @@ public class BaseManager : MonoBehaviour {
             //Load Inventory
             inventoryReference.Load(gameData.inventoryData);
 
-			//attackTimer = gameData.attackTimer;
-			//attackTimerSet = true;
+			attackTimer = gameData.attackTimer;
+			attackTimerSet = true;
 
 			Debug.Log ("Game Loaded");
 
