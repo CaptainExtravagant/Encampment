@@ -119,7 +119,7 @@ public class Character : MonoBehaviour{
     protected bool offHandEnabled = true;
 	public BaseArmor equippedArmor;
 
-    protected int experienceNextLevel;
+    protected int experienceNextLevel = 1;
     
     private float currentHealth;
 
@@ -198,7 +198,7 @@ public class Character : MonoBehaviour{
         characterInfo.characterCombatSkills.sword += ((characterInfo.characterCombatSkills.sword / 100) * ((characterInfo.characterAttributes.focus / 100) * 20));
 
         characterInfo.characterLevel++;
-        GetNextLevelExperience();
+		CalculateNextLevelExperience();
     }
 
 	public int GetNextLevelExperience()

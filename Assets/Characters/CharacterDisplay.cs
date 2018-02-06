@@ -88,8 +88,7 @@ public class CharacterDisplay : MonoBehaviour {
 		characterName = villager.GetName();
 		characterLevel = villager.GetLevel();
 
-		panelPortrait.sprite
-            = characterPortrait;
+		panelPortrait.sprite = characterPortrait;
 		panelName.text = characterName;
 		panelLevel.text = "Level: " + characterLevel.ToString ();
 	}

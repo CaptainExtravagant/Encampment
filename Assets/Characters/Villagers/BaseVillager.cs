@@ -60,6 +60,8 @@ public class BaseVillager : Character{
 		EquipArmor (armor);
 
 		timer = wanderTimer;
+
+		CalculateNextLevelExperience ();
 	}
 
     public TaskSkills GetTaskSkills()
@@ -464,6 +466,7 @@ public class BaseVillager : Character{
 
 		SetTaskSkills (villagerData.taskSkills);
 		characterInfo = villagerData.characterInfo;
+		CalculateNextLevelExperience ();
 
 		SetCurrentHealth (villagerData.currentHealth);
 

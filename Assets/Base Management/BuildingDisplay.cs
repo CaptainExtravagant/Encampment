@@ -10,6 +10,8 @@ public class BuildingDisplay : MonoBehaviour {
     private int buildingHealth;
     private int buildingMaxHealth;
 
+	private BaseBuilding buildingReference;
+
     private BaseBuilding.BUILDING_TYPE buildingType;
 
     public List<GameObject> uniquePanels = new List<GameObject>();
@@ -23,16 +25,23 @@ public class BuildingDisplay : MonoBehaviour {
         }
     }
 
+	public BaseBuilding GetBuildingReference()
+	{
+		return buildingReference;
+	}
+
     public void SetInformation(BaseBuilding baseBuilding, GameObject infoPanel)
     {
+		buildingReference = baseBuilding;
+
         buildingType = baseBuilding.GetBuildingType();
         
 		switch(buildingType)
         {
-		case BaseBuilding.BUILDING_TYPE.BUILDING_BARRACKS:
-			buildingName = "Barracks";
+			case BaseBuilding.BUILDING_TYPE.BUILDING_BARRACKS:
+				buildingName = "Barracks";
                 baseBuilding.infoPanel = uniquePanels[0];
-			baseBuilding.gameObject.GetComponent<Building_Barracks> ().SetUpInfoPanel ();
+				baseBuilding.gameObject.GetComponent<Building_Barracks> ().SetUpInfoPanel ();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_BLACKSMITH:
@@ -118,11 +127,13 @@ public class BuildingDisplay : MonoBehaviour {
 
 	public void ClosePanel()
 	{
-		uniquePanel.SetActive (false);
+		if(uniquePanel != null)
+			uniquePanel.SetActive (false);
 	}
 
 	public void AddCharacter(BaseVillager newVillager)
 	{
-
+		buildingReference.AddVillagerToWork (newVillager);
+		buildingReference.SetUpInfoPanel ();
 	}
 }

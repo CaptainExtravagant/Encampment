@@ -30,6 +30,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
     }
 
 	protected List <BaseVillager> workingVillagers = new List <BaseVillager>();
+	protected List <int> villagerIndexes = new List<int>();
     protected int maxWorkingVillagers;
 
 	protected string loadPath;
@@ -161,7 +162,10 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public void AddVillagerToWork(BaseVillager selectedVillager)
     {
-		workingVillagers.Add(selectedVillager);
+		if (BuildSlotAvailable()) {
+			workingVillagers.Add (selectedVillager);
+			villagerIndexes.Add (baseManager.villagerList.IndexOf(selectedVillager));
+		}
     }
 
     protected void SetBuildingType(BUILDING_TYPE newBuildingType)
@@ -284,6 +288,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public void Load(BuildingData building, BaseManager manager)
 	{
+		baseManager = manager;
+
 		transform.position = new Vector3(building.positionX, building.positionY, building.positionZ);
 
 		loadPath = building.loadPath;
@@ -299,8 +305,13 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		maxHealth = building.maxHealth;
 		currentHealth = building.currentHealth;
 
-		workingVillagers = building.workingVillagers;
 		maxWorkingVillagers = building.maxWorkingVillagers;
+		villagerIndexes = building.villagerIndexes;
+
+		for(int i = 0; i < villagerIndexes.Count; i++)
+		{
+			AddVillagerToWork(manager.villagerList[villagerIndexes[i]]);
+		}
 
 		SetPlacedInWorld (true);
 
@@ -329,8 +340,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		buildingData.maxHealth = maxHealth;
 		buildingData.currentHealth = currentHealth;
 
-		buildingData.workingVillagers = workingVillagers;
 		buildingData.maxWorkingVillagers = maxWorkingVillagers;
+		buildingData.villagerIndexes = villagerIndexes;
 
 		return buildingData;
 	}
@@ -358,6 +369,6 @@ public class BuildingData
 	public float maxHealth;
 	public float currentHealth;
 
-	public List <BaseVillager> workingVillagers;
 	public int maxWorkingVillagers;
+	public List <int> villagerIndexes;
 }
