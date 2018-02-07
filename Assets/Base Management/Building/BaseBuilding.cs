@@ -111,7 +111,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		}
 	}
 
-	protected void DestroyBuilding()
+	public void DestroyBuilding()
 	{
 		if (isBuilt) {
 			baseManager.buildingList.Remove (this);
@@ -120,6 +120,12 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 			baseManager.toBeBuilt.Remove (this);
 			Destroy (gameObject);
 		}
+		baseManager.buildingInfo.SetActive (false);
+	}
+
+	public void UpgradeBuilding()
+	{
+
 	}
 
 	protected void ResetCurrentHealth()
@@ -308,9 +314,11 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		maxWorkingVillagers = building.maxWorkingVillagers;
 		villagerIndexes = building.villagerIndexes;
 
+		Debug.Log ("Villager Indexes: " + villagerIndexes.Count);
+
 		for(int i = 0; i < villagerIndexes.Count; i++)
 		{
-			AddVillagerToWork(manager.villagerList[villagerIndexes[i]]);
+			workingVillagers.Add(manager.villagerList[villagerIndexes[i]]);
 		}
 
 		SetPlacedInWorld (true);
@@ -342,6 +350,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 		buildingData.maxWorkingVillagers = maxWorkingVillagers;
 		buildingData.villagerIndexes = villagerIndexes;
+
+		Debug.Log ("Villager Indexes (Save): " + buildingData.villagerIndexes);
 
 		return buildingData;
 	}

@@ -281,7 +281,6 @@ public class BaseManager : MonoBehaviour {
 			settingUpQuest = false;
 		} else if (addingToBuilding) {
 			buildingInfo.GetComponentInChildren<BuildingDisplay> ().AddCharacter (chosenVillager);
-			//buildingInfo.GetComponentInChildren<BuildingDisplay> ().GetBuildingReference ().SetUpInfoPanel ();
 			ToggleCharacterMenu ();
 			ToggleBuildingInfo ();
 			addingToBuilding = false;

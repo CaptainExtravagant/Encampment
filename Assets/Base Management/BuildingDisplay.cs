@@ -30,6 +30,17 @@ public class BuildingDisplay : MonoBehaviour {
 		return buildingReference;
 	}
 
+	public void DestroyButton()
+	{
+		buildingReference.DestroyBuilding ();
+
+	}
+
+	public void UpgradeButton()
+	{
+		buildingReference.UpgradeBuilding ();
+	}
+
     public void SetInformation(BaseBuilding baseBuilding, GameObject infoPanel)
     {
 		buildingReference = baseBuilding;

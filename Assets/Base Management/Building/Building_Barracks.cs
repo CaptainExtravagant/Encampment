@@ -16,7 +16,7 @@ public class Building_Barracks : BaseBuilding, I_Building {
 
 		loadPath = "Buildings/BuildingBarracks";
 
-		maxWorkingVillagers = 6;
+		maxWorkingVillagers = 4;
 
 		workTime = 10.0f;
 		activeTimer = workTime;
@@ -69,28 +69,25 @@ public class Building_Barracks : BaseBuilding, I_Building {
 
 	public override void SetUpInfoPanel ()
 	{
+		textList.Clear ();
+		sliderList.Clear ();
+
 		textList.AddRange (infoPanel.GetComponentsInChildren<Text> ());
 		sliderList.AddRange (infoPanel.GetComponentsInChildren<Slider> ());
 
-		//Set values for the info panel, skip the first text entry as this isn't button text
-		for (int i = 0; i <= textList.Count; i++) {
-			if (i > 0) {
-					if (workingVillagers [i] != null) {
-						textList [i].text =	
-							workingVillagers [i].GetCharacterInfo ().characterName;
-					
-					Debug.Log("Name: " + workingVillagers[i].GetCharacterInfo().characterName);
-						Debug.Log ("Current Experience " + workingVillagers [i].GetExperience ());
-						Debug.Log ("Next Level Experience " + workingVillagers [i].GetNextLevelExperience ());
+		Debug.Log ("Text " + textList.Count);
+		Debug.Log ("Sliders " + sliderList.Count);
+		Debug.Log ("Workers " + workingVillagers.Count);
 
-						sliderList [i].value = 
-							workingVillagers [i].GetExperience () / 
-							workingVillagers [i].GetNextLevelExperience();
-
-				} else {
-					textList [i].text = "Select";
-					sliderList [i].value = 0;
-				}
+		//Set for the info panel, skip the first text entry as this isn't button text
+		if (workingVillagers.Count > 0) {
+			for (int i = 0; i < workingVillagers.Count; i++) {
+				textList [i+1].text = 
+					workingVillagers [i].GetCharacterInfo ().characterName;
+				
+				sliderList [i].value = 
+					workingVillagers [i].GetExperience () / 
+					workingVillagers [i].GetNextLevelExperience ();
 			}
 		}
 	}
