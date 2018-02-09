@@ -58,7 +58,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	protected float workTime;
 	protected float activeTimer;
-
+    protected bool isWorking;
 
 	protected float baseHealthValue;
 	private float maxHealth;
@@ -172,6 +172,26 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 			workingVillagers.Add (selectedVillager);
 			villagerIndexes.Add (baseManager.villagerList.IndexOf(selectedVillager));
 		}
+    }
+
+    public virtual void StartWorking()
+    {
+
+    }
+
+    public virtual void StopWorking()
+    {
+
+    }
+
+    public virtual void SetWorkingItem()
+    {
+
+    }
+
+    public bool IsWorking()
+    {
+        return isWorking;
     }
 
     protected void SetBuildingType(BUILDING_TYPE newBuildingType)

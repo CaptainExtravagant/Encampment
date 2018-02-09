@@ -41,6 +41,25 @@ public class BuildingDisplay : MonoBehaviour {
 		buildingReference.UpgradeBuilding ();
 	}
 
+    public void StartWorkButton(Button button)
+    {
+        if (buildingReference.IsWorking())
+        {
+            buildingReference.StopWorking();
+            button.GetComponentInChildren<Text>().text = "Start Working";
+        }
+        else
+        {
+            buildingReference.StartWorking();
+            button.GetComponentInChildren<Text>().text = "Cancel";
+        }
+    }
+
+    public void SetWorkingItem()
+    {
+        buildingReference.SetWorkingItem();
+    }
+
     public void SetInformation(BaseBuilding baseBuilding, GameObject infoPanel)
     {
 		buildingReference = baseBuilding;
@@ -138,9 +157,12 @@ public class BuildingDisplay : MonoBehaviour {
 
 	public void ClosePanel()
 	{
-		if(uniquePanel != null)
-			uniquePanel.SetActive (false);
-	}
+        if (uniquePanel != null)
+        {
+            uniquePanel.SetActive(false);
+            uniquePanel = null;
+        }
+    }
 
 	public void AddCharacter(BaseVillager newVillager)
 	{
