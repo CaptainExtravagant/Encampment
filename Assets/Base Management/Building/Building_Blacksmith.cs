@@ -7,7 +7,7 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 	private float itemValue;
     private UnityEngine.UI.Dropdown dropdown;
 
-	BaseItem chosenItem;
+	BaseWeapon chosenItem;
 
     private void Awake()
     {
@@ -17,7 +17,7 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 
         maxWorkingVillagers = 2;
 
-		workTime = 120.0f;
+		workTime = 20.0f;
 		activeTimer = workTime;
     }
 
@@ -39,6 +39,7 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 
 		if (workingVillagers.Count > 0 && isWorking) {
 			activeTimer -= Time.deltaTime;
+            infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
 
 			if (activeTimer <= 0)
 				WorkBuilding ();
@@ -85,28 +86,24 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
             case 5:
                 chosenItem = new Item_Shield();
                 break;
-
-            case 6:
-                chosenItem = new BaseArmor();
-                break;
         }
     }
 
     override public void WorkBuilding()
 	{
-		GameObject newObject;
-
+        isWorking = false;
+        activeTimer = workTime;
+        
 		I_Inventory inventory = baseManager.GetInventory();
-			
-		newObject = Instantiate (chosenItem.gameObject);
 
-		I_Item itemInterface = (I_Item)newObject.GetComponent<BaseItem> ();
+		I_Item itemInterface = chosenItem;
 
-		itemInterface.CalculateBaseStats (workingVillagers[0]);
+        itemInterface.CalculateBaseStats(workingVillagers[0]);
 
-		inventory.AddItem (newObject.GetComponent<BaseItem>());
+		inventory.AddItem (chosenItem);
 
-		activeTimer = workTime;
+        SetUpInfoPanel();
+
 	}
 
     public override void SetUpInfoPanel()
@@ -122,5 +119,10 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[3].text = workingVillagers[1].GetCharacterInfo().characterName;
         else
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[3].text = "Select";
+
+        if(IsWorking())
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Button>()[2].GetComponentInChildren<UnityEngine.UI.Text>().text = "Cancel";
+        else
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Button>()[2].GetComponentInChildren<UnityEngine.UI.Text>().text = "Start Working";
     }
 }

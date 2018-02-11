@@ -9,7 +9,8 @@ public class Building_MiningCamp : BaseBuilding, I_Building{
 		SetBuildingType (BUILDING_TYPE.BUILDING_MININGCAMP);
 		loadPath = "Buildings/BuildingMiningcamp";
 		workTime = 20.0f;
-		activeTimer = workTime;
+        maxWorkingVillagers = 4;
+        activeTimer = workTime;
 	}
 
 	new void Update()
@@ -38,4 +39,24 @@ public class Building_MiningCamp : BaseBuilding, I_Building{
 
 		activeTimer = workTime;
 	}
+
+    public override void SetUpInfoPanel()
+    {
+        float tempValue = 0;
+
+        for (int i = 0; i < workingVillagers.Count; i++)
+        {
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[i * 2].text = workingVillagers[i].GetCharacterInfo().characterName;
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[(i * 2) + 1].text = workingVillagers[i].GetTaskSkills().mining.ToString();
+
+            tempValue += workingVillagers[i].GetTaskSkills().mining;
+        }
+
+        tempValue = tempValue / workingVillagers.Count;
+
+        infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = tempValue.ToString();
+
+        infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
+
+    }
 }

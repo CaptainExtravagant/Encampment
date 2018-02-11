@@ -69,7 +69,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         //SetMesh();
 
 		//CloseInfoPanel ();
-
+        
         buildTime = 10;
 		baseHealthValue = 40;
 
@@ -82,6 +82,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 		SetBaseManager (manager);
 		meshFilterReference = GetComponent<MeshFilter> ();
+        infoPanel = baseManager.buildingInfo.GetComponentInChildren<BuildingDisplay>().uniquePanels[(int)buildingType];
 	}
 
 	protected MeshFilter GetMeshFilter()
@@ -150,7 +151,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public virtual void SetUpInfoPanel()
 	{
-
+        
 	}
 
     protected void Update()
@@ -322,7 +323,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 		isBuilt = building.isBuilt;
 		workTime = building.workTime;
+        isWorking = building.isWorking;
 		SetBuildTime(building.buildTime);
+        activeTimer = building.activeTimer;
 		buildingCost = building.buildingCost;
 		buildingResource = (ResourceTile.RESOURCE_TYPE)building.buildingResource;
 
@@ -358,7 +361,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 		buildingData.isBuilt = isBuilt;
 		buildingData.workTime = workTime;
+        buildingData.isWorking = isWorking;
 		buildingData.buildTime = buildTime;
+        buildingData.activeTimer = activeTimer;
 		buildingData.buildingCost = buildingCost;
 		buildingData.buildingType = (int)buildingType;
 		buildingData.buildingResource = (int)buildingResource;
@@ -389,7 +394,9 @@ public class BuildingData
 
 	public bool isBuilt;
 	public float workTime;
+    public bool isWorking;
 	public float buildTime;
+    public float activeTimer;
 	public int buildingCost;
 	public int buildingType;
 	public int buildingResource;

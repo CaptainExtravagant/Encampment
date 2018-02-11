@@ -173,6 +173,11 @@ public class BaseManager : MonoBehaviour {
         }
     }
 
+    public float GetAttackTimer()
+    {
+        return attackTimer;
+    }
+
 	void OnApplicationQuit()
 	{
 		SaveGame ();

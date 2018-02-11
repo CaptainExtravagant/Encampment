@@ -39,4 +39,24 @@ public class Building_Farm : BaseBuilding, I_Building {
 
 		activeTimer = workTime;
 	}
+
+    public override void SetUpInfoPanel()
+    {
+        float tempValue = 0;
+
+        for(int i = 0; i < workingVillagers.Count; i++)
+        {
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[i * 2].text = workingVillagers[i].GetCharacterInfo().characterName;
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[(i * 2) + 1].text = workingVillagers[i].GetTaskSkills().farming.ToString();
+
+            tempValue += workingVillagers[i].GetTaskSkills().farming;
+        }
+
+        tempValue = tempValue / workingVillagers.Count;
+
+        infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = tempValue.ToString();
+
+        infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
+
+    }
 }

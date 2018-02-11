@@ -68,34 +68,35 @@ public class BuildingDisplay : MonoBehaviour {
         
 		switch(buildingType)
         {
-			case BaseBuilding.BUILDING_TYPE.BUILDING_BARRACKS:
-				buildingName = "Barracks";
+
+            case BaseBuilding.BUILDING_TYPE.BUILDING_TOWNHALL:
+                buildingName = "Town Hall";
                 baseBuilding.infoPanel = uniquePanels[0];
-				baseBuilding.gameObject.GetComponent<Building_Barracks> ().SetUpInfoPanel ();
+                baseBuilding.gameObject.GetComponent<Building_TownHall>().SetUpInfoPanel();
                 break;
 
-            case BaseBuilding.BUILDING_TYPE.BUILDING_BLACKSMITH:
-                buildingName = "Blacksmith";
+            case BaseBuilding.BUILDING_TYPE.BUILDING_WALL:
+                buildingName = "Wall";
                 baseBuilding.infoPanel = uniquePanels[1];
-                baseBuilding.gameObject.GetComponent<Building_Blacksmith>().SetUpInfoPanel();
-                break;
-
-            case BaseBuilding.BUILDING_TYPE.BUILDING_DOCK:
-                buildingName = "Dock";
-                baseBuilding.infoPanel = uniquePanels[2];
-                baseBuilding.gameObject.GetComponent<Building_Dock>().SetUpInfoPanel();
-                break;
-
-            case BaseBuilding.BUILDING_TYPE.BUILDING_FARM:
-                buildingName = "Farm";
-                baseBuilding.infoPanel = uniquePanels[3];
-                baseBuilding.gameObject.GetComponent<Building_Farm>().SetUpInfoPanel();
+                baseBuilding.gameObject.GetComponent<Building_Walls>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_HOUSE:
                 buildingName = "House";
-                baseBuilding.infoPanel = uniquePanels[4];
+                baseBuilding.infoPanel = uniquePanels[2];
                 baseBuilding.gameObject.GetComponent<Building_House>().SetUpInfoPanel();
+                break;
+
+            case BaseBuilding.BUILDING_TYPE.BUILDING_MILL:
+                buildingName = "Mill";
+                baseBuilding.infoPanel = uniquePanels[3];
+                baseBuilding.gameObject.GetComponent<Building_Mill>().SetUpInfoPanel();
+                break;
+
+            case BaseBuilding.BUILDING_TYPE.BUILDING_FARM:
+                buildingName = "Farm";
+                baseBuilding.infoPanel = uniquePanels[4];
+                baseBuilding.gameObject.GetComponent<Building_Farm>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_LUMBERCAMP:
@@ -104,36 +105,36 @@ public class BuildingDisplay : MonoBehaviour {
                 baseBuilding.gameObject.GetComponent<Building_LumberCamp>().SetUpInfoPanel();
                 break;
 
-            case BaseBuilding.BUILDING_TYPE.BUILDING_MILL:
-                buildingName = "Mill";
-                baseBuilding.infoPanel = uniquePanels[6];
-                baseBuilding.gameObject.GetComponent<Building_Mill>().SetUpInfoPanel();
-                break;
-
             case BaseBuilding.BUILDING_TYPE.BUILDING_MININGCAMP:
                 buildingName = "Mining Camp";
-                baseBuilding.infoPanel = uniquePanels[7];
+                baseBuilding.infoPanel = uniquePanels[6];
                 baseBuilding.gameObject.GetComponent<Building_MiningCamp>().SetUpInfoPanel();
+                break;
+
+            case BaseBuilding.BUILDING_TYPE.BUILDING_DOCK:
+                buildingName = "Dock";
+                baseBuilding.infoPanel = uniquePanels[7];
+                baseBuilding.gameObject.GetComponent<Building_Dock>().SetUpInfoPanel();
+                break;
+
+            case BaseBuilding.BUILDING_TYPE.BUILDING_BARRACKS:
+				buildingName = "Barracks";
+                baseBuilding.infoPanel = uniquePanels[8];
+				baseBuilding.gameObject.GetComponent<Building_Barracks> ().SetUpInfoPanel ();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_OUTPOST:
                 buildingName = "Outpost";
-                baseBuilding.infoPanel = uniquePanels[8];
+                baseBuilding.infoPanel = uniquePanels[9];
                 baseBuilding.gameObject.GetComponent<Building_Outpost>().SetUpInfoPanel();
                 break;
 
-            case BaseBuilding.BUILDING_TYPE.BUILDING_TOWNHALL:
-                buildingName = "Town Hall";
-                baseBuilding.infoPanel = uniquePanels[9];
-                baseBuilding.gameObject.GetComponent<Building_TownHall>().SetUpInfoPanel();
-                break;
-
-            case BaseBuilding.BUILDING_TYPE.BUILDING_WALL:
-                buildingName = "Wall";
+            case BaseBuilding.BUILDING_TYPE.BUILDING_BLACKSMITH:
+                buildingName = "Blacksmith";
                 baseBuilding.infoPanel = uniquePanels[10];
-                baseBuilding.gameObject.GetComponent<Building_Walls>().SetUpInfoPanel();
+                baseBuilding.gameObject.GetComponent<Building_Blacksmith>().SetUpInfoPanel();
                 break;
-
+                
             default:
                 
                 break;
