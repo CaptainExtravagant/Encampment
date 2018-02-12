@@ -19,7 +19,6 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         BUILDING_TOWNHALL = 0,
         BUILDING_WALL,
         BUILDING_HOUSE,
-        BUILDING_MILL,
         BUILDING_FARM,
         BUILDING_LUMBERCAMP,
         BUILDING_MININGCAMP,
@@ -112,7 +111,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		}
 	}
 
-	public void DestroyBuilding()
+	virtual public void DestroyBuilding()
 	{
 		if (isBuilt) {
 			baseManager.buildingList.Remove (this);
@@ -124,7 +123,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		baseManager.buildingInfo.SetActive (false);
 	}
 
-	public void UpgradeBuilding()
+	public virtual void UpgradeBuilding()
 	{
 
 	}
@@ -279,7 +278,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		return false;
 	}
 
-	protected void CreateBuilding(BaseVillager characterReference)
+	virtual protected void CreateBuilding(BaseVillager characterReference)
     {
         baseManager.toBeBuilt.Remove(this);
         baseManager.buildingList.Add(this);

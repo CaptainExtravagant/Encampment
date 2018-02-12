@@ -3,17 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Building_TownHall : BaseBuilding, I_Building {
-	
+
+    int villagerSlots;
+
 	void Awake ()
 	{
 		SetBuildingType (BUILDING_TYPE.BUILDING_TOWNHALL);
 		loadPath = "Buildings/BuildingTownHall";
 		workTime = 600.0f;
 		maxWorkingVillagers = 4;
+        villagerSlots = 10;
 		activeTimer = workTime;
+
 	}
 
-	override public void WorkBuilding()
+    protected override void CreateBuilding(BaseVillager characterReference)
+    {
+
+        baseManager.IncreaseVillagerCap(villagerSlots);
+
+        base.CreateBuilding(characterReference);
+    }
+
+    override public void WorkBuilding()
 	{
 		float resourceValue = 0;
 
@@ -24,7 +36,8 @@ public class Building_TownHall : BaseBuilding, I_Building {
 		resourceValue = (resourceValue / workingVillagers.Count) / 10;
 
 		for (int i = 0; i < resourceValue; i++) {
-			baseManager.characterScroll.GetComponent<CharacterDisplay>().Init(baseManager.SpawnVillager());
+            if(baseManager.villagerList.Count < baseManager.GetVillagerCap())
+			    baseManager.characterScroll.GetComponent<CharacterDisplay>().Init(baseManager.SpawnVillager());
 		}
 
 		activeTimer = workTime;
@@ -44,9 +57,17 @@ public class Building_TownHall : BaseBuilding, I_Building {
 
 		tempValue = (tempValue / workingVillagers.Count) / 10;
 
-		infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = Mathf.Ceil(tempValue);
+		infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = Mathf.Ceil(tempValue).ToString();
 
 		infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
 
 	}
+
+    public override void DestroyBuilding()
+    {
+        if(IsBuilt())
+            baseManager.DecreaseVillagerCap(villagerSlots);
+
+        base.DestroyBuilding();
+    }
 }

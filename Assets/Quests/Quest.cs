@@ -63,6 +63,7 @@ public class Quest : MonoBehaviour {
         {
             time -= Time.deltaTime;
             questTimeText.text = System.TimeSpan.FromSeconds(time).ToString();
+            questTimeText.text = string.Format("{0}:{1:00}", (int)time / 60, (int)time % 60);
 
             if (time <= 0)
         {

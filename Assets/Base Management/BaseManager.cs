@@ -13,7 +13,7 @@ public class BaseManager : MonoBehaviour {
     int supplyStone;
     int supplyWood;
     int supplyFood;
-    int supplyMorale;
+    int maxVillagers;
 
     bool placingBuilding;
 
@@ -49,7 +49,7 @@ public class BaseManager : MonoBehaviour {
     public GameObject woodText;
     public GameObject stoneText;
     public GameObject foodText;
-    public GameObject attackTimerText;
+    public GameObject villagerText;
 
 	private float attackTimer;
 	private bool attackTimerSet;
@@ -64,7 +64,7 @@ public class BaseManager : MonoBehaviour {
         villagerList.AddRange(FindObjectsOfType<BaseVillager>());
 
         buildingPanelPositionStart = buildingPanel.transform.position;
-        buildingPanelPositionEnd = new Vector3(buildingPanel.transform.position.x - 880, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
+        buildingPanelPositionEnd = new Vector3(buildingPanel.transform.position.x - 730, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
 
         cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
@@ -79,7 +79,7 @@ public class BaseManager : MonoBehaviour {
         buildingInfo.SetActive(true);
 
         supplyFood = 100;
-        supplyMorale = 50;
+        maxVillagers = 0;
         supplyStone = 100;
         supplyWood = 100;
 
@@ -149,7 +149,7 @@ public class BaseManager : MonoBehaviour {
         woodText.GetComponent<Text>().text = "Wood: " + supplyWood;
         stoneText.GetComponent<Text>().text = "Stone: " + supplyStone;
         foodText.GetComponent<Text>().text = "Food: " + supplyFood;
-        attackTimerText.GetComponent<Text>().text = "Attack: " + attackTimer;
+        villagerText.GetComponent<Text>().text = "Villagers: " + villagerList.Count + "/" + maxVillagers;
     }
     //===============//
 
@@ -171,6 +171,21 @@ public class BaseManager : MonoBehaviour {
                 newGoblin = null;
             }
         }
+    }
+
+    public void IncreaseVillagerCap(int amountToAdd)
+    {
+        maxVillagers += amountToAdd;
+    }
+
+    public void DecreaseVillagerCap(int amountToRemove)
+    {
+        maxVillagers -= amountToRemove;
+    }
+
+    public int GetVillagerCap()
+    {
+        return maxVillagers;
     }
 
     public float GetAttackTimer()
@@ -406,7 +421,7 @@ public class BaseManager : MonoBehaviour {
 		gameData.supplyStone = supplyStone;
 		gameData.supplyWood = supplyWood;
 		gameData.supplyFood = supplyFood;
-		gameData.supplyMorale = supplyMorale;
+		gameData.maxVillagers = maxVillagers;
 
 		//Save Villagers
 		foreach (BaseVillager villager in villagerList) {
@@ -457,7 +472,7 @@ public class BaseManager : MonoBehaviour {
 			supplyStone = gameData.supplyStone;
 			supplyWood = gameData.supplyWood;
 			supplyFood = gameData.supplyFood;
-			supplyMorale = gameData.supplyMorale;
+			maxVillagers = gameData.maxVillagers;
 
             //Remove villagers from world
             foreach (BaseVillager villager in villagerList) {
@@ -534,7 +549,7 @@ class GameData
 	public int supplyStone;
 	public int supplyWood;
 	public int supplyFood;
-	public int supplyMorale;
+	public int maxVillagers;
 
 	public List<VillagerData> villagerList = new List<VillagerData>();
 	public List<BuildingData> toBeBuilt = new List<BuildingData>();
