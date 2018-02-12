@@ -16,7 +16,7 @@ public class Building_Outpost : BaseBuilding, I_Building {
     {
         base.Update();
 
-        infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[3].text = string.Format("{0}:{1:00}", (int)baseManager.GetAttackTimer() / 60, (int)baseManager.GetAttackTimer() % 60);
+        SetUpInfoPanel();
     }
 
     public override void SetUpInfoPanel()

@@ -435,27 +435,28 @@ public class BaseVillager : Character{
 
     public VillagerData Save()
     {
-        VillagerData villagerData = new VillagerData();
+        VillagerData villagerData = new VillagerData
+        {
+            positionX = transform.position.x,
+            positionY = transform.position.y,
+            positionZ = transform.position.z,
 
-        villagerData.positionX = transform.position.x;
-        villagerData.positionY = transform.position.y;
-        villagerData.positionZ = transform.position.z;
+            taskSkills = GetTaskSkills(),
+            characterInfo = GetCharacterInfo(),
 
-        villagerData.taskSkills = GetTaskSkills();
-        villagerData.characterInfo = GetCharacterInfo();
+            currentHealth = GetCurrentHealth(),
 
-        villagerData.currentHealth = GetCurrentHealth();
+            onQuest = onQuest,
+            questNumber = activeQuest
+        };
 
-		if(GetEquippedWeapon() != null)
+        if (GetEquippedWeapon() != null)
         	villagerData.equippedWeapon = GetEquippedWeapon().Save();
 		if(GetOffHandWeapon() != null)
 			villagerData.offhandWeapon = GetOffHandWeapon().Save();
 		if(GetEquippedArmor() != null)
         	villagerData.equippedArmor = GetEquippedArmor().Save();
-
-        villagerData.onQuest = onQuest;
-        villagerData.questNumber = activeQuest;
-
+        
 		return villagerData;
 	}
 

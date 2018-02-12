@@ -49,8 +49,8 @@ public class Quest : MonoBehaviour {
 
 		nameText.text = questName;
 		questImageSlot.sprite = questImage;
-        questTimeText.text = System.TimeSpan.FromSeconds(time).ToString();
-	}
+        questTimeText.text = string.Format("{0}:{1:00}", (int)time / 60, (int)time % 60);
+    }
 
     public void ActivateQuest()
     {
@@ -62,7 +62,6 @@ public class Quest : MonoBehaviour {
         if(active)
         {
             time -= Time.deltaTime;
-            questTimeText.text = System.TimeSpan.FromSeconds(time).ToString();
             questTimeText.text = string.Format("{0}:{1:00}", (int)time / 60, (int)time % 60);
 
             if (time <= 0)
@@ -123,22 +122,22 @@ public class Quest : MonoBehaviour {
 		if (activeVillagers.Count < characterSlots) {
 			activeVillagers.Add (chosenVillager);
 			UpdateButton (activeVillagers.IndexOf(chosenVillager), chosenVillager);
-            //AddVillagerIndex(activeVillagers.IndexOf(chosenVillager));
 		}
 	}
 
     public QuestData Save()
     {
-        QuestData dataToSave = new QuestData();
+        QuestData dataToSave = new QuestData
+        {
+            time = time,
+            name = questName,
+            slots = characterSlots,
+            active = active,
 
-        dataToSave.time = time;
-        dataToSave.name = questName;
-        dataToSave.slots = characterSlots;
-        dataToSave.active = active;
-
-        dataToSave.villagerIndexes = villagerIndexes;
+            villagerIndexes = villagerIndexes
+        };
         //dataToSave.image = questImage;
-        
+
         return dataToSave;
     }
 

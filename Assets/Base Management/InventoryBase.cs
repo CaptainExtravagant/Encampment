@@ -45,7 +45,7 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 
 	public void AddItem(BaseItem itemToAdd)
 	{
-		I_Inventory inventoryInterface = this as I_Inventory;
+		I_Inventory inventoryInterface = this;
 
 		inventoryInterface.AddItem (itemToAdd);
 	}
@@ -66,7 +66,7 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 	bool I_Inventory.AddItem(BaseItem itemToAdd)
     {
         //Run through entire inventory
-		for(int i = 0; i < itemList.Capacity; i++)
+		for(int i = 0; i < itemCap; i++)
         {
             //Find the next empty slot
             if(itemList[i] == null)

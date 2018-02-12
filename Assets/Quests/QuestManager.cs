@@ -121,6 +121,9 @@ public class QuestManager : MonoBehaviour {
 
     public void QuestComplete(Quest finishedQuest)
     {
+        //Character checks (Is Character Alive, XP Gained etc.)==
+        CharacterCheck(finishedQuest);
+
         //Create loot==
 
         //Enable villagers
@@ -140,6 +143,19 @@ public class QuestManager : MonoBehaviour {
 
         //Create new quest
         AddQuest();
+    }
+
+    private void CharacterCheck(Quest quest)
+    {
+
+    }
+
+    private BaseItem CreateLoot()
+    {
+        BaseItem rewardItem = new BaseItem();
+
+
+        return rewardItem;
     }
 
     public void Load(List<QuestData> data)
