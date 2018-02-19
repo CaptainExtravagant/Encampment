@@ -423,7 +423,7 @@ public class PlayerController : MonoBehaviour {
 
     void OpenBuildingInfoPanel()
     {
-        buildingPanel.GetComponentInChildren<BuildingDisplay>().SetInformation(buildingReference, buildingPanel);
+        buildingPanel.GetComponentInChildren<BuildingDisplay>().SetInformation(buildingReference);
 
         buildingPanel.SetActive(true);
     }

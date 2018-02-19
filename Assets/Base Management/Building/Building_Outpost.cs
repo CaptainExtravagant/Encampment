@@ -21,7 +21,12 @@ public class Building_Outpost : BaseBuilding, I_Building {
 
     public override void SetUpInfoPanel()
     {
-        if(workingVillagers.Count > 0)
+        infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[0].text = "Select";
+        infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[1].text = "Select";
+
+        infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[3].text = "No Lookouts Posted";
+
+        if (workingVillagers.Count > 0)
         {
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[0].text = workingVillagers[0].GetCharacterInfo().characterName;
             if(workingVillagers.Count > 1)

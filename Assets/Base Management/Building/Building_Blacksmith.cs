@@ -7,6 +7,9 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 	private float itemValue;
     private UnityEngine.UI.Dropdown dropdown;
 
+    private BaseVillager masterVillager;
+    private BaseVillager apprenticeVillager;
+
 	BaseWeapon chosenItem;
 
     private void Awake()
@@ -19,18 +22,6 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 
 		workTime = 20.0f;
 		activeTimer = workTime;
-    }
-
-    public override void OnClicked(BaseVillager selectedVillager)
-    {
-		if (selectedVillager != null) {
-			if (IsBuilt ()) {
-				if (BuildSlotAvailable()) {
-					selectedVillager.SetTarget (this.gameObject);
-					AddVillagerToWork (selectedVillager);
-				}
-			}
-		}
     }
 
 	new void Update()
@@ -109,14 +100,14 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
     public override void SetUpInfoPanel()
     {
         dropdown = infoPanel.GetComponentInChildren<UnityEngine.UI.Dropdown>();
-
-        if (workingVillagers.Count > 0)
-            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[1].text = workingVillagers[0].GetCharacterInfo().characterName;
+        
+        if (masterVillager)
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[1].text = masterVillager.GetCharacterInfo().characterName;
         else
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[1].text = "Select";
 
-        if (workingVillagers.Count > 1)
-            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[3].text = workingVillagers[1].GetCharacterInfo().characterName;
+        if (apprenticeVillager)
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[3].text = apprenticeVillager.GetCharacterInfo().characterName;
         else
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[3].text = "Select";
 
@@ -124,5 +115,69 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Button>()[2].GetComponentInChildren<UnityEngine.UI.Text>().text = "Cancel";
         else
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Button>()[2].GetComponentInChildren<UnityEngine.UI.Text>().text = "Start Working";
+    }
+
+    public override void AddVillagerToWork(BaseVillager selectedVillager, int slotIndex)
+    {
+        if(slotIndex == 0)
+        {
+            workingVillagers.Add(selectedVillager);
+            selectedVillager.SelectWorkArea(this.gameObject);
+            villagerIndexes.Add(baseManager.villagerList.IndexOf(selectedVillager));
+            masterVillager = selectedVillager;
+        }
+        else if(slotIndex == 1)
+        {
+            workingVillagers.Add(selectedVillager);
+            selectedVillager.SelectWorkArea(this.gameObject);
+            villagerIndexes.Add(baseManager.villagerList.IndexOf(selectedVillager));
+            apprenticeVillager = selectedVillager;
+        }
+    }
+
+    public override void RemoveVillagerFromWork(int villager)
+    {
+        if(villager == 0)
+        {
+        masterVillager.VillagerStopWork();
+        villagerIndexes.Remove(baseManager.villagerList.IndexOf(masterVillager));
+        workingVillagers.RemoveAt(workingVillagers.IndexOf(masterVillager));
+        masterVillager = null;
+        }
+        else if(villager == 1)
+        {
+            apprenticeVillager.VillagerStopWork();
+            villagerIndexes.Remove(baseManager.villagerList.IndexOf(apprenticeVillager));
+            workingVillagers.RemoveAt(workingVillagers.IndexOf(apprenticeVillager));
+            apprenticeVillager = null;
+        }
+    }
+
+    public override bool FindVillagerSet(int index)
+    {
+        if(index == 0)
+        {
+            if(masterVillager != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if(index == 1)
+        {
+            if(apprenticeVillager != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return false;
     }
 }

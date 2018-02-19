@@ -13,6 +13,7 @@ public class Character : MonoBehaviour{
         CHARACTER_WANDER = 0,
         CHARACTER_MOVING,
         CHARACTER_BUILDING,
+        CHARACTER_WORKING,
         CHARACTER_COLLECTING,
         CHARACTER_ATTACKING,
         CHARACTER_DEAD

@@ -60,7 +60,7 @@ public class BuildingDisplay : MonoBehaviour {
         buildingReference.SetWorkingItem();
     }
 
-    public void SetInformation(BaseBuilding baseBuilding, GameObject infoPanel)
+    public void SetInformation(BaseBuilding baseBuilding)
     {
 		buildingReference = baseBuilding;
 
@@ -150,6 +150,11 @@ public class BuildingDisplay : MonoBehaviour {
         uniquePanel.SetActive (true);
     }
 
+    public void RefreshPanel()
+    {
+        SetInformation(buildingReference);
+    }
+
 	public void ClosePanel()
 	{
         if (uniquePanel != null)
@@ -159,9 +164,16 @@ public class BuildingDisplay : MonoBehaviour {
         }
     }
 
-	public void AddCharacter(BaseVillager newVillager)
+	public void AddCharacter(BaseVillager newVillager, int buttonIndex)
 	{
-		buildingReference.AddVillagerToWork (newVillager);
+		buildingReference.AddVillagerToWork (newVillager, buttonIndex);
 		buildingReference.SetUpInfoPanel ();
 	}
+
+    public void RemoveCharacter(int villagerIndex)
+    {
+        buildingReference.RemoveVillagerFromWork(villagerIndex);
+        buildingReference.SetUpInfoPanel();
+        RefreshPanel();
+    }
 }

@@ -54,6 +54,8 @@ public class BaseManager : MonoBehaviour {
 
 	private float attackTimer;
 	private bool attackTimerSet;
+
+    private int buildingButtonIndex;
     
     //====================//
     //Awake, Start, Update//
@@ -286,11 +288,20 @@ public class BaseManager : MonoBehaviour {
 		settingUpQuest = true;
 	}
 
-	public void AddingCharacter()
+	public void AddingCharacter(int buttonIndex)
 	{
+        if(buildingInfo.GetComponentInChildren<BuildingDisplay>().GetBuildingReference().FindVillagerSet(buttonIndex))
+        {
+            buildingInfo.GetComponentInChildren<BuildingDisplay>().RemoveCharacter(buttonIndex);
+            //Debug.Log("Remove Character");
+            return;
+        }
+
 		ToggleBuildingInfo ();
 		ToggleCharacterMenu ();
 		addingToBuilding = true;
+
+        buildingButtonIndex = buttonIndex;
 	}
 
 	public void SelectCharacter(BaseVillager chosenVillager)
@@ -301,7 +312,7 @@ public class BaseManager : MonoBehaviour {
 			ToggleCharacterMenu ();
 			settingUpQuest = false;
 		} else if (addingToBuilding) {
-			buildingInfo.GetComponentInChildren<BuildingDisplay> ().AddCharacter (chosenVillager);
+			buildingInfo.GetComponentInChildren<BuildingDisplay> ().AddCharacter (chosenVillager, buildingButtonIndex);
 			ToggleCharacterMenu ();
 			ToggleBuildingInfo ();
 			addingToBuilding = false;
@@ -567,6 +578,7 @@ public class BaseManager : MonoBehaviour {
 			return true;
 		}
 		Debug.Log ("Game Failed to Load");
+        
 
 		return false;
 	}

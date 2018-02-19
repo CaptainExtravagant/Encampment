@@ -39,9 +39,6 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	protected bool placedInWorld;
     private bool isBuilt;
 
-	protected int buildingCost;
-	protected ResourceTile.RESOURCE_TYPE buildingResource;
-
     protected Dictionary<ResourceTile.RESOURCE_TYPE, int> buildingCosts = new Dictionary<ResourceTile.RESOURCE_TYPE, int>();
 
     private BUILDING_TYPE buildingType;
@@ -75,12 +72,13 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         
         buildTime = 10;
 		baseHealthValue = 40;
-
-		buildingCost = 50;
+        
 		currentHealth = baseHealthValue;
-		buildingResource = ResourceTile.RESOURCE_TYPE.WOOD;
 
         SetBuildingCost();
+        
+        if (isBuilt)
+            GetComponent<BoxCollider>().enabled = true;
 
     }
 
@@ -180,12 +178,33 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
     }
 
-	public void AddVillagerToWork(BaseVillager selectedVillager)
+	public virtual void AddVillagerToWork(BaseVillager selectedVillager, int slotIndex)
     {
 		if (BuildSlotAvailable()) {
 			workingVillagers.Add (selectedVillager);
-			villagerIndexes.Add (baseManager.villagerList.IndexOf(selectedVillager));
+            selectedVillager.SelectWorkArea(this.gameObject);
+            villagerIndexes.Add (baseManager.villagerList.IndexOf(selectedVillager));
 		}
+    }
+
+    public virtual void RemoveVillagerFromWork(int villager)
+    {
+        workingVillagers[villager].VillagerStopWork();
+        villagerIndexes.Remove(baseManager.villagerList.IndexOf(workingVillagers[villager]));
+        workingVillagers.RemoveAt(villager);
+    }
+
+    public virtual bool FindVillagerSet(int index)
+    {
+        if (workingVillagers.Count > index)
+            return true;
+        else
+            return false;
+    }
+
+    public List<BaseVillager> GetWorkingVillagers()
+    {
+        return workingVillagers;
     }
 
     public virtual void StartWorking()
@@ -350,8 +369,6 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         isWorking = building.isWorking;
 		SetBuildTime(building.buildTime);
         activeTimer = building.activeTimer;
-		buildingCost = building.buildingCost;
-		buildingResource = (ResourceTile.RESOURCE_TYPE)building.buildingResource;
 
 		buildingLevel = building.level;
 		baseHealthValue = building.baseHealthValue;
@@ -365,7 +382,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 		for(int i = 0; i < villagerIndexes.Count; i++)
 		{
-			workingVillagers.Add(manager.villagerList[villagerIndexes[i]]);
+            workingVillagers.Add(manager.villagerList[villagerIndexes[i]]);
+            manager.villagerList[villagerIndexes[i]].SelectWorkArea(this.gameObject);
+            //AddVillagerToWork(manager.villagerList[villagerIndexes[i]], villagerIndexes[i]);
 		}
 
 		SetPlacedInWorld (true);
@@ -388,9 +407,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         buildingData.isWorking = isWorking;
 		buildingData.buildTime = buildTime;
         buildingData.activeTimer = activeTimer;
-		buildingData.buildingCost = buildingCost;
 		buildingData.buildingType = (int)buildingType;
-		buildingData.buildingResource = (int)buildingResource;
 
 		buildingData.level = buildingLevel;
 		buildingData.baseHealthValue = baseHealthValue;
@@ -421,9 +438,7 @@ public class BuildingData
     public bool isWorking;
 	public float buildTime;
     public float activeTimer;
-	public int buildingCost;
 	public int buildingType;
-	public int buildingResource;
 
 	public int level;
 	public float baseHealthValue;

@@ -77,9 +77,15 @@ public class Building_Barracks : BaseBuilding, I_Building {
 		textList.AddRange (infoPanel.GetComponentsInChildren<Text> ());
 		sliderList.AddRange (infoPanel.GetComponentsInChildren<Slider> ());
 
-		Debug.Log ("Text " + textList.Count);
-		Debug.Log ("Sliders " + sliderList.Count);
-		Debug.Log ("Workers " + workingVillagers.Count);
+        for(int i = 0; i < 4; i++)
+        {
+            textList[i + 1].text = "Select";
+            sliderList[i].value = 0;
+        }
+
+		//Debug.Log ("Text " + textList.Count);
+		//Debug.Log ("Sliders " + sliderList.Count);
+		//Debug.Log ("Workers " + workingVillagers.Count);
 
 		//Set for the info panel, skip the first text entry as this isn't button text
 		if (workingVillagers.Count > 0) {

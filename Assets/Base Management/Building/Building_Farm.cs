@@ -44,7 +44,13 @@ public class Building_Farm : BaseBuilding, I_Building {
     {
         float tempValue = 0;
 
-        for(int i = 0; i < workingVillagers.Count; i++)
+        for (int i = 0; i < 4; i++)
+        {
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[i * 2].text = "Select";
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[(i * 2) + 1].text = "0";
+        }
+
+        for (int i = 0; i < workingVillagers.Count; i++)
         {
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[i * 2].text = workingVillagers[i].GetCharacterInfo().characterName;
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[(i * 2) + 1].text = workingVillagers[i].GetTaskSkills().farming.ToString();
@@ -54,7 +60,10 @@ public class Building_Farm : BaseBuilding, I_Building {
 
         tempValue = tempValue / workingVillagers.Count;
 
-        infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = tempValue.ToString();
+        if (workingVillagers.Count > 0)
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = Mathf.Ceil(tempValue).ToString();
+        else
+            infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = "No Working Villagers";
 
         infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
 

@@ -181,6 +181,10 @@ public class BaseVillager : Character{
                 VillagerWander();
                 break;
 
+            case CHARACTER_STATE.CHARACTER_WORKING:
+                AIFindTarget();
+                break;
+
             case CHARACTER_STATE.CHARACTER_COLLECTING:
                 VillagerCollect();
                 break;
@@ -238,7 +242,8 @@ public class BaseVillager : Character{
 
         targetObject = objectReference;
 
-        workingResource = objectReference.GetComponent<ResourceTile>();
+        if(objectReference.GetComponent<ResourceTile>())
+            workingResource = objectReference.GetComponent<ResourceTile>();
 
         currentState = CHARACTER_STATE.CHARACTER_MOVING;
     }
@@ -286,9 +291,10 @@ public class BaseVillager : Character{
     }
 
 	protected override void AIMoveToTarget ()
-	{
-		if(targetObject == null)
+    {
+        if (targetObject == null)
 		{
+
 			currentState = CHARACTER_STATE.CHARACTER_WANDER;
 			//Debug.Log ("Target is null");
 			AIFindTarget();
@@ -305,9 +311,16 @@ public class BaseVillager : Character{
 
 
 			if (targetObject.GetComponent<BaseBuilding> ()) {
+
                 if (targetObject.GetComponent<BaseBuilding> ().IsBuilt () == false && AICheckRange()) {
 					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+                    return;
 				}
+
+                if(targetObject.GetComponent<BaseBuilding>().IsBuilt() && AICheckRange())
+                {
+                    VillagerWork();
+                }
 
 			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
@@ -320,31 +333,45 @@ public class BaseVillager : Character{
     protected override void AIFindTarget()
     {
         //print("Trying to find target");
+        if(manager.GetUnderAttack() && currentState == CHARACTER_STATE.CHARACTER_WORKING)
+        {
+            targetObject = null;
+            GetComponent<MeshRenderer>().enabled = true;
+            agent.enabled = true;
+        }
+
 
         if (targetObject == null)
         {
-            //print("Target Object is null");
-
             //Is the base currently under attack?
-			if (manager.GetUnderAttack())
+            if (manager.GetUnderAttack())
             {
                 //Find all enemies in the world and target the closest one
-
+                
                 for (int i = 0; i < manager.enemyList.Count; i++)
                 {
-					if (manager.enemyList [i] != null) {
-						//If this is the first item, set it to be the current target
-						if (i == 0) {
-							SetTarget (manager.enemyList [i].gameObject);
-						}
-                    //If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
-                    else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, manager.enemyList [i].transform.position)) {
-							SetTarget (manager.enemyList [i].gameObject);
-						}
-					}
+                    if (manager.enemyList[i] != null)
+                    {
+                        //If this is the first item, set it to be the current target
+                        if (i == 0)
+                        {
+                            SetTarget(manager.enemyList[i].gameObject);
+                        }
+                        //If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
+                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, manager.enemyList[i].transform.position))
+                        {
+                            SetTarget(manager.enemyList[i].gameObject);
+                        }
+
+                    }
                 }
+
+                return;
             }
-            else
+
+            //print("Target Object is null");
+
+            if (!workingBuilding)
             {
 
                 //print("Finding build targets");
@@ -380,6 +407,11 @@ public class BaseVillager : Character{
                         }
                     }
                 }
+            }
+            else
+            {
+                targetObject = workingBuilding.gameObject;
+                currentState = CHARACTER_STATE.CHARACTER_MOVING;
             }
 
             //Set the current character state
@@ -427,11 +459,23 @@ public class BaseVillager : Character{
 
     void VillagerWork()
     {
-		
+        workingBuilding = targetObject.GetComponent<BaseBuilding>();
+        currentState = CHARACTER_STATE.CHARACTER_WORKING;
+        GetComponent<MeshRenderer>().enabled = false;
+        agent.enabled = false;
+    }
+
+    public void VillagerStopWork()
+    {
+        workingBuilding = null;
+        currentState = CHARACTER_STATE.CHARACTER_WANDER;
+        GetComponent<MeshRenderer>().enabled = true;
+        agent.enabled = true;
     }
 
     public void SetTarget(GameObject newTarget)
     {
+        currentState = CHARACTER_STATE.CHARACTER_MOVING;
         targetPosition = newTarget.transform.position;
         targetObject = newTarget;
     }
