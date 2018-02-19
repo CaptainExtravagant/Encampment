@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -477,6 +478,12 @@ public class BaseManager : MonoBehaviour {
 
 		Debug.Log ("Game Saved");
 	}
+
+    public void ResetSave()
+    {
+        File.Delete(Application.persistentDataPath + "/baseInfo.dat");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
 	public bool LoadGame()
 	{

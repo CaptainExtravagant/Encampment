@@ -304,13 +304,11 @@ public class BaseVillager : Character{
 			currentState = CHARACTER_STATE.CHARACTER_MOVING;
 
 
-			if (targetObject.GetComponent<BaseBuilding> () && AICheckRange ()) {
-				if (targetObject.GetComponent<BaseBuilding> ().IsBuilt () == false) {
+			if (targetObject.GetComponent<BaseBuilding> ()) {
+                if (targetObject.GetComponent<BaseBuilding> ().IsBuilt () == false && AICheckRange()) {
 					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
-				} else {
-					targetObject = null;
-					currentState = CHARACTER_STATE.CHARACTER_WANDER;
 				}
+
 			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
 			} else if (targetObject.GetComponent<ResourceTile> () && AICheckRange ()) {
@@ -365,14 +363,19 @@ public class BaseVillager : Character{
                         //If this is the first item, set it to be the current target
                         if (i == 0)
                         {
-                            SetTarget(manager.toBeBuilt[i].gameObject);
+                            //Does this site have a build slot available?
+                            if (manager.toBeBuilt[i].BuildSlotAvailable())
+                            {
+                                SetTarget(manager.toBeBuilt[i].gameObject);
+                                manager.toBeBuilt[i].StartWork();
+                            }
                         }//If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
                         else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, manager.toBeBuilt[i].transform.position))
                         {
                             //Does this site have a build slot available?
 							if (manager.toBeBuilt [i].BuildSlotAvailable ()) {
 								SetTarget (manager.toBeBuilt [i].gameObject);
-								manager.toBeBuilt [i].AddVillagerToWork (this);
+								manager.toBeBuilt [i].StartWork();
 							}
                         }
                     }

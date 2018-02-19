@@ -32,6 +32,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	protected List <int> villagerIndexes = new List<int>();
     protected int maxWorkingVillagers;
 
+    private bool isBeingWorked;
+
 	protected string loadPath;
 
 	protected bool placedInWorld;
@@ -77,6 +79,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		buildingCost = 50;
 		currentHealth = baseHealthValue;
 		buildingResource = ResourceTile.RESOURCE_TYPE.WOOD;
+
+        SetBuildingCost();
 
     }
 
@@ -282,19 +286,30 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public bool BuildSlotAvailable()
 	{
-		if (workingVillagers.Count < maxWorkingVillagers) {
+		if (!isBeingWorked) {
 			return true;
 		}
 		return false;
 	}
 
+    public void StartWork()
+    {
+        isBeingWorked = true;
+    }
+
+    public bool IsBeingWorked()
+    {
+        return isBeingWorked;
+    }
+
 	virtual protected void CreateBuilding(BaseVillager characterReference)
     {
+        gameObject.GetComponent<BoxCollider>().enabled = true;
         baseManager.toBeBuilt.Remove(this);
         baseManager.buildingList.Add(this);
 		SetMaxHealth (characterReference.GetTaskSkills().construction);
         isBuilt = true;
-
+        isBeingWorked = false;
         //SetMesh();
     }
 
