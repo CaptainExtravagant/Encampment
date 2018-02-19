@@ -40,6 +40,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	protected int buildingCost;
 	protected ResourceTile.RESOURCE_TYPE buildingResource;
 
+    protected Dictionary<ResourceTile.RESOURCE_TYPE, int> buildingCosts = new Dictionary<ResourceTile.RESOURCE_TYPE, int>();
+
     private BUILDING_TYPE buildingType;
     private int buildingLevel;
 
@@ -75,6 +77,14 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		buildingCost = 50;
 		currentHealth = baseHealthValue;
 		buildingResource = ResourceTile.RESOURCE_TYPE.WOOD;
+
+    }
+
+    virtual protected void SetBuildingCost()
+    {
+        buildingCosts.Add(ResourceTile.RESOURCE_TYPE.WOOD, 50);
+        buildingCosts.Add(ResourceTile.RESOURCE_TYPE.STONE, 50);
+        buildingCosts.Add(ResourceTile.RESOURCE_TYPE.FOOD, 0);
     }
 
 	public void InitBuilding(BaseManager manager)
@@ -241,7 +251,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	public bool PlaceInWorld()
 	{
-		if (baseManager.RemoveResources(buildingCost, (int)buildingResource))
+		if (baseManager.RemoveBuildingResources(buildingCosts))
 		{
 			//Debug.Log ("Place in World");
 			SetPlacedInWorld (true);

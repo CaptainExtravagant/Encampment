@@ -366,6 +366,29 @@ public class BaseManager : MonoBehaviour {
 
     }
 
+    public bool RemoveBuildingResources(Dictionary<ResourceTile.RESOURCE_TYPE, int> resourceDictionary)
+    {
+        int tempStone = supplyStone;
+        int tempFood = supplyFood;
+        int tempWood = supplyWood;
+
+        tempWood -= resourceDictionary[ResourceTile.RESOURCE_TYPE.WOOD];
+        tempFood -= resourceDictionary[ResourceTile.RESOURCE_TYPE.FOOD];
+        tempStone -= resourceDictionary[ResourceTile.RESOURCE_TYPE.STONE];
+
+        if(tempWood >= 0
+            && tempFood >= 0
+            && tempStone >= 0)
+        {
+            supplyFood = tempFood;
+            supplyStone = tempStone;
+            supplyWood = tempWood;
+            return true;
+        }
+
+        return false;
+    }
+
     public bool RemoveResources(int resourceValue, int resourceType)
     {
         int tempValue;
