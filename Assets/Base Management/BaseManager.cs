@@ -40,6 +40,7 @@ public class BaseManager : MonoBehaviour {
     public List<BaseVillager> villagerList = new List<BaseVillager>();
     public List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
     public List<BaseBuilding> buildingList = new List<BaseBuilding>();
+	public List<BaseBuilding> toBeUpgraded = new List<BaseBuilding>();
     public List<BaseEnemy> enemyList = new List<BaseEnemy>();
 
     private Camera cameraReference;
@@ -471,6 +472,9 @@ public class BaseManager : MonoBehaviour {
 		{
 			gameData.buildingList.Add(building.Save ());
 		}
+		foreach (BaseBuilding building in toBeUpgraded) {
+			gameData.toBeUpgraded.Add (building.Save ());
+		}
 
         //Save Inventory
         gameData.inventoryData = inventoryReference.Save();
@@ -547,6 +551,10 @@ public class BaseManager : MonoBehaviour {
 				Destroy (building.gameObject);
 			}
 			toBeBuilt.Clear ();
+			foreach (BaseBuilding building in toBeUpgraded) {
+				Destroy (building.gameObject);
+			}
+			toBeUpgraded.Clear ();
 
 			//Load Buildings
 			foreach (BuildingData building in gameData.toBeBuilt) {
@@ -562,6 +570,14 @@ public class BaseManager : MonoBehaviour {
 				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding>();
 				toAdd.Load (building, this);
                 buildingList.Add(toAdd);
+			}
+
+			foreach (BuildingData building in gameData.toBeUpgraded) {
+				GameObject newBuilding = Instantiate (Resources.Load (building.loadPath)) as GameObject;
+
+				BaseBuilding toAdd = newBuilding.GetComponent<BaseBuilding> ();
+				toAdd.Load (building, this);
+				toBeUpgraded.Add (toAdd);
 			}
 
 
@@ -596,6 +612,7 @@ class GameData
 	public List<VillagerData> villagerList = new List<VillagerData>();
 	public List<BuildingData> toBeBuilt = new List<BuildingData>();
 	public List<BuildingData> buildingList = new List<BuildingData>();
+	public List<BuildingData> toBeUpgraded = new List<BuildingData> ();
     public List<QuestData> questList = new List<QuestData>();
 
 	public float attackTimer;

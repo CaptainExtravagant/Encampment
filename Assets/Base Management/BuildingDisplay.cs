@@ -142,6 +142,7 @@ public class BuildingDisplay : MonoBehaviour {
 
         GetComponentsInChildren<Text>()[0].text = buildingName;
         GetComponentsInChildren<Text>()[2].text = buildingLevel.ToString();
+		GetComponentsInChildren<Text> () [4].text = baseBuilding.GetConstructor ();
 
         GetComponentInChildren<Slider>().value = buildingHealth / buildingMaxHealth;
 

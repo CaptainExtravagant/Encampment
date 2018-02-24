@@ -48,6 +48,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
     protected Mesh buildingMesh;
     protected Mesh constructionMesh;
+	protected string constructor;
 
     protected BaseManager baseManager;
 
@@ -63,6 +64,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	protected float baseHealthValue;
 	private float maxHealth;
 	private float currentHealth;
+	protected float coreModifier = 1.0f;
 
     protected void Start()
     {
@@ -101,6 +103,11 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		return meshFilterReference;
 	}
 
+	public string GetConstructor()
+	{
+		return constructor;
+	}
+
 	protected void SetBaseManager(BaseManager manager)
 	{
 		baseManager = manager;
@@ -135,9 +142,33 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		baseManager.buildingInfo.SetActive (false);
 	}
 
-	public virtual void UpgradeBuilding()
+	public void UpgradeBuilding()
 	{
+		if(baseManager.RemoveBuildingResources(buildingCosts))
+		{
+			baseManager.buildingList.Remove (this);
+			baseManager.toBeUpgraded.Add (this);
+		}
+	}
 
+	protected virtual void CompleteUpgrade()
+	{
+		Debug.Log ("Building Upgraded");
+
+		buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] = (int)(buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] * 1.5f);
+		buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] = (int)(buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] * 1.5f);
+		buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] = (int)(buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] * 1.5f);
+
+		coreModifier += 0.5f;
+		maxHealth = maxHealth * coreModifier;
+		currentHealth = maxHealth;
+
+		buildingLevel += 1;
+
+		SetBuildTime (buildTime * coreModifier);
+
+		baseManager.toBeUpgraded.Remove (this);
+		baseManager.buildingList.Add (this);
 	}
 
 	protected void ResetCurrentHealth()
@@ -277,6 +308,10 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		if (baseManager.RemoveBuildingResources(buildingCosts))
 		{
 			//Debug.Log ("Place in World");
+			buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] / 2;
+			buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] / 2;
+			buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] = buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] / 2;
+
 			SetPlacedInWorld (true);
 			return true;
 		}
@@ -329,6 +364,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		SetMaxHealth (characterReference.GetTaskSkills().construction);
         isBuilt = true;
         isBeingWorked = false;
+		constructor = characterReference.GetName();
+		SetBuildTime (buildTime / 2);
         //SetMesh();
     }
 
@@ -342,7 +379,10 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         buildTime -= points;
         if(buildTime <= 0)
         {
-			CreateBuilding(characterReference);
+			if (!isBuilt)
+				CreateBuilding (characterReference);
+			else
+				CompleteUpgrade ();
         }
     }
 
@@ -387,6 +427,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
             //AddVillagerToWork(manager.villagerList[villagerIndexes[i]], villagerIndexes[i]);
 		}
 
+		constructor = building.constructor;
+
 		SetPlacedInWorld (true);
 
 		InitBuilding (manager);
@@ -413,6 +455,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		buildingData.baseHealthValue = baseHealthValue;
 		buildingData.maxHealth = maxHealth;
 		buildingData.currentHealth = currentHealth;
+		buildingData.constructor = constructor;
 
 		buildingData.maxWorkingVillagers = maxWorkingVillagers;
 		buildingData.villagerIndexes = villagerIndexes;
@@ -444,6 +487,8 @@ public class BuildingData
 	public float baseHealthValue;
 	public float maxHealth;
 	public float currentHealth;
+
+	public string constructor;
 
 	public int maxWorkingVillagers;
 	public List <int> villagerIndexes;

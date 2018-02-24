@@ -312,6 +312,11 @@ public class BaseVillager : Character{
 
 			if (targetObject.GetComponent<BaseBuilding> ()) {
 
+				if (manager.toBeUpgraded.Contains (targetObject.GetComponent<BaseBuilding> ()) && AICheckRange ()) {
+					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+					return;
+				}
+
                 if (targetObject.GetComponent<BaseBuilding> ().IsBuilt () == false && AICheckRange()) {
 					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
                     return;
@@ -407,6 +412,31 @@ public class BaseVillager : Character{
                         }
                     }
                 }
+
+				if (manager.toBeUpgraded.Count <= 0) {
+					currentState = CHARACTER_STATE.CHARACTER_WANDER;
+				} else {
+					//print("Target found");
+					for (int i = 0; i < manager.toBeUpgraded.Count; i++) {
+						//print("Check target");
+						//If this is the first item, set it to be the current target
+						if (i == 0) {
+							//Does this site have a build slot available?
+							if (manager.toBeUpgraded [i].BuildSlotAvailable ()) {
+								SetTarget (manager.toBeUpgraded [i].gameObject);
+								manager.toBeUpgraded [i].StartWork ();
+							}
+						}//If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
+						else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, manager.toBeUpgraded [i].transform.position)) {
+							//Does this site have a build slot available?
+							if (manager.toBeUpgraded [i].BuildSlotAvailable ()) {
+								SetTarget (manager.toBeUpgraded [i].gameObject);
+								manager.toBeUpgraded [i].StartWork ();
+							}
+						}
+					}
+				}
+
             }
             else
             {
@@ -428,33 +458,54 @@ public class BaseVillager : Character{
 
     void VillagerBuild()
     {
-        if(targetObject.GetComponent<BaseBuilding>().IsBuilt())
-        {
-            isBuilding = false;
-            agent.enabled = true;
-            currentState = CHARACTER_STATE.CHARACTER_WANDER;
-        }
+		if (manager.toBeUpgraded.Contains (targetObject.GetComponent<BaseBuilding> ())) {
+			if (isBuilding) {
+				timer += Time.deltaTime;
 
-        if (isBuilding && !targetObject.GetComponent<BaseBuilding>().IsBuilt())
-        {
-            timer += Time.deltaTime;
+				if (timer >= buildTimer) {
+					//Add construction points to building
+					targetObject.GetComponent<BaseBuilding> ().AddConstructionPoints (taskSkills.construction, this);
+					timer = 0;
+				}
+			} else
+			{
+				//Set building to true, start build timer, stop navigation
+				isBuilding = true;
 
-            if (timer >= buildTimer)
-            {
-                //Add construction points to building
-				targetObject.GetComponent<BaseBuilding>().AddConstructionPoints(taskSkills.construction, this);
-                timer = 0;
-            }
-        }
-        else if (!isBuilding && !targetObject.GetComponent<BaseBuilding>().IsBuilt())
-        {
-                //Set building to true, start build timer, stop navigation
-                isBuilding = true;
+				agent.enabled = false;
 
-                agent.enabled = false;
-
-                buildTimer = wanderTimer;
-        }
+				buildTimer = wanderTimer;
+			}
+		}
+		else{
+			if (isBuilding && !targetObject.GetComponent<BaseBuilding>().IsBuilt())
+			{
+			    timer += Time.deltaTime;
+			
+			    if (timer >= buildTimer)
+			    {
+			        //Add construction points to building
+					targetObject.GetComponent<BaseBuilding>().AddConstructionPoints(taskSkills.construction, this);
+			        timer = 0;
+			    }
+			}
+			else if (!isBuilding && !targetObject.GetComponent<BaseBuilding>().IsBuilt())
+			{
+			        //Set building to true, start build timer, stop navigation
+			        isBuilding = true;
+			
+			        agent.enabled = false;
+			
+			        buildTimer = wanderTimer;
+			} 	
+			  	
+			if	(targetObject.GetComponent<BaseBuilding>().IsBuilt())
+			{ 	
+					isBuilding = false;
+					agent.enabled = true;
+					currentState = CHARACTER_STATE.CHARACTER_WANDER;
+			} 	
+		}
     }
 
     void VillagerWork()
