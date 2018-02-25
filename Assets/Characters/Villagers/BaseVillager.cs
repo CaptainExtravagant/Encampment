@@ -531,6 +531,13 @@ public class BaseVillager : Character{
         targetObject = newTarget;
     }
 
+	protected void AIDead()
+	{
+		manager.villagerList.Remove (this);
+		manager.CheckVillagerCount ();
+		base.AIDead ();
+	}
+
     public VillagerData Save()
     {
         VillagerData villagerData = new VillagerData

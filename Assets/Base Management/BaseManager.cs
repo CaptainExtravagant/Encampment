@@ -11,6 +11,8 @@ using System.IO;
 
 public class BaseManager : MonoBehaviour {
 
+	public GameObject mainUI;
+
     int supplyStone;
     int supplyWood;
     int supplyFood;
@@ -52,6 +54,8 @@ public class BaseManager : MonoBehaviour {
     public GameObject stoneText;
     public GameObject foodText;
     public GameObject villagerText;
+
+	public GameObject lossPanel;
 
 	private float attackTimer;
 	private bool attackTimerSet;
@@ -106,6 +110,8 @@ public class BaseManager : MonoBehaviour {
         questMenu.SetActive(false);
         characterMenu.SetActive(false);
         buildingInfo.SetActive(false);
+		mainUI.SetActive (true);
+		lossPanel.SetActive (false);
     }
 
     private void Update()
@@ -357,6 +363,35 @@ public class BaseManager : MonoBehaviour {
 
 		return newVillager;
     }
+
+	public void CheckVillagerCount()
+	{
+		if (villagerList.Count <= 0) {
+			GameLost ();
+		}
+	}
+
+	private void GameLost()
+	{
+		buildingInfo.SetActive (false);
+		buildingMenu.SetActive (false);
+		characterMenu.SetActive (false);
+		mainUI.SetActive (false);
+
+		lossPanel.SetActive (true);
+	}
+
+	public void RestartGame()
+	{
+		ResetSave ();
+	}
+
+	public void ReturnToMenu()
+	{
+
+		File.Delete(Application.persistentDataPath + "/baseInfo.dat");
+		SceneManager.LoadScene(0);
+	}
 
     //Resource Management//
 

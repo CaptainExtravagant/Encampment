@@ -396,7 +396,7 @@ public class Character : MonoBehaviour{
     }
 
     //Destroy this character
-    protected void AIDead()
+	protected void AIDead()
     {
         targetPosition = transform.position;
         targetObject = null;
