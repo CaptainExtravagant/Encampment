@@ -1,0 +1,230 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1762731904979720}
+  m_IsPrefabParent: 1
+--- !u!1 &1762731904979720
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4325295575497992}
+  - component: {fileID: 114744330297354458}
+  - component: {fileID: 114964888079543340}
+  - component: {fileID: 114254593674685596}
+  m_Layer: 0
+  m_Name: BaseManager
+  m_TagString: Manager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4325295575497992
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1762731904979720}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.92, y: -1.5564862, z: 4.18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114254593674685596
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1762731904979720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bf44870618681c4b980921b5bd314f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  missionNamesStart:
+  - Banished
+  - Black
+  - Bleeding
+  - Blind
+  - Blinding
+  - Bloody
+  - Broken
+  - Brutal
+  - Burning
+  - Cold
+  - Crimson
+  - Cryptic
+  - Crystal
+  - Dark
+  - Defiant
+  - Demon
+  - Devil's
+  - Driving
+  - Dying
+  - Empty
+  - Enduring
+  - Fading
+  - Fallen
+  - Final
+  - First
+  - Flying
+  - Forgotten
+  - Frozen
+  - Glass
+  - Hidden
+  - Hot
+  - Lazy
+  - Lone
+  - Lost
+  - Morbid
+  - Patient
+  - Purple
+  - Red
+  - Rotting
+  - Sacred
+  - Secret
+  - Severed
+  - Shattered
+  - Silent
+  - Soaring
+  - Spectral
+  - Stone
+  - Swift
+  - Twisted
+  - Unceasing
+  - Vengeful
+  missionNamesEnd:
+  - Apollo
+  - Bell
+  - Blade
+  - Breath
+  - Calm
+  - Crone
+  - Crown
+  - Daze
+  - Dream
+  - Druid
+  - Empire
+  - Engine
+  - Fall
+  - Father
+  - Fear
+  - Fog
+  - Future
+  - Grave
+  - God
+  - Hammer
+  - Hawk
+  - Hydra
+  - Hymn
+  - Jester
+  - Justice
+  - King
+  - Line
+  - Law
+  - Moon
+  - Mother
+  - Mountain
+  - Night
+  - Palace
+  - Paramour
+  - Pipe
+  - Priest
+  - Prophet
+  - Pyre
+  - Rain
+  - Ring
+  - Savior
+  - Scepter
+  - Serpent
+  - Shield
+  - Shroud
+  - Skull
+  - Smoke
+  - Stallion
+  - Star
+  - Stranger
+  - Stroke
+  - Summer
+  - Sword
+  - Tears
+  - Thorn
+  - Throne
+  - Thunder
+  - Vanguard
+  - Vengeance
+  - Whisper
+  questMenu: {fileID: 0}
+  questScroll: {fileID: 0}
+--- !u!114 &114744330297354458
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1762731904979720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a55a0ba27fc884cbe2af6d85e79dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainUI: {fileID: 0}
+  controller: {fileID: 0}
+  questMenu: {fileID: 0}
+  characterMenu: {fileID: 0}
+  characterScroll: {fileID: 0}
+  buildingMenu: {fileID: 0}
+  buildingPanel: {fileID: 0}
+  buildingInfo: {fileID: 0}
+  villagerList: []
+  toBeBuilt: []
+  buildingList: []
+  toBeUpgraded: []
+  enemyList: []
+  woodText: {fileID: 0}
+  stoneText: {fileID: 0}
+  foodText: {fileID: 0}
+  villagerText: {fileID: 0}
+  lossPanel: {fileID: 0}
+--- !u!114 &114964888079543340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1762731904979720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d72f9bee16b764eb9be57e2797f0fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  itemList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  inventoryScrollBox: {fileID: 0}
+  inventoryDropdown: {fileID: 0}
