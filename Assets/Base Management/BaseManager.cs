@@ -65,7 +65,7 @@ public class BaseManager : MonoBehaviour {
     //==========================//
     //Awake, Start, Update, Quit//
     //==========================//
-    private void Awake()
+    protected void Awake()
     {
         inventoryReference = GetComponent<InventoryBase>();
         villagerList.AddRange(FindObjectsOfType<BaseVillager>());

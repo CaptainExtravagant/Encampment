@@ -58,7 +58,6 @@ public class TutorialManager : BaseManager {
         attackTimerSet = false;
         SetActiveAdvice(0);
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -109,7 +108,7 @@ public class TutorialManager : BaseManager {
 
         UIUpdate();
     }
-    override public void AddResources(int resourceValue, int resourceType)
+    public override void AddResources(int resourceValue, int resourceType)
     {
         switch (resourceType)
         {
@@ -134,8 +133,7 @@ public class TutorialManager : BaseManager {
             SetActiveAdvice(1);
 
     }
-
-    override public void ToggleBuildingInfo()
+    public override void ToggleBuildingInfo()
     {
         if (buildingInfo.activeSelf)
         {
@@ -147,14 +145,12 @@ public class TutorialManager : BaseManager {
             SetActiveAdvice(2);
         }
     }
-
     void SetActiveAdvice(int index)
     {
         subjectText.text = adviceSubjects[index];
         contentsText.text = adviceContents[index];
     }
-
-    override public void SelectCharacter(BaseVillager chosenVillager)
+    public override void SelectCharacter(BaseVillager chosenVillager)
     {
         if (settingUpQuest)
         {
@@ -184,8 +180,7 @@ public class TutorialManager : BaseManager {
             SetActiveAdvice(8);
         }
     }
-
-    override protected void PlaceBuilding()
+    protected override void PlaceBuilding()
     {
         if (!placingBuilding)
         {
@@ -198,16 +193,17 @@ public class TutorialManager : BaseManager {
             //Place construction site on mouse position and add to list of construction areas.
 
             if (heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld())
+            {
                 toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
 
-            if(heldBuilding.GetComponent<Building_Farm>() || heldBuilding.GetComponent<Building_LumberCamp>() || heldBuilding.GetComponent<Building_MiningCamp>())
-            {
-                SetActiveAdvice(7);
+                if (heldBuilding.GetComponent<Building_Farm>() || heldBuilding.GetComponent<Building_LumberCamp>() || heldBuilding.GetComponent<Building_MiningCamp>())
+                {
+                    SetActiveAdvice(7);
+                }
             }
 
             placingBuilding = false;
             heldBuilding = null;
         }
     }
-
 }
