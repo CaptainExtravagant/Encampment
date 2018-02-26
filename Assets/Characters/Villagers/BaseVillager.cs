@@ -52,7 +52,7 @@ public class BaseVillager : Character{
 		CreateCharacter(new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)));
 		CreateTaskSkills();
 
-		Weapon_Fists fists = new GameObject ("Fists").AddComponent<Weapon_Fists> ();
+		Weapon_Fists fists = new GameObject ("Fist").AddComponent<Weapon_Fists> ();
 		BaseArmor armor = new GameObject ("No Armor").AddComponent<BaseArmor> ();
 
 		EquipWeaponToMainHand(fists);

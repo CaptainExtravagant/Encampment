@@ -13,14 +13,14 @@ public class BaseManager : MonoBehaviour {
 
 	public GameObject mainUI;
 
-    int supplyStone;
-    int supplyWood;
-    int supplyFood;
-    int maxVillagers;
+    protected int supplyStone;
+    protected int supplyWood;
+    protected int supplyFood;
+    protected int maxVillagers;
 
-    bool placingBuilding;
+    protected bool placingBuilding;
 
-    GameObject heldBuilding;
+    protected GameObject heldBuilding;
 
 	public PlayerController controller;
 
@@ -35,9 +35,9 @@ public class BaseManager : MonoBehaviour {
 
 	public GameObject buildingInfo;
 
-    bool isUnderAttack;
-	bool settingUpQuest;
-	bool addingToBuilding;
+    protected bool isUnderAttack;
+	protected bool settingUpQuest;
+	protected bool addingToBuilding;
 
     public List<BaseVillager> villagerList = new List<BaseVillager>();
     public List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
@@ -57,15 +57,14 @@ public class BaseManager : MonoBehaviour {
 
 	public GameObject lossPanel;
 
-	private float attackTimer;
-	private bool attackTimerSet;
+	protected float attackTimer;
+	protected bool attackTimerSet;
 
-    private int buildingButtonIndex;
+    protected int buildingButtonIndex;
     
-    //====================//
-    //Awake, Start, Update//
-    //====================//
-
+    //==========================//
+    //Awake, Start, Update, Quit//
+    //==========================//
     private void Awake()
     {
         inventoryReference = GetComponent<InventoryBase>();
@@ -77,7 +76,6 @@ public class BaseManager : MonoBehaviour {
         cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
     }
-
     private void Start()
     {
         //Make sure all menus are running so init values can be set
@@ -113,7 +111,6 @@ public class BaseManager : MonoBehaviour {
 		mainUI.SetActive (true);
 		lossPanel.SetActive (false);
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -153,21 +150,128 @@ public class BaseManager : MonoBehaviour {
 
         UIUpdate();
     }
-
-    private void UIUpdate()
+    protected void UIUpdate()
     {
         woodText.GetComponent<Text>().text = "Wood: " + supplyWood;
         stoneText.GetComponent<Text>().text = "Stone: " + supplyStone;
         foodText.GetComponent<Text>().text = "Food: " + supplyFood;
         villagerText.GetComponent<Text>().text = "Villagers: " + villagerList.Count + "/" + maxVillagers;
     }
+    void OnApplicationQuit()
+    {
+        SaveGame();
+    }
+    public void RestartGame()
+    {
+        ResetSave();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void ReturnToMenu()
+    {
+        File.Delete(Application.persistentDataPath + "/baseInfo.dat");
+        SceneManager.LoadScene(0);
+    }
+    private void GameLost()
+    {
+        buildingInfo.SetActive(false);
+        buildingMenu.SetActive(false);
+        characterMenu.SetActive(false);
+        mainUI.SetActive(false);
+
+        lossPanel.SetActive(true);
+    }
     //===============//
 
+
+    //======//
+    //Quests//
+    //======//
     public void OpenQuestMenu()
 	{
 		ToggleQuestMenu ();
-	}
+    }
+    public void SettingUpQuest(Quest activeQuest)
+    {
+        ToggleQuestMenu();
+        characterScroll.GetComponent<CharacterDisplay>().OpenMenuForQuests(activeQuest);
+        ToggleCharacterMenu();
+        settingUpQuest = true;
+    }
+    public void ToggleQuestMenu()
+    {
+        if (questMenu.activeSelf)
+        {
+            questMenu.SetActive(false);
+        }
+        else
+        {
+            questMenu.SetActive(true);
+        }
+    }
+    //======//
+    
 
+    //=========//
+    //Villagers//
+    //=========//
+    public void IncreaseVillagerCap(int amountToAdd)
+    {
+        maxVillagers += amountToAdd;
+    }
+    public void DecreaseVillagerCap(int amountToRemove)
+    {
+        maxVillagers -= amountToRemove;
+    }
+    public GameObject SpawnVillager()
+    {
+        //Create some villagers
+        GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
+
+        if (newVillager != null)
+        {
+            villagerList.Add(newVillager.GetComponent<BaseVillager>());
+        }
+
+        return newVillager;
+    }
+    public void CheckVillagerCount()
+    {
+        if (villagerList.Count <= 0)
+        {
+            GameLost();
+        }
+    }
+    public int GetVillagerCap()
+    {
+        return maxVillagers;
+    }
+    public virtual void SelectCharacter(BaseVillager chosenVillager)
+    {
+        if (settingUpQuest)
+        {
+            characterScroll.GetComponent<CharacterDisplay>().GetActiveQuest().AddCharacter(chosenVillager);
+            ToggleQuestMenu();
+            ToggleCharacterMenu();
+            settingUpQuest = false;
+        }
+        else if (addingToBuilding)
+        {
+            buildingInfo.GetComponentInChildren<BuildingDisplay>().AddCharacter(chosenVillager, buildingButtonIndex);
+            ToggleCharacterMenu();
+            ToggleBuildingInfo();
+            addingToBuilding = false;
+        }
+        else
+        {
+            ToggleCharacterMenu();
+        }
+    }
+    //=========//
+
+
+    //======//
+    //Attack//
+    //======//
     public void LaunchAttack()
     {
         for (int i = 0; i < 5; i++)
@@ -182,34 +286,11 @@ public class BaseManager : MonoBehaviour {
             }
         }
     }
-
-    public void IncreaseVillagerCap(int amountToAdd)
-    {
-        maxVillagers += amountToAdd;
-    }
-
-    public void DecreaseVillagerCap(int amountToRemove)
-    {
-        maxVillagers -= amountToRemove;
-    }
-
-    public int GetVillagerCap()
-    {
-        return maxVillagers;
-    }
-
     public float GetAttackTimer()
     {
         return attackTimer;
     }
-
-	void OnApplicationQuit()
-	{
-		SaveGame ();
-	}
-
-    
-    private bool FindEnemies()
+    protected bool FindEnemies()
     {
         enemyList.Clear();
         if (FindObjectsOfType<BaseEnemy>().Length > 0)
@@ -221,14 +302,29 @@ public class BaseManager : MonoBehaviour {
 
         return false;
     }
-
-
-    public InventoryBase GetInventory()
+    public bool GetUnderAttack()
     {
-        return inventoryReference;
+        return isUnderAttack;
     }
 
-	public void ScrollBuildingMenu(Scrollbar scrollReference)
+    //======//
+
+
+    //=====//
+    //Menus//
+    //=====//
+    public virtual void ToggleBuildingInfo()
+    {
+        if (buildingInfo.activeSelf)
+        {
+            buildingInfo.SetActive(false);
+        }
+        else
+        {
+            buildingInfo.SetActive(true);
+        }
+    }
+    public void ScrollBuildingMenu(Scrollbar scrollReference)
 	{
 		//Zero value = 60
 		//1 value = -820
@@ -237,165 +333,52 @@ public class BaseManager : MonoBehaviour {
 		Vector3 newPosition = Vector3.Lerp(buildingPanelPositionStart, buildingPanelPositionEnd, scrollValue);
 
 		buildingPanel.transform.position = newPosition;
-	}
-
-	public void SelectBuilding(GameObject buildingType)
-	{
-		heldBuilding = Instantiate (buildingType);
-		heldBuilding.GetComponent<BaseBuilding>().InitBuilding (this);
-		ToggleBuildingMenu ();
-		PlaceBuilding ();
-	}
-
-	void PlaceBuilding()
+    }
+    public void ToggleBuildingMenu()
     {
-        if (!placingBuilding)
+        if (buildingMenu.activeSelf)
         {
-            //Set placingBuilding to true
-            placingBuilding = true;
+            buildingMenu.SetActive(false);
         }
         else
         {
-            //Debug.Log ("Place Construction Down");
-            //Place construction site on mouse position and add to list of construction areas.
-
-            if(heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld())
-                toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
-            
-            placingBuilding = false;
-            heldBuilding = null;
+            buildingMenu.SetActive(true);
         }
     }
-
-	public void ToggleBuildingMenu()
-	{
-		if (buildingMenu.activeSelf) {
-			buildingMenu.SetActive (false);
-            cameraMovement.SetCameraMovement(true);
-		} else {
-			buildingMenu.SetActive (true);
-            cameraMovement.SetCameraMovement(false);
-		}
-	}
-
-	public void ToggleCharacterMenu()
-	{
-		if (characterMenu.activeSelf) {
-			characterMenu.SetActive (false);
-		} else {
-			characterMenu.SetActive (true);
-		}	
-	}
-
-	public void SettingUpQuest(Quest activeQuest)
-	{
-		ToggleQuestMenu ();
-		characterScroll.GetComponent<CharacterDisplay> ().OpenMenuForQuests (activeQuest);
-		ToggleCharacterMenu ();
-		settingUpQuest = true;
-	}
-
-	public void AddingCharacter(int buttonIndex)
-	{
-        if(buildingInfo.GetComponentInChildren<BuildingDisplay>().GetBuildingReference().FindVillagerSet(buttonIndex))
+    public void ToggleCharacterMenu()
+    {
+        if (characterMenu.activeSelf)
+        {
+            characterMenu.SetActive(false);
+        }
+        else
+        {
+            characterMenu.SetActive(true);
+        }
+    }
+    public void AddingCharacter(int buttonIndex)
+    {
+        if (buildingInfo.GetComponentInChildren<BuildingDisplay>().GetBuildingReference().FindVillagerSet(buttonIndex))
         {
             buildingInfo.GetComponentInChildren<BuildingDisplay>().RemoveCharacter(buttonIndex);
             //Debug.Log("Remove Character");
             return;
         }
 
-		ToggleBuildingInfo ();
-		ToggleCharacterMenu ();
-		addingToBuilding = true;
+        ToggleBuildingInfo();
+        ToggleCharacterMenu();
+        addingToBuilding = true;
 
         buildingButtonIndex = buttonIndex;
-	}
-
-	public void SelectCharacter(BaseVillager chosenVillager)
-	{
-		if (settingUpQuest) {
-			characterScroll.GetComponent<CharacterDisplay> ().GetActiveQuest ().AddCharacter (chosenVillager);
-			ToggleQuestMenu ();
-			ToggleCharacterMenu ();
-			settingUpQuest = false;
-		} else if (addingToBuilding) {
-			buildingInfo.GetComponentInChildren<BuildingDisplay> ().AddCharacter (chosenVillager, buildingButtonIndex);
-			ToggleCharacterMenu ();
-			ToggleBuildingInfo ();
-			addingToBuilding = false;
-		}else {
-			ToggleCharacterMenu ();
-		}
-	}
-
-	public void ToggleQuestMenu()
-	{
-		if (questMenu.activeSelf) {
-			questMenu.SetActive (false);
-		} else {
-			questMenu.SetActive (true);
-		}
-	}
-
-	public void ToggleBuildingInfo()
-	{
-		if (buildingInfo.activeSelf) {
-			buildingInfo.SetActive (false);
-		} else {
-			buildingInfo.SetActive (true);
-		}
-	}
-
-    public bool GetUnderAttack()
-    {
-        return isUnderAttack;
-    }
-    
-	public GameObject SpawnVillager()
-    {
-            //Create some villagers
-            GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
-
-            if (newVillager != null)
-            {
-                villagerList.Add(newVillager.GetComponent<BaseVillager>());
-            }
-
-		return newVillager;
     }
 
-	public void CheckVillagerCount()
-	{
-		if (villagerList.Count <= 0) {
-			GameLost ();
-		}
-	}
+    //=====//
 
-	private void GameLost()
-	{
-		buildingInfo.SetActive (false);
-		buildingMenu.SetActive (false);
-		characterMenu.SetActive (false);
-		mainUI.SetActive (false);
 
-		lossPanel.SetActive (true);
-	}
-
-	public void RestartGame()
-	{
-		ResetSave ();
-	}
-
-	public void ReturnToMenu()
-	{
-
-		File.Delete(Application.persistentDataPath + "/baseInfo.dat");
-		SceneManager.LoadScene(0);
-	}
-
+    //===================//
     //Resource Management//
-
-    public void AddResources(int resourceValue, int resourceType)
+    //===================//
+    public virtual void AddResources(int resourceValue, int resourceType)
     {
         switch(resourceType)
         {
@@ -413,7 +396,6 @@ public class BaseManager : MonoBehaviour {
         }
 
     }
-
     public bool RemoveBuildingResources(Dictionary<ResourceTile.RESOURCE_TYPE, int> resourceDictionary)
     {
         int tempStone = supplyStone;
@@ -436,7 +418,6 @@ public class BaseManager : MonoBehaviour {
 
         return false;
     }
-
     public bool RemoveResources(int resourceValue, int resourceType)
     {
         int tempValue;
@@ -479,10 +460,44 @@ public class BaseManager : MonoBehaviour {
 
         return false;
     }
+    protected virtual void PlaceBuilding()
+    {
+        if (!placingBuilding)
+        {
+            //Set placingBuilding to true
+            placingBuilding = true;
+        }
+        else
+        {
+            //Debug.Log ("Place Construction Down");
+            //Place construction site on mouse position and add to list of construction areas.
 
+            if (heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld())
+                toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
+
+            placingBuilding = false;
+            heldBuilding = null;
+        }
+    }
+    public InventoryBase GetInventory()
+    {
+        return inventoryReference;
+    }
+    public void SelectBuilding(GameObject buildingType)
+    {
+        heldBuilding = Instantiate(buildingType);
+        heldBuilding.GetComponent<BaseBuilding>().InitBuilding(this);
+        ToggleBuildingMenu();
+        PlaceBuilding();
+    }
+
+    //===================//
+
+
+    //==================//
     //Saving and Loading//
-
-	public void SaveGame()
+    //==================//
+    public void SaveGame()
 	{
 		BinaryFormatter formatter = new BinaryFormatter ();
 		FileStream fileStream = File.Create (Application.persistentDataPath + "/baseInfo.dat");
@@ -528,13 +543,10 @@ public class BaseManager : MonoBehaviour {
 
 		Debug.Log ("Game Saved");
 	}
-
     public void ResetSave()
     {
         File.Delete(Application.persistentDataPath + "/baseInfo.dat");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
 	public bool LoadGame()
 	{
 		//Debug.Log ("Loading Game");
@@ -634,6 +646,7 @@ public class BaseManager : MonoBehaviour {
 		return false;
 	}
 
+    //==================//
 }
 
 [Serializable]

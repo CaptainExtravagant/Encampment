@@ -109,6 +109,8 @@ GameObject:
   - component: {fileID: 114000607092129894}
   - component: {fileID: 114482400328312854}
   - component: {fileID: 114590676782942308}
+  - component: {fileID: 114615969316796530}
+  - component: {fileID: 114533937002737250}
   m_Layer: 5
   m_Name: AdvicePanel
   m_TagString: Untagged
@@ -246,6 +248,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114533937002737250
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1699507832872316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d72f9bee16b764eb9be57e2797f0fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  itemList: []
+  inventoryScrollBox: {fileID: 0}
+  inventoryDropdown: {fileID: 0}
 --- !u!114 &114568382740875642
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -284,6 +301,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2cc9a4860d93d641bf46c9b41ccaa7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainUI: {fileID: 0}
+  controller: {fileID: 0}
+  questMenu: {fileID: 0}
+  characterMenu: {fileID: 0}
+  characterScroll: {fileID: 0}
+  buildingMenu: {fileID: 0}
+  buildingPanel: {fileID: 0}
+  buildingInfo: {fileID: 0}
+  villagerList: []
+  toBeBuilt: []
+  buildingList: []
+  toBeUpgraded: []
+  enemyList: []
+  woodText: {fileID: 0}
+  stoneText: {fileID: 0}
+  foodText: {fileID: 0}
+  villagerText: {fileID: 0}
+  lossPanel: {fileID: 0}
   adviceSubjects:
   - Getting Started
   - Building
@@ -318,7 +353,7 @@ MonoBehaviour:
     You'll need to defend yourself. Walls are the best way to go about this, stop
     them moving into your village and hold them away from your more important buildings.
     Build a few now while it's quiet... Too quiet...
-  - The Goblins have started an attack. Your villagers may be a bit stupid but they're
+  - The Goblins have started an attack! Your villagers may be a bit stupid but they're
     brave, they'll attack the nearest Goblin until their last breath. There's nothing
     you can do but wait to see how it turns out. A good way to make sure they don't
     sneak up on you like that again is to build an Outpost, once you're safe again
@@ -379,6 +414,37 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114615969316796530
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1699507832872316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bf44870618681c4b980921b5bd314f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  missionNamesStart:
+  - Test0
+  - Test1
+  - Test2
+  - Test3
+  - Test4
+  missionNamesEnd:
+  - Test5
+  - Test6
+  - Test7
+  - Test8
+  - Test9
+  questMenu: {fileID: 0}
+  questScroll: {fileID: 0}
 --- !u!114 &114910244331942036
 MonoBehaviour:
   m_ObjectHideFlags: 1

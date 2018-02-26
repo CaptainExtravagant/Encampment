@@ -7,7 +7,7 @@ public class Weapon_Fists : BaseWeapon {
     void Awake()
     {
         SetWeaponType(WEAPON_TYPE.WEAPON_FISTS);
-        SetItemName("Fists");
+        SetItemName("Fist");
     }
 
     public override void CalculateStats(Character characterReference)
