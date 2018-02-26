@@ -531,7 +531,7 @@ public class BaseVillager : Character{
         targetObject = newTarget;
     }
 
-	protected void AIDead()
+	new protected void AIDead()
 	{
 		manager.villagerList.Remove (this);
 		manager.CheckVillagerCount ();
