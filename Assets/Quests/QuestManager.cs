@@ -5,29 +5,27 @@ using UnityEngine.UI;
 
 public class QuestManager : MonoBehaviour {
 
-	public List<Sprite> imageList = new List<Sprite>();
+    public List<Sprite> imageList = new List<Sprite>();
 
-	public List<string> missionNamesStart = new List<string> ();
-	public List<string> missionNamesEnd = new List<string> ();
+    private List<string> missionNamesStart = new List<string>() { "Banished", "Black", "Bleeding", "Blind", "Blinding", "Bloody", "Broken", "Brutal", "Burning", "Cold", "Crimson", "Cryptic", "Crystal", "Dark", "Defiant", "Demon", "Devil's", "Driving", "Dying", "Empty", "Enduring", "Fading", "Fallen", "Final", "First", "Flying", "Forgotten", "Frozen", "Glass", "Hidden", "Hot", "Lazy", "Lone", "Lost", "Morbid", "Patient", "Purple", "Red", "Rotting", "Sacred", "Secret", "Severed", "Shattered", "Silent", "Soaring", "Spectral", "Stone", "Swift", "Twisted", "Unceasing", "Vengeful" };
+	private List<string> missionNamesEnd = new List<string>() {"Apollo", "Bell", "Blade", "Breath", "Calm", "Crone", "Crown", "Daze", "Dream", "Druid", "Empire", "Engine", "Fall", "Father", "Fear", "Fog", "Future", "Grave", "God", "Hammer", "Hawk", "Hydra", "Hymn", "Jester", "Justice", "King", "Line", "Law", "Moon", "Mother", "Mountain", "Night", "Palace", "Paramour", "Pipe", "Priest", "Prophet", "Pyre", "Rain", "Ring", "Savior", "Scepter", "Serpent", "Shield", "Shroud", "Skull", "Smoke", "Stallion", "Star", "Stranger", "Stroke", "Summer", "Sword", "Tears", "Thorn", "Throne", "Thunder", "Vanguard", "Vengeance", "Whisper" };
 
 	protected List<Quest> questList = new List<Quest> ();
 
-	public GameObject questMenu;
-	public GameObject questScroll;
+	private GameObject questMenu;
+	private GameObject questScroll;
 	protected GameObject questPanel;
 
     private BaseManager baseManager;
-
-	void Awake()
-	{
+    
+    public void Init(GameObject menu, GameObject scroll)
+    {
         baseManager = GetComponent<BaseManager>();
 
-		Debug.Log ("QuestManager start");
-		questPanel = (GameObject)Resources.Load ("UI/QuestPanel");
-	}
+        questPanel = (GameObject)Resources.Load("UI/QuestPanel");
+        questMenu = menu;
+        questScroll = scroll;
 
-    public void Init()
-    {
         for (int i = 0; i < 3; i++)
         {
             AddQuest();
@@ -43,7 +41,7 @@ public class QuestManager : MonoBehaviour {
 		}
 	}
 
-	void AddQuest()
+	public void AddQuest()
 	{
 		//Debug.Log ("Add Quest");
 
@@ -98,17 +96,17 @@ public class QuestManager : MonoBehaviour {
             //Save character indexes from BaseManager list
             foreach(BaseVillager villager in questRef.GetVillagerList())
             {
-                questRef.AddVillagerIndex(baseManager.villagerList.IndexOf(villager));
+                questRef.AddVillagerIndex(baseManager.GetVillagerIndex(villager));
             }
 
-            if (baseManager.characterScroll == null)
+            if (baseManager.GetCharacterScroll() == null)
                     Debug.Log("Activate Quest - Character Scroll null");
 
             //Disable display buttons for villagers
             for(int i = 0; i < questRef.GetVillagerList().Count; i++)
             {
                 Debug.Log("Disable character button for " + questRef.GetVillagerList()[i].GetName());
-                baseManager.characterScroll.GetComponent<CharacterDisplay>().buttonList[questRef.GetVillagerIndexes()[i]].GetComponent<Button>().interactable = false;
+                baseManager.GetCharacterDisplay().DisableCharacterButton(questRef.GetVillagerIndexes()[i]);
             }
 
             //Change all buttons to uninteractable
@@ -133,7 +131,7 @@ public class QuestManager : MonoBehaviour {
             //Enable villagers buttons==
             for (int i = 0; i < finishedQuest.GetVillagerList().Count; i++)
             {
-                baseManager.characterScroll.GetComponentsInChildren<Button>()[finishedQuest.GetVillagerIndexes()[i]].interactable = true;
+                baseManager.GetCharacterDisplay().EnableCharacterButton(finishedQuest.GetVillagerIndexes()[i]);
             }
         }
 

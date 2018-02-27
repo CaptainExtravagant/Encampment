@@ -16,7 +16,7 @@ public class BuildingDisplay : MonoBehaviour {
 
     public List<GameObject> uniquePanels = new List<GameObject>();
     private GameObject uniquePanel;
-
+    
     private void Awake()
     {
         foreach(GameObject panel in uniquePanels)

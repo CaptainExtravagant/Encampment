@@ -29,15 +29,25 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 		itemButtonReference = (GameObject)Resources.Load ("InventoryItem");
 	}
 
-	public void SortItems()
+    public void Init(GameObject inventoryPanel, PlayerController playerController)
+    {
+        controller = playerController;
+
+        inventoryScrollBox = inventoryPanel.GetComponentInChildren<GridLayout>().gameObject;
+        inventoryDropdown = inventoryPanel.GetComponentInChildren<Dropdown>();
+
+        inventoryDropdown.onValueChanged.AddListener(SortItems);
+    }
+
+	public void SortItems(int value)
 	{
-		if (inventoryDropdown.value == 0) {
+		if (value == 0) {
 			displayItems.Clear ();
 			displayItems.AddRange(itemList);
-		} else if (inventoryDropdown.value == 1) {
+		} else if (value == 1) {
 			displayItems.Clear ();
 			displayItems.AddRange(weaponList.ToArray());
-		} else if (inventoryDropdown.value == 2) {
+		} else if (value == 2) {
 			displayItems.Clear ();
 			displayItems.AddRange(armorList.ToArray());
 		}

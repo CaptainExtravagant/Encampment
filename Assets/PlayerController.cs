@@ -26,15 +26,30 @@ public class PlayerController : MonoBehaviour {
     public GameObject buildingPanel;
     Text[] infoText;
 
-    private void Awake()
+    private BaseManager baseManager;
+
+    public void Init(GameObject inventoryPanelIn, GameObject characterPanelIn, GameObject buildingPanelIn, BaseManager newManager)
     {
+        inventoryPanel = inventoryPanelIn;
+        characterPanel = characterPanelIn;
+        buildingPanel = buildingPanelIn;
+
         cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
 
-		infoText = characterPanel.GetComponentsInChildren<Text>();
+        infoText = characterPanel.GetComponentsInChildren<Text>();
 
-        CloseCharacterInfoPanel();
-		CloseInventory ();
+        baseManager = newManager;
+
+        baseManager.GetMainUI().GetComponentsInChildren<Button>()[0].onClick.AddListener(OpenInventory);
+
+        characterPanel.GetComponentsInChildren<Button>()[0].onClick.AddListener(EquipWeaponButton);
+        characterPanel.GetComponentsInChildren<Button>()[1].onClick.AddListener(EquipOffhandButton);
+        characterPanel.GetComponentsInChildren<Button>()[2].onClick.AddListener(EquipArmorButton);
+
+        inventoryPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseInventory);
+
+        Reset();
     }
 
 	public void Reset()

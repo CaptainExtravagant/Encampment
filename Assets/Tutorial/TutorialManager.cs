@@ -39,12 +39,12 @@ public class TutorialManager : BaseManager {
         {
             //Create some villagers
 
-            characterScroll.GetComponent<CharacterDisplay>().Init(SpawnVillager());
+            characterScroll.GetComponent<CharacterDisplay>().AddVillager(SpawnVillager());
         }
 
         //Create new quests
         if (GetComponent<QuestManager>().GetQuestList().Count < 1)
-            GetComponent<QuestManager>().Init();
+            //GetComponent<QuestManager>().Init();
 
         //Close all menus after init
         buildingMenu.SetActive(false);

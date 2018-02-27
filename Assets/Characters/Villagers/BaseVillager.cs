@@ -312,7 +312,7 @@ public class BaseVillager : Character{
 
 			if (targetObject.GetComponent<BaseBuilding> ()) {
 
-				if (manager.toBeUpgraded.Contains (targetObject.GetComponent<BaseBuilding> ()) && AICheckRange ()) {
+				if (manager.GetUpgradedList().Contains (targetObject.GetComponent<BaseBuilding> ()) && AICheckRange ()) {
 					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
 					return;
 				}
@@ -353,19 +353,19 @@ public class BaseVillager : Character{
             {
                 //Find all enemies in the world and target the closest one
                 
-                for (int i = 0; i < manager.enemyList.Count; i++)
+                for (int i = 0; i < manager.GetEnemyCount(); i++)
                 {
-                    if (manager.enemyList[i] != null)
+                    if (manager.GetEnemyList()[i] != null)
                     {
                         //If this is the first item, set it to be the current target
                         if (i == 0)
                         {
-                            SetTarget(manager.enemyList[i].gameObject);
+                            SetTarget(manager.GetEnemyList()[i].gameObject);
                         }
                         //If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
-                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, manager.enemyList[i].transform.position))
+                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, manager.GetEnemyList()[i].transform.position))
                         {
-                            SetTarget(manager.enemyList[i].gameObject);
+                            SetTarget(manager.GetEnemyList()[i].gameObject);
                         }
 
                     }
@@ -381,7 +381,7 @@ public class BaseVillager : Character{
 
                 //print("Finding build targets");
                 //If there aren't any construction targets, continue to wander
-                if (manager.toBeBuilt.Count <= 0)
+                if (manager.GetToBeBuiltCount() <= 0)
                 {
                     //print("No Build Targets");
                     currentState = CHARACTER_STATE.CHARACTER_WANDER;
@@ -389,49 +389,49 @@ public class BaseVillager : Character{
                 else //If at least one target has been found, set it as the current target and set the character state to build
                 {
                     //print("Target found");
-                    for (int i = 0; i < manager.toBeBuilt.Count; i++)
+                    for (int i = 0; i < manager.GetToBeBuiltCount(); i++)
                     {
                         //print("Check target");
                         //If this is the first item, set it to be the current target
                         if (i == 0)
                         {
                             //Does this site have a build slot available?
-                            if (manager.toBeBuilt[i].BuildSlotAvailable())
+                            if (manager.GetToBeBuiltList()[i].BuildSlotAvailable())
                             {
-                                SetTarget(manager.toBeBuilt[i].gameObject);
-                                manager.toBeBuilt[i].StartWork();
+                                SetTarget(manager.GetToBeBuiltList()[i].gameObject);
+                                manager.GetToBeBuiltList()[i].StartWork();
                             }
                         }//If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
-                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, manager.toBeBuilt[i].transform.position))
+                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, manager.GetToBeBuiltList()[i].transform.position))
                         {
                             //Does this site have a build slot available?
-							if (manager.toBeBuilt [i].BuildSlotAvailable ()) {
-								SetTarget (manager.toBeBuilt [i].gameObject);
-								manager.toBeBuilt [i].StartWork();
+							if (manager.GetToBeBuiltList() [i].BuildSlotAvailable ()) {
+								SetTarget (manager.GetToBeBuiltList() [i].gameObject);
+								manager.GetToBeBuiltList() [i].StartWork();
 							}
                         }
                     }
                 }
 
-				if (manager.toBeUpgraded.Count <= 0) {
+				if (manager.GetUpgradedCount() <= 0) {
 					currentState = CHARACTER_STATE.CHARACTER_WANDER;
 				} else {
 					//print("Target found");
-					for (int i = 0; i < manager.toBeUpgraded.Count; i++) {
+					for (int i = 0; i < manager.GetUpgradedCount(); i++) {
 						//print("Check target");
 						//If this is the first item, set it to be the current target
 						if (i == 0) {
 							//Does this site have a build slot available?
-							if (manager.toBeUpgraded [i].BuildSlotAvailable ()) {
-								SetTarget (manager.toBeUpgraded [i].gameObject);
-								manager.toBeUpgraded [i].StartWork ();
+							if (manager.GetUpgradedList() [i].BuildSlotAvailable ()) {
+								SetTarget (manager.GetUpgradedList() [i].gameObject);
+								manager.GetUpgradedList() [i].StartWork ();
 							}
 						}//If this isn't the current item, see if the distance between this character and the new target is less than the distance to the current target
-						else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, manager.toBeUpgraded [i].transform.position)) {
+						else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, manager.GetUpgradedList() [i].transform.position)) {
 							//Does this site have a build slot available?
-							if (manager.toBeUpgraded [i].BuildSlotAvailable ()) {
-								SetTarget (manager.toBeUpgraded [i].gameObject);
-								manager.toBeUpgraded [i].StartWork ();
+							if (manager.GetUpgradedList() [i].BuildSlotAvailable ()) {
+								SetTarget (manager.GetUpgradedList() [i].gameObject);
+								manager.GetUpgradedList() [i].StartWork ();
 							}
 						}
 					}
@@ -458,7 +458,7 @@ public class BaseVillager : Character{
 
     void VillagerBuild()
     {
-		if (manager.toBeUpgraded.Contains (targetObject.GetComponent<BaseBuilding> ())) {
+		if (manager.GetUpgradedList().Contains (targetObject.GetComponent<BaseBuilding> ())) {
 			if (isBuilding) {
 				timer += Time.deltaTime;
 
@@ -533,7 +533,7 @@ public class BaseVillager : Character{
 
 	new protected void AIDead()
 	{
-		manager.villagerList.Remove (this);
+		manager.RemoveVillagerFromList (this);
 		manager.CheckVillagerCount ();
 		base.AIDead ();
 	}
@@ -594,7 +594,7 @@ public class BaseVillager : Character{
             //manager.gameObject.GetComponent<QuestManager>().GetQuestList()[activeQuest].AddCharacter(this);
         }
 
-        manager.characterScroll.GetComponent<CharacterDisplay>().Init(this.gameObject);
+        manager.GetCharacterDisplay().AddVillager(this.gameObject);
 	}
 
     public void SendOnQuest(int questNumber)

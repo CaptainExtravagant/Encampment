@@ -11,7 +11,7 @@ using System.IO;
 
 public class BaseManager : MonoBehaviour {
 
-	public GameObject mainUI;
+    protected GameObject mainUI;
 
     protected int supplyStone;
     protected int supplyWood;
@@ -22,40 +22,47 @@ public class BaseManager : MonoBehaviour {
 
     protected GameObject heldBuilding;
 
-	public PlayerController controller;
+	protected PlayerController controller;
 
-	public GameObject questMenu;
-	public GameObject characterMenu;
-	public GameObject characterScroll;
+	protected GameObject questMenu;
+	protected GameObject characterMenu;
+	protected GameObject characterScroll;
+    private GameObject characterInfo;
+    private CharacterDisplay characterDisplay;
 
-	public GameObject buildingMenu;
-	public GameObject buildingPanel;
+	protected GameObject buildingMenu;
+	protected GameObject buildingPanel;
 	private Vector3 buildingPanelPositionStart;
 	private Vector3 buildingPanelPositionEnd;
 
-	public GameObject buildingInfo;
+    private GameObject inventoryPanel;
+
+	protected GameObject buildingInfo;
+    private BuildingDisplay buildingDisplay;
 
     protected bool isUnderAttack;
 	protected bool settingUpQuest;
 	protected bool addingToBuilding;
 
-    public List<BaseVillager> villagerList = new List<BaseVillager>();
-    public List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
-    public List<BaseBuilding> buildingList = new List<BaseBuilding>();
-	public List<BaseBuilding> toBeUpgraded = new List<BaseBuilding>();
-    public List<BaseEnemy> enemyList = new List<BaseEnemy>();
+    protected List<BaseVillager> villagerList = new List<BaseVillager>();
+    protected List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
+    protected List<BaseBuilding> buildingList = new List<BaseBuilding>();
+	protected List<BaseBuilding> toBeUpgraded = new List<BaseBuilding>();
+    protected List<BaseEnemy> enemyList = new List<BaseEnemy>();
 
     private Camera cameraReference;
     private CameraMovement cameraMovement;
 
 	InventoryBase inventoryReference;
 
-    public GameObject woodText;
-    public GameObject stoneText;
-    public GameObject foodText;
-    public GameObject villagerText;
+    protected Text woodText;
+    protected Text stoneText;
+    protected Text foodText;
+    protected Text villagerText;
 
-	public GameObject lossPanel;
+	protected GameObject lossPanel;
+
+    private QuestManager questManager;
 
 	protected float attackTimer;
 	protected bool attackTimerSet;
@@ -93,15 +100,17 @@ public class BaseManager : MonoBehaviour {
         {
             //Create some villagers
 
-            characterScroll.GetComponent<CharacterDisplay>().Init(SpawnVillager());
+            characterScroll.GetComponent<CharacterDisplay>().AddVillager(SpawnVillager());
         }
 
         LoadGame();
 
 
         //Create new quests
-        if (GetComponent<QuestManager>().GetQuestList().Count < 1)
-            GetComponent<QuestManager>().Init();
+        int questCount = questManager.GetQuestList().Count;
+
+        for (int i = 3; i > questCount; i--)
+            questManager.AddQuest();
 
         //Close all menus after init
         buildingMenu.SetActive(false);
@@ -180,7 +189,168 @@ public class BaseManager : MonoBehaviour {
 
         lossPanel.SetActive(true);
     }
+
+    private void Init()
+    {
+
+        controller = Camera.main.GetComponent<PlayerController>();
+
+        mainUI = Instantiate(Resources.Load("UI/MainUI")) as GameObject;
+        woodText = mainUI.GetComponentsInChildren<Text>()[0];
+        stoneText = mainUI.GetComponentsInChildren<Text>()[1];
+        foodText = mainUI.GetComponentsInChildren<Text>()[2];
+        villagerText = mainUI.GetComponentsInChildren<Text>()[3];
+
+        mainUI.GetComponentsInChildren<Button>()[1].onClick.AddListener(ToggleBuildingMenu);
+        mainUI.GetComponentsInChildren<Button>()[2].onClick.AddListener(OpenQuestMenu);
+        mainUI.GetComponentsInChildren<Button>()[3].onClick.AddListener(ToggleCharacterMenu);
+        mainUI.GetComponentsInChildren<Button>()[4].onClick.AddListener(RestartGame);
+
+        questMenu = Instantiate(Resources.Load("UI/QuestMenuPanel")) as GameObject;
+        characterMenu = Instantiate(Resources.Load("UI/CharacterMenuPanel")) as GameObject;
+        characterScroll = characterMenu.GetComponentInChildren<CharacterDisplay>().gameObject;
+        characterDisplay = characterScroll.GetComponent<CharacterDisplay>();
+        characterInfo = Instantiate(Resources.Load("UI/SelectedCharacterInfo")) as GameObject;
+
+        buildingMenu = Instantiate(Resources.Load("UI/BuildingMenuPanel")) as GameObject;
+        buildingPanel = buildingMenu.GetComponentInChildren<HorizontalLayoutGroup>().gameObject;
+        buildingInfo = Instantiate(Resources.Load("UI/BuildingInfoPanel")) as GameObject;
+        buildingDisplay = buildingInfo.GetComponent<BuildingDisplay>();
+
+        lossPanel = Instantiate(Resources.Load("UI/GameOverPanel")) as GameObject;
+
+        inventoryPanel = Instantiate(Resources.Load("UI/InventoryPanel")) as GameObject;
+
+        inventoryReference = gameObject.AddComponent<InventoryBase>();
+        questManager = gameObject.AddComponent<QuestManager>();
+
+        
+        questMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleQuestMenu);
+        characterMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleCharacterMenu);
+
+        //Loss Panel
+        lossPanel.GetComponentsInChildren<Button>()[0].onClick.AddListener(RestartGame);
+        lossPanel.GetComponentsInChildren<Button>()[1].onClick.AddListener(ReturnToMenu);
+        
+        //Build Menu
+        buildingMenu.GetComponentsInChildren<Button>()[0].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingTownHall") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[1].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingWall") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[2].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingHouse") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[3].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingFarm") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[4].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingLumbercamp") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[5].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingMiningcamp") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[6].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingDocks") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[7].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingBarracks") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[8].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingOutpost") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[9].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingBlacksmith") as GameObject); });
+
+        //Barracks Buttons
+        buildingInfo.GetComponentsInChildren<Button>()[0].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[1].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[2].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[3].onClick.AddListener(delegate { AddingCharacter(3); });
+
+        //Blacksmith Buttons
+        buildingInfo.GetComponentsInChildren<Button>()[5].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[6].onClick.AddListener(delegate { AddingCharacter(1); });
+
+        //Farm Buttons
+        buildingInfo.GetComponentsInChildren<Button>()[8].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[9].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[10].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[11].onClick.AddListener(delegate { AddingCharacter(3); });
+
+        //Lumbermill Buttons
+        buildingInfo.GetComponentsInChildren<Button>()[12].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[13].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[14].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[15].onClick.AddListener(delegate { AddingCharacter(3); });
+
+        //MiningCamp Buttons
+        buildingInfo.GetComponentsInChildren<Button>()[16].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[17].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[18].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[19].onClick.AddListener(delegate { AddingCharacter(3); });
+
+        //Outpost Buttons
+        buildingInfo.GetComponentsInChildren<Button>()[20].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[21].onClick.AddListener(delegate { AddingCharacter(1); });
+
+        //Townhall Buttons
+        buildingInfo.GetComponentsInChildren<Button>()[22].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[23].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[24].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[25].onClick.AddListener(delegate { AddingCharacter(3); });
+
+        controller.Init(inventoryPanel, characterInfo, buildingPanel, this);
+        characterMenu.GetComponent<CharacterDisplay>().Init(this, characterMenu.GetComponentInChildren<Scrollbar>());
+        questManager.Init(questMenu, questMenu.GetComponentInChildren<HorizontalLayoutGroup>().gameObject);
+        inventoryReference.Init(inventoryPanel, controller);
+    }
     //===============//
+
+    //====//
+    //GETS//
+    //====//
+    
+    public GameObject GetMainUI()
+    {
+        return mainUI;
+    }
+    public BuildingDisplay GetBuildingDisplay()
+    {
+        return buildingDisplay;
+    }
+    public CharacterDisplay GetCharacterDisplay()
+    {
+        return characterDisplay;
+    }
+    public int GetVillagerCount()
+    {
+        return villagerList.Count;
+    }
+
+    public int GetBuildingCount()
+    {
+        return buildingList.Count;
+    }
+    public List<BaseBuilding> GetBuildingList()
+    {
+        return buildingList;
+    }
+
+    public int GetToBeBuiltCount()
+    {
+        return toBeBuilt.Count;
+    }
+    public List<BaseBuilding> GetToBeBuiltList()
+    {
+        return toBeBuilt;
+    }
+
+    public int GetUpgradedCount()
+    {
+        return toBeUpgraded.Count;
+    }
+    public List<BaseBuilding> GetUpgradedList()
+    {
+        return toBeUpgraded;
+    }
+
+    public List<BaseEnemy> GetEnemyList()
+    {
+        return enemyList;
+    }
+    public int GetEnemyCount()
+    {
+        return enemyList.Count;
+    }
+
+    public GameObject GetCharacterScroll()
+    {
+        return characterScroll;
+    }
+    //====//
 
 
     //======//
@@ -265,6 +435,29 @@ public class BaseManager : MonoBehaviour {
         {
             ToggleCharacterMenu();
         }
+    }
+
+    public void AddVillagerToList(BaseVillager villager)
+    {
+        villagerList.Add(villager);
+    }
+    public void RemoveVillagerFromList(BaseVillager villager)
+    {
+        villagerList.Remove(villager);
+    }
+
+    public List<BaseVillager> GetVillagerList()
+    {
+        return villagerList;
+    }
+
+    public int GetVillagerIndex(BaseVillager villager)
+    {
+        return villagerList.IndexOf(villager);
+    }
+    public BaseVillager GetVillager(int index)
+    {
+        return villagerList[index];
     }
     //=========//
 
@@ -486,9 +679,51 @@ public class BaseManager : MonoBehaviour {
     public void SelectBuilding(GameObject buildingType)
     {
         heldBuilding = Instantiate(buildingType);
-        heldBuilding.GetComponent<BaseBuilding>().InitBuilding(this);
+        heldBuilding.GetComponent<BaseBuilding>().InitBuilding(this, buildingDisplay.uniquePanels[(int)heldBuilding.GetComponent<BaseBuilding>().GetBuildingType()]);
         ToggleBuildingMenu();
         PlaceBuilding();
+    }
+
+    public void AddBuildingToList(BaseBuilding buildingToAdd, int listIndex)
+    {
+        switch (listIndex)
+        {
+            case 0:
+                toBeBuilt.Add(buildingToAdd);
+                break;
+
+            case 1:
+                buildingList.Add(buildingToAdd);
+                break;
+
+            case 2:
+                toBeUpgraded.Add(buildingToAdd);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void RemoveBuildingFromList(BaseBuilding buildingToAdd, int listIndex)
+    {
+        switch (listIndex)
+        {
+            case 0:
+                toBeBuilt.Remove(buildingToAdd);
+                break;
+
+            case 1:
+                buildingList.Remove(buildingToAdd);
+                break;
+
+            case 2:
+                toBeUpgraded.Remove(buildingToAdd);
+                break;
+
+            default:
+                break;
+        }
     }
 
     //===================//

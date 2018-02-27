@@ -91,11 +91,14 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         buildingCosts.Add(ResourceTile.RESOURCE_TYPE.FOOD, 0);
     }
 
-	public void InitBuilding(BaseManager manager)
+	public void InitBuilding(BaseManager manager, GameObject uniquePanel)
 	{
 		SetBaseManager (manager);
 		meshFilterReference = GetComponent<MeshFilter> ();
-        infoPanel = baseManager.buildingInfo.GetComponentInChildren<BuildingDisplay>().uniquePanels[(int)buildingType];
+        if (uniquePanel != null)
+            infoPanel = uniquePanel;
+        else
+            infoPanel = baseManager.GetBuildingDisplay().uniquePanels[(int)buildingType];
 	}
 
 	protected MeshFilter GetMeshFilter()
@@ -133,21 +136,21 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	virtual public void DestroyBuilding()
 	{
 		if (isBuilt) {
-			baseManager.buildingList.Remove (this);
+			baseManager.RemoveBuildingFromList (this, 1);
 			Destroy (gameObject);
 		} else {
-			baseManager.toBeBuilt.Remove (this);
+			baseManager.RemoveBuildingFromList(this, 0);
 			Destroy (gameObject);
 		}
-		baseManager.buildingInfo.SetActive (false);
+		baseManager.ToggleBuildingInfo();
 	}
 
 	public void UpgradeBuilding()
 	{
 		if(baseManager.RemoveBuildingResources(buildingCosts))
 		{
-			baseManager.buildingList.Remove (this);
-			baseManager.toBeUpgraded.Add (this);
+			baseManager.RemoveBuildingFromList(this, 1);
+			baseManager.AddBuildingToList (this, 2);
 		}
 	}
 
@@ -167,8 +170,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 		SetBuildTime (buildTime * coreModifier);
 
-		baseManager.toBeUpgraded.Remove (this);
-		baseManager.buildingList.Add (this);
+		baseManager.RemoveBuildingFromList (this, 2);
+		baseManager.AddBuildingToList (this, 1);
 	}
 
 	protected void ResetCurrentHealth()
@@ -214,14 +217,14 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		if (BuildSlotAvailable()) {
 			workingVillagers.Add (selectedVillager);
             selectedVillager.SelectWorkArea(this.gameObject);
-            villagerIndexes.Add (baseManager.villagerList.IndexOf(selectedVillager));
+            villagerIndexes.Add (baseManager.GetVillagerIndex(selectedVillager));
 		}
     }
 
     public virtual void RemoveVillagerFromWork(int villager)
     {
         workingVillagers[villager].VillagerStopWork();
-        villagerIndexes.Remove(baseManager.villagerList.IndexOf(workingVillagers[villager]));
+        villagerIndexes.Remove(baseManager.GetVillagerIndex((workingVillagers[villager])));
         workingVillagers.RemoveAt(villager);
     }
 
@@ -359,8 +362,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	virtual protected void CreateBuilding(BaseVillager characterReference)
     {
         gameObject.GetComponent<BoxCollider>().enabled = true;
-        baseManager.toBeBuilt.Remove(this);
-        baseManager.buildingList.Add(this);
+        baseManager.RemoveBuildingFromList(this, 0);
+        baseManager.AddBuildingToList(this, 1);
 		SetMaxHealth (characterReference.GetTaskSkills().construction);
         isBuilt = true;
         isBeingWorked = false;
@@ -422,8 +425,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 		for(int i = 0; i < villagerIndexes.Count; i++)
 		{
-            workingVillagers.Add(manager.villagerList[villagerIndexes[i]]);
-            manager.villagerList[villagerIndexes[i]].SelectWorkArea(this.gameObject);
+            workingVillagers.Add(manager.GetVillagerList()[villagerIndexes[i]]);
+            manager.GetVillagerList()[villagerIndexes[i]].SelectWorkArea(this.gameObject);
             //AddVillagerToWork(manager.villagerList[villagerIndexes[i]], villagerIndexes[i]);
 		}
 
@@ -431,7 +434,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 		SetPlacedInWorld (true);
 
-		InitBuilding (manager);
+		InitBuilding (manager, infoPanel);
 	}
 
 	public BuildingData Save()

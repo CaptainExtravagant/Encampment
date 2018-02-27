@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class CharacterDisplay : MonoBehaviour {
 
-	public BaseManager manager;
+	private BaseManager manager;
 
 	private GameObject characterPanel;
 
-    public List<GameObject> buttonList = new List<GameObject>();
+    private List<GameObject> buttonList = new List<GameObject>();
 
 	private Sprite characterPortrait;
 	private string characterName;
 	private int characterLevel;
 
-	public Scrollbar displayScroll;
+	private Scrollbar displayScroll;
 
 	private Quest activeQuest;
 
@@ -27,6 +27,12 @@ public class CharacterDisplay : MonoBehaviour {
 	private Image panelPortrait;
 	private Text panelName;
 	private Text panelLevel;
+
+    public void Init(BaseManager baseManager, Scrollbar scrollbar)
+    {
+        manager = baseManager;
+        displayScroll = scrollbar;
+    }
 
 	void Awake()
 	{
@@ -57,7 +63,7 @@ public class CharacterDisplay : MonoBehaviour {
 		panelParent.transform.position = newPosition;
 	}
 
-	public void Init(GameObject villager)
+	public void AddVillager(GameObject villager)
 	{
 		UpdateValues (villager.GetComponent<BaseVillager>());
 
@@ -70,6 +76,16 @@ public class CharacterDisplay : MonoBehaviour {
         if(buttonList.Count > 4)
 		    parentEnd = new Vector3(parentEnd.x, parentEnd.y + 168, parentEnd.z);
 	}
+
+    public void DisableCharacterButton(int index)
+    {
+        buttonList[index].GetComponent<Button>().interactable = false;
+    }
+
+    public void EnableCharacterButton(int index)
+    {
+        buttonList[index].GetComponent<Button>().interactable = true;
+    }
 
     public void RemoveAllButtons()
     {

@@ -123,14 +123,14 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
         {
             workingVillagers.Add(selectedVillager);
             selectedVillager.SelectWorkArea(this.gameObject);
-            villagerIndexes.Add(baseManager.villagerList.IndexOf(selectedVillager));
+            villagerIndexes.Add(baseManager.GetVillagerIndex(selectedVillager));
             masterVillager = selectedVillager;
         }
         else if(slotIndex == 1)
         {
             workingVillagers.Add(selectedVillager);
             selectedVillager.SelectWorkArea(this.gameObject);
-            villagerIndexes.Add(baseManager.villagerList.IndexOf(selectedVillager));
+            villagerIndexes.Add(baseManager.GetVillagerIndex(selectedVillager));
             apprenticeVillager = selectedVillager;
         }
     }
@@ -140,14 +140,14 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
         if(villager == 0)
         {
         masterVillager.VillagerStopWork();
-        villagerIndexes.Remove(baseManager.villagerList.IndexOf(masterVillager));
+        villagerIndexes.Remove(baseManager.GetVillagerIndex(masterVillager));
         workingVillagers.RemoveAt(workingVillagers.IndexOf(masterVillager));
         masterVillager = null;
         }
         else if(villager == 1)
         {
             apprenticeVillager.VillagerStopWork();
-            villagerIndexes.Remove(baseManager.villagerList.IndexOf(apprenticeVillager));
+            villagerIndexes.Remove(baseManager.GetVillagerIndex(apprenticeVillager));
             workingVillagers.RemoveAt(workingVillagers.IndexOf(apprenticeVillager));
             apprenticeVillager = null;
         }

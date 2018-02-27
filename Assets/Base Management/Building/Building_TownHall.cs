@@ -36,8 +36,8 @@ public class Building_TownHall : BaseBuilding, I_Building {
 		resourceValue = (resourceValue / workingVillagers.Count) / 10;
 
 		for (int i = 0; i < resourceValue; i++) {
-            if(baseManager.villagerList.Count < baseManager.GetVillagerCap())
-			    baseManager.characterScroll.GetComponent<CharacterDisplay>().Init(baseManager.SpawnVillager());
+            if(baseManager.GetVillagerList().Count < baseManager.GetVillagerCap())
+			    baseManager.GetCharacterDisplay().AddVillager(baseManager.SpawnVillager());
 		}
 
 		activeTimer = workTime;

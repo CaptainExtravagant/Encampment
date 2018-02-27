@@ -158,7 +158,7 @@ public class Quest : MonoBehaviour {
             //Add each villager from the index
             for(int i = 0; i < villagerIndexes.Count; i++)
             {
-                AddCharacter(manager.villagerList[villagerIndexes[i]]);
+                AddCharacter(manager.GetVillager(villagerIndexes[i]));
             }
 
             //Activate the quest properly

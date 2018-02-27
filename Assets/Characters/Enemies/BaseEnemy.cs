@@ -68,31 +68,31 @@ public class BaseEnemy : Character {
     {
         if(targetObject == null)
         {
-			for (int i = 0; i < managerReference.villagerList.Count; i++) {
-				if (managerReference.villagerList [i] != null) {
+			for (int i = 0; i < managerReference.GetVillagerCount(); i++) {
+				if (managerReference.GetVillagerList() [i] != null) {
 					if (i == 0) {
-						targetPosition = managerReference.villagerList [i].transform.position;
-						targetObject = managerReference.villagerList [i].gameObject;
-					} else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.villagerList [i].transform.position)) {
-						targetPosition = managerReference.villagerList [i].transform.position;
-						targetObject = managerReference.villagerList [i].gameObject;
+						targetPosition = managerReference.GetVillagerList() [i].transform.position;
+						targetObject = managerReference.GetVillagerList() [i].gameObject;
+					} else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.GetVillagerList() [i].transform.position)) {
+						targetPosition = managerReference.GetVillagerList() [i].transform.position;
+						targetObject = managerReference.GetVillagerList() [i].gameObject;
 					}
 				}
 			}
-			for (int i = 0; i < managerReference.buildingList.Count; i++) {
-				if (managerReference.buildingList [i] != null) {
-					if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.buildingList [i].transform.position)) {
-						targetPosition = managerReference.buildingList [i].transform.position;
-						targetObject = managerReference.buildingList [i].gameObject;
+			for (int i = 0; i < managerReference.GetBuildingCount(); i++) {
+				if (managerReference.GetBuildingList() [i] != null) {
+					if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.GetBuildingList() [i].transform.position)) {
+						targetPosition = managerReference.GetBuildingList() [i].transform.position;
+						targetObject = managerReference.GetBuildingList() [i].gameObject;
 					}
 				}
 			}
-			for(int i = 0; i < managerReference.toBeBuilt.Count; i++)
+			for(int i = 0; i < managerReference.GetToBeBuiltCount(); i++)
 			{
-				if (managerReference.toBeBuilt [i] != null) {
-					if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.toBeBuilt [i].transform.position)) {
-						targetPosition = managerReference.toBeBuilt [i].transform.position;
-						targetObject = managerReference.toBeBuilt [i].gameObject;
+				if (managerReference.GetToBeBuiltList() [i] != null) {
+					if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.GetToBeBuiltList() [i].transform.position)) {
+						targetPosition = managerReference.GetToBeBuiltList() [i].transform.position;
+						targetObject = managerReference.GetToBeBuiltList() [i].gameObject;
 					}
 				}
             }
