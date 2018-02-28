@@ -7,12 +7,12 @@ using System;
 
 public class InventoryBase : MonoBehaviour, I_Inventory {
 
-	public PlayerController controller;
+	private PlayerController controller;
 
 	private GameObject itemButtonReference;
 	private GameObject[] itemButtonList = new GameObject[itemCap];
 
-	public List<BaseItem> itemList = new List <BaseItem>(itemCap);
+	private List<BaseItem> itemList = new List <BaseItem>(itemCap);
 
 	private List<BaseItem> displayItems = new List <BaseItem>(itemCap);
 
@@ -21,8 +21,8 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 
 	private static int itemCap = 10;
 
-	public GameObject inventoryScrollBox;
-	public Dropdown inventoryDropdown;
+	private GameObject inventoryScrollBox;
+	private Dropdown inventoryDropdown;
 
 	void Awake()
 	{
@@ -33,10 +33,23 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
     {
         controller = playerController;
 
-        inventoryScrollBox = inventoryPanel.GetComponentInChildren<GridLayout>().gameObject;
+        inventoryScrollBox = inventoryPanel.GetComponentInChildren<GridLayoutGroup>().gameObject;
         inventoryDropdown = inventoryPanel.GetComponentInChildren<Dropdown>();
 
         inventoryDropdown.onValueChanged.AddListener(SortItems);
+    }
+
+    public List<BaseItem> GetItemList()
+    {
+        return itemList;
+    }
+
+    public bool CheckForItem(BaseItem itemToCheck)
+    {
+        if (itemList.Contains(itemToCheck))
+            return true;
+        else
+            return false;
     }
 
 	public void SortItems(int value)

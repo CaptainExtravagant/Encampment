@@ -123,23 +123,23 @@ public class BaseVillager : Character{
 
     private void CreateTaskSkills()
     {
-        taskSkills.mining = baseAttributeValue * (characterInfo.characterAttributes.fitness / 100);
+        taskSkills.mining = Mathf.Round(baseAttributeValue * (characterInfo.characterAttributes.fitness / 100));
 
-        taskSkills.woodcutting = baseAttributeValue * (characterInfo.characterAttributes.fitness / 100);
+        taskSkills.woodcutting = Mathf.Round(baseAttributeValue * (characterInfo.characterAttributes.fitness / 100));
 
-        taskSkills.blacksmithing = baseAttributeValue * (((characterInfo.characterAttributes.focus / 100) + (characterInfo.characterAttributes.fitness / 100)) / 2);
+        taskSkills.blacksmithing = Mathf.Round(baseAttributeValue * (((characterInfo.characterAttributes.focus / 100) + (characterInfo.characterAttributes.fitness / 100)) / 2));
 
-        taskSkills.weaponCrafting = baseAttributeValue * (characterInfo.characterAttributes.focus / 100);
+        taskSkills.weaponCrafting = Mathf.Round(baseAttributeValue * (characterInfo.characterAttributes.focus / 100));
 
-        taskSkills.armorCrafting = baseAttributeValue * (characterInfo.characterAttributes.focus / 100);
+        taskSkills.armorCrafting = Mathf.Round(baseAttributeValue * (characterInfo.characterAttributes.focus / 100));
 
-        taskSkills.tailoring = baseAttributeValue * (characterInfo.characterAttributes.focus / 100);
+        taskSkills.tailoring = Mathf.Round(baseAttributeValue * (characterInfo.characterAttributes.focus / 100));
 
-        taskSkills.farming = baseAttributeValue * (characterInfo.characterAttributes.fitness / 100);
+        taskSkills.farming = Mathf.Round(baseAttributeValue * (characterInfo.characterAttributes.fitness / 100));
 
-        taskSkills.construction = baseAttributeValue * (((characterInfo.characterAttributes.focus / 100) + (characterInfo.characterAttributes.fitness / 100)) / 2);
+        taskSkills.construction = Mathf.Round(baseAttributeValue * (((characterInfo.characterAttributes.focus / 100) + (characterInfo.characterAttributes.fitness / 100)) / 2));
 
-        taskSkills.sailing = baseAttributeValue * (((characterInfo.characterAttributes.focus / 100) + (characterInfo.characterAttributes.fitness / 100)) / 2);
+        taskSkills.sailing = Mathf.Round(baseAttributeValue * (((characterInfo.characterAttributes.focus / 100) + (characterInfo.characterAttributes.fitness / 100)) / 2));
     }
 
 	private void SetTaskSkills(TaskSkills newSkills)
@@ -214,15 +214,15 @@ public class BaseVillager : Character{
                 switch(workingResource.GetResourceType())
                 {
                     case 0:
-                        workingResource.MineResource((int)taskSkills.mining);
+                        workingResource.MineResource((int)taskSkills.mining * 10);
                         break;
 
                     case 1:
-                        workingResource.MineResource((int)taskSkills.woodcutting);
+                        workingResource.MineResource((int)taskSkills.woodcutting * 10);
                         break;
 
                     case 2:
-                        workingResource.MineResource((int)taskSkills.farming);
+                        workingResource.MineResource((int)taskSkills.farming * 10);
                         break;
                 }
 				timer = 0;
@@ -501,6 +501,7 @@ public class BaseVillager : Character{
 			  	
 			if	(targetObject.GetComponent<BaseBuilding>().IsBuilt())
 			{ 	
+                    
 					isBuilding = false;
 					agent.enabled = true;
 					currentState = CHARACTER_STATE.CHARACTER_WANDER;

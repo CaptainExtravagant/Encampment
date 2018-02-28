@@ -49,7 +49,9 @@ public class CameraMovement : MonoBehaviour {
             if (cameraTarget != null)
             {
                 //Move camera based on both X and Z so WASD line up properly to perspective; Space.World makes movement based on global axis, not local
-                cameraTarget.Translate(new Vector3(((translationX / 2) + (translationZ / 2)), 0.0f, ((translationZ / 2) - (translationX / 2))), Space.World);
+                cameraTarget.Translate(new Vector3(((translationX / 2) + (translationZ / 2)),
+                    0.0f,
+                    ((translationZ / 2) - (translationX / 2))), Space.World);                
             }
 
             //=====================
@@ -57,7 +59,7 @@ public class CameraMovement : MonoBehaviour {
             //=====================
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                holdMouseTimer += Time.deltaTime;
+                //holdMouseTimer += Time.deltaTime;
 
             }
 
@@ -120,9 +122,9 @@ public class CameraMovement : MonoBehaviour {
 
         //Move camera, use x values normally, empty y value, use y value from mouseOffset so z moves properly; use same method as WASD movement so the mouse movements lines up with camera movement correctly
         cameraTarget.Translate(new Vector3(
-            (((targetStart.x + mouseOffset.x) / 2) + ((targetStart.z + mouseOffset.y) / 2)),
+            (((mouseOffset.x) / 2) + ((mouseOffset.y) / 2)),
             0.0f,
-            (((targetStart.z + mouseOffset.y) / 2) - ((targetStart.x + mouseOffset.x) / 2))),
+            (((mouseOffset.y) / 2) - (mouseOffset.x) / 2)),
             Space.World);
     }
     

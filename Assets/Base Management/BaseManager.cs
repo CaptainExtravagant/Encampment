@@ -72,19 +72,10 @@ public class BaseManager : MonoBehaviour {
     //==========================//
     //Awake, Start, Update, Quit//
     //==========================//
-    protected void Awake()
-    {
-        inventoryReference = GetComponent<InventoryBase>();
-        villagerList.AddRange(FindObjectsOfType<BaseVillager>());
-
-        buildingPanelPositionStart = buildingPanel.transform.position;
-        buildingPanelPositionEnd = new Vector3(buildingPanel.transform.position.x - 730, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
-
-        cameraReference = Camera.main;
-        cameraMovement = cameraReference.GetComponent<CameraMovement>();
-    }
     private void Start()
     {
+        Init();
+
         //Make sure all menus are running so init values can be set
         buildingMenu.SetActive(true);
         questMenu.SetActive(true);
@@ -103,7 +94,7 @@ public class BaseManager : MonoBehaviour {
             characterScroll.GetComponent<CharacterDisplay>().AddVillager(SpawnVillager());
         }
 
-        LoadGame();
+        //LoadGame();
 
 
         //Create new quests
@@ -190,10 +181,14 @@ public class BaseManager : MonoBehaviour {
         lossPanel.SetActive(true);
     }
 
-    private void Init()
+    protected void Init()
     {
+        villagerList.AddRange(FindObjectsOfType<BaseVillager>());
 
-        controller = Camera.main.GetComponent<PlayerController>();
+        cameraReference = Camera.main;
+        cameraMovement = cameraReference.GetComponent<CameraMovement>();
+
+        controller = cameraReference.GetComponent<PlayerController>();
 
         mainUI = Instantiate(Resources.Load("UI/MainUI")) as GameObject;
         woodText = mainUI.GetComponentsInChildren<Text>()[0];
@@ -201,10 +196,6 @@ public class BaseManager : MonoBehaviour {
         foodText = mainUI.GetComponentsInChildren<Text>()[2];
         villagerText = mainUI.GetComponentsInChildren<Text>()[3];
 
-        mainUI.GetComponentsInChildren<Button>()[1].onClick.AddListener(ToggleBuildingMenu);
-        mainUI.GetComponentsInChildren<Button>()[2].onClick.AddListener(OpenQuestMenu);
-        mainUI.GetComponentsInChildren<Button>()[3].onClick.AddListener(ToggleCharacterMenu);
-        mainUI.GetComponentsInChildren<Button>()[4].onClick.AddListener(RestartGame);
 
         questMenu = Instantiate(Resources.Load("UI/QuestMenuPanel")) as GameObject;
         characterMenu = Instantiate(Resources.Load("UI/CharacterMenuPanel")) as GameObject;
@@ -215,7 +206,7 @@ public class BaseManager : MonoBehaviour {
         buildingMenu = Instantiate(Resources.Load("UI/BuildingMenuPanel")) as GameObject;
         buildingPanel = buildingMenu.GetComponentInChildren<HorizontalLayoutGroup>().gameObject;
         buildingInfo = Instantiate(Resources.Load("UI/BuildingInfoPanel")) as GameObject;
-        buildingDisplay = buildingInfo.GetComponent<BuildingDisplay>();
+        buildingDisplay = buildingInfo.GetComponentInChildren<BuildingDisplay>();
 
         lossPanel = Instantiate(Resources.Load("UI/GameOverPanel")) as GameObject;
 
@@ -227,7 +218,7 @@ public class BaseManager : MonoBehaviour {
         
         questMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleQuestMenu);
         characterMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleCharacterMenu);
-
+        
         //Loss Panel
         lossPanel.GetComponentsInChildren<Button>()[0].onClick.AddListener(RestartGame);
         lossPanel.GetComponentsInChildren<Button>()[1].onClick.AddListener(ReturnToMenu);
@@ -282,17 +273,32 @@ public class BaseManager : MonoBehaviour {
         buildingInfo.GetComponentsInChildren<Button>()[24].onClick.AddListener(delegate { AddingCharacter(2); });
         buildingInfo.GetComponentsInChildren<Button>()[25].onClick.AddListener(delegate { AddingCharacter(3); });
 
-        controller.Init(inventoryPanel, characterInfo, buildingPanel, this);
-        characterMenu.GetComponent<CharacterDisplay>().Init(this, characterMenu.GetComponentInChildren<Scrollbar>());
+        controller.Init(inventoryPanel, characterInfo, buildingInfo, this);
+        characterDisplay.Init(this, characterMenu.GetComponentInChildren<Scrollbar>());
         questManager.Init(questMenu, questMenu.GetComponentInChildren<HorizontalLayoutGroup>().gameObject);
         inventoryReference.Init(inventoryPanel, controller);
+        
+        buildingPanelPositionStart = buildingPanel.transform.position;
+        buildingPanelPositionEnd = new Vector3(buildingPanel.transform.position.x - 730, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
+
+        buildingMenu.GetComponentInChildren<Scrollbar>().onValueChanged.AddListener(ScrollBuildingMenu);
+
+        buildingDisplay.Init();
+        
+        mainUI.GetComponentsInChildren<Button>()[0].onClick.AddListener(controller.OpenInventory);
+        mainUI.GetComponentsInChildren<Button>()[1].onClick.AddListener(ToggleBuildingMenu);
+        mainUI.GetComponentsInChildren<Button>()[2].onClick.AddListener(OpenQuestMenu);
+        mainUI.GetComponentsInChildren<Button>()[3].onClick.AddListener(ToggleCharacterMenu);
+        mainUI.GetComponentsInChildren<Button>()[4].onClick.AddListener(RestartGame);
+
+        Debug.Log("Init Successful");
     }
     //===============//
 
     //====//
     //GETS//
     //====//
-    
+
     public GameObject GetMainUI()
     {
         return mainUI;
@@ -349,6 +355,11 @@ public class BaseManager : MonoBehaviour {
     public GameObject GetCharacterScroll()
     {
         return characterScroll;
+    }
+
+    public QuestManager GetQuestManager()
+    {
+        return questManager;
     }
     //====//
 
@@ -510,20 +521,19 @@ public class BaseManager : MonoBehaviour {
     {
         if (buildingInfo.activeSelf)
         {
-            buildingInfo.SetActive(false);
+            //buildingInfo.SetActive(false);
         }
         else
         {
-            buildingInfo.SetActive(true);
+           //buildingInfo.SetActive(true);
         }
     }
-    public void ScrollBuildingMenu(Scrollbar scrollReference)
+    public void ScrollBuildingMenu(float value)
 	{
 		//Zero value = 60
 		//1 value = -820
-		float scrollValue = scrollReference.value;
 
-		Vector3 newPosition = Vector3.Lerp(buildingPanelPositionStart, buildingPanelPositionEnd, scrollValue);
+		Vector3 newPosition = Vector3.Lerp(buildingPanelPositionStart, buildingPanelPositionEnd, value);
 
 		buildingPanel.transform.position = newPosition;
     }

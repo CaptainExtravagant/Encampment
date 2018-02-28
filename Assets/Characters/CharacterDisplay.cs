@@ -32,19 +32,21 @@ public class CharacterDisplay : MonoBehaviour {
     {
         manager = baseManager;
         displayScroll = scrollbar;
+
+        characterPanel = (GameObject)Resources.Load("UI/CharacterPanel");
+        panelPortrait = characterPanel.GetComponentInChildren<Image>();
+        panelName = characterPanel.GetComponentsInChildren<Text>()[0];
+        panelLevel = characterPanel.GetComponentsInChildren<Text>()[1];
+
+        panelParent = GetComponentInChildren<VerticalLayoutGroup>().gameObject;
+        parentStart = panelParent.transform.position;
+        parentEnd = parentStart;
     }
 
-	void Awake()
-	{
-		characterPanel = (GameObject)Resources.Load ("UI/CharacterPanel");
-		panelPortrait = characterPanel.GetComponentInChildren<Image> ();
-		panelName = characterPanel.GetComponentsInChildren<Text> ()[0];
-		panelLevel = characterPanel.GetComponentsInChildren<Text> () [1];
+    public void OpenPanel(BaseVillager villager)
+    {
 
-		panelParent = GetComponentInChildren<VerticalLayoutGroup> ().gameObject;
-		parentStart = panelParent.transform.position;
-		parentEnd = parentStart;
-	}
+    }
 
 	public void OpenMenuForQuests(Quest chosenQuest)
 	{

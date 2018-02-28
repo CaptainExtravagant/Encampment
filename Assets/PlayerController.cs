@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using UnityEngine.EventSystems;
+
 public class PlayerController : MonoBehaviour {
 
     Camera cameraReference;
@@ -21,9 +23,10 @@ public class PlayerController : MonoBehaviour {
     Character.CharacterInfo selectedCharacterInfo;
     BaseVillager.TaskSkills selectedCharacterTaskSkills;
 
-	public GameObject inventoryPanel;
-    public GameObject characterPanel;
-    public GameObject buildingPanel;
+	private GameObject inventoryPanel;
+    private GameObject characterPanel;
+    private GameObject buildingPanel;
+    private BuildingDisplay buildingDisplay;
     Text[] infoText;
 
     private BaseManager baseManager;
@@ -33,6 +36,7 @@ public class PlayerController : MonoBehaviour {
         inventoryPanel = inventoryPanelIn;
         characterPanel = characterPanelIn;
         buildingPanel = buildingPanelIn;
+        buildingDisplay = buildingPanel.GetComponentInChildren<BuildingDisplay>();
 
         cameraReference = Camera.main;
         cameraMovement = cameraReference.GetComponent<CameraMovement>();
@@ -66,89 +70,98 @@ public class PlayerController : MonoBehaviour {
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-			//Debug.Log ("Mouse Click");
-			selectedObject = FindObjectUnderMouse ();
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                //Debug.Log ("Mouse Click");
+                selectedObject = FindObjectUnderMouse();
 
-			if (selectedObject != null) {
-				//Debug.Log ("Object Selected");
+                if (selectedObject != null)
+                {
+                    //Debug.Log ("Object Selected");
 
-				if (selectedObject.GetComponent<BaseVillager> ()) {
-					//Debug.Log ("Villager Found");
-
-                    if (villagerReference == null)
+                    if (selectedObject.GetComponent<BaseVillager>())
                     {
-                        villagerReference = selectedObject.GetComponent<BaseVillager>();
+                        //Debug.Log ("Villager Found");
 
-                        villagerReference.SetSelected(true);
-                        OpenCharacterInfoPanel();
+                        if (villagerReference == null)
+                        {
+                            villagerReference = selectedObject.GetComponent<BaseVillager>();
+
+                            villagerReference.SetSelected(true);
+                            OpenCharacterInfoPanel();
+                        }
+                        else
+                        {
+                            villagerReference.SetSelected(false);
+                            villagerReference = null;
+                            CloseCharacterInfoPanel();
+                        }
+
+                        if (buildingReference != null)
+                        {
+                            CloseBuildingInfoPanel();
+                        }
                     }
-                    else
+                    else if (selectedObject.GetComponent<ResourceTile>())
                     {
-                        villagerReference.SetSelected(false);
-                        villagerReference = null;
-                        CloseCharacterInfoPanel();
-                    }
+                        //Debug.Log ("Resources Found");
+                        resourceReference = selectedObject.GetComponent<ResourceTile>();
 
-                    if (buildingReference != null)
+                        if (villagerReference != null)
+                        {
+                            //Debug.Log ("Setting Work Area (Controller)");
+                            villagerReference.SelectWorkArea(resourceReference.gameObject);
+                            villagerReference.SetSelected(false);
+                            villagerReference = null;
+                            CloseCharacterInfoPanel();
+                        }
+
+                        if (buildingReference != null)
+                        {
+                            CloseBuildingInfoPanel();
+                        }
+
+                        resourceReference = null;
+                    }
+                    else if (selectedObject.GetComponent<BaseBuilding>())
                     {
-                        CloseBuildingInfoPanel();
+
+                        //Debug.Log ("Building Found");
+
+                        if (buildingReference != null)
+                        {
+                            //Close panel and remove reference
+                            CloseBuildingInfoPanel();
+                        }
+                        else
+                        {
+                            //Set building reference and open info panel
+                            buildingReference = selectedObject.GetComponent<BaseBuilding>();
+                            if (buildingReference.IsBuilt() == true)
+                                OpenBuildingInfoPanel();
+                            else
+                                buildingReference = null;
+                        }
+
+                        if (villagerReference != null)
+                        {
+
+                            //buildingReference.OnClicked(villagerReference);
+
+                            villagerReference.SetSelected(false);
+                            villagerReference = null;
+                            CloseCharacterInfoPanel();
+                        }
                     }
                 }
-				else if (selectedObject.GetComponent<ResourceTile> ()) {
-					//Debug.Log ("Resources Found");
-					resourceReference = selectedObject.GetComponent<ResourceTile> ();
+                else
+                {
+                    //Debug.Log ("Object is null");
+                }
 
-					if (villagerReference != null)
-					{
-						//Debug.Log ("Setting Work Area (Controller)");
-						villagerReference.SelectWorkArea (resourceReference.gameObject);
-						villagerReference.SetSelected (false);
-						villagerReference = null;
-                        CloseCharacterInfoPanel();
-					}
-
-                    if(buildingReference != null)
-                    {
-                        CloseBuildingInfoPanel();
-                    }
-
-					resourceReference = null;
-				} else if (selectedObject.GetComponent<BaseBuilding> ()) {
-
-                    //Debug.Log ("Building Found");
-
-                    if (buildingReference != null)
-                    {
-                        //Close panel and remove reference
-                        CloseBuildingInfoPanel();
-                    }
-                    else
-                    {
-                        //Set building reference and open info panel
-                        buildingReference = selectedObject.GetComponent<BaseBuilding>();
-                        if (buildingReference.IsBuilt() == true)
-                            OpenBuildingInfoPanel();
-                        else
-                            buildingReference = null;
-                    }
-                    
-                    if (villagerReference != null) {
-
-                        //buildingReference.OnClicked(villagerReference);
-
-						villagerReference.SetSelected (false);
-						villagerReference = null;
-                        CloseCharacterInfoPanel();
-					}
-				}
-			}
-			else
-			{
-				//Debug.Log ("Object is null");
-			}
-           
+            }
         }
     }
 
@@ -297,7 +310,136 @@ public class PlayerController : MonoBehaviour {
 
         characterPanel.SetActive(true);
     }
-        
+        public void OpenCharacterInfoPanel(BaseVillager villager)
+        {
+        villagerReference = villager;
+
+        selectedCharacterInfo = villagerReference.GetCharacterInfo();
+        selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
+
+		for (int i = 0; i < infoText.Length; i++) {
+			switch (i) {
+			case 1:
+				infoText [i].text = selectedCharacterInfo.characterName;
+				break;
+
+			case 3:
+				if (selectedCharacterInfo.characterSex == 1) {
+					infoText [i].text = "Male";
+				} else {
+					infoText [i].text = "Female";
+				}
+				break;
+
+			case 5:
+				infoText [i].text = selectedCharacterInfo.characterLevel.ToString();
+				break;
+
+			case 8:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.fitness.ToString ();
+				break;
+
+			case 10:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.nimbleness.ToString ();
+				break;
+
+			case 12:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.curiosity.ToString ();
+				break;
+
+			case 14:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.focus.ToString ();
+				break;
+
+			case 16:
+				infoText [i].text = selectedCharacterInfo.characterAttributes.charm.ToString ();
+				break;
+
+			case 19:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.brawling.ToString ();
+				break;
+
+			case 21:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.sword.ToString ();
+				break;
+
+			case 23:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.longsword.ToString ();
+				break;
+
+			case 25:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.axe.ToString ();
+				break;
+
+			case 27:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.polearm.ToString ();
+				break;
+
+			case 29:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.bow.ToString ();
+				break;
+
+			case 31:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.dodge.ToString ();
+				break;
+
+			case 33:
+				infoText [i].text = selectedCharacterInfo.characterCombatSkills.armor.ToString ();
+				break;
+
+			case 36:
+				infoText [i].text = selectedCharacterTaskSkills.mining.ToString ();
+				break;
+
+			case 38:
+				infoText [i].text = selectedCharacterTaskSkills.woodcutting.ToString ();
+				break;
+
+			case 40:
+				infoText [i].text = selectedCharacterTaskSkills.blacksmithing.ToString ();
+				break;
+
+			case 42:
+				infoText [i].text = selectedCharacterTaskSkills.weaponCrafting.ToString ();
+				break;
+
+			case 44:
+				infoText [i].text = selectedCharacterTaskSkills.armorCrafting.ToString ();
+				break;
+
+			case 46:
+				infoText [i].text = selectedCharacterTaskSkills.tailoring.ToString ();
+				break;
+
+			case 48:
+				infoText [i].text = selectedCharacterTaskSkills.farming.ToString ();
+				break;
+
+			case 50:
+				infoText [i].text = selectedCharacterTaskSkills.construction.ToString ();
+				break;
+
+			case 52:
+				infoText [i].text = selectedCharacterTaskSkills.sailing.ToString ();
+				break;
+
+			case 54:
+				infoText [i].text = villagerReference.GetEquippedWeapon ().GetItemName ();
+				break;
+
+			case 56:
+				infoText [i].text = villagerReference.GetOffHandWeapon ().GetItemName ();
+				break;
+
+			case 58:
+				infoText [i].text = villagerReference.GetEquippedArmor ().GetItemName ();
+				break;
+			}
+		}
+
+        characterPanel.SetActive(true);
+        }
+
 	    public void CloseCharacterInfoPanel()
     {
         characterPanel.SetActive(false);
@@ -438,16 +580,18 @@ public class PlayerController : MonoBehaviour {
 
     void OpenBuildingInfoPanel()
     {
-        buildingPanel.GetComponentInChildren<BuildingDisplay>().SetInformation(buildingReference);
+        baseManager.ToggleBuildingInfo();
+        buildingDisplay.SetInformation(buildingReference);
 
         buildingPanel.SetActive(true);
     }
 
     public void CloseBuildingInfoPanel()
     {
+        baseManager.ToggleBuildingInfo();
         buildingReference = null;
 
-        buildingPanel.GetComponentInChildren<BuildingDisplay> ().ClosePanel ();
+        buildingDisplay.ClosePanel ();
 
         buildingPanel.SetActive(false);
     }

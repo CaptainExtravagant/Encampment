@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 222005042865955048}
   - component: {fileID: 114741182068770438}
   - component: {fileID: 114557775015422542}
+  - component: {fileID: 225142842369685330}
   m_Layer: 5
   m_Name: OpenInventory
   m_TagString: Untagged
@@ -176,6 +177,7 @@ GameObject:
   - component: {fileID: 222654747382450702}
   - component: {fileID: 114424635851758432}
   - component: {fileID: 114652959409249456}
+  - component: {fileID: 225459842463189112}
   m_Layer: 5
   m_Name: Characters
   m_TagString: Untagged
@@ -194,6 +196,7 @@ GameObject:
   - component: {fileID: 222843101342858298}
   - component: {fileID: 114147109680536416}
   - component: {fileID: 114364264716295196}
+  - component: {fileID: 225953627548948682}
   m_Layer: 5
   m_Name: Quests
   m_TagString: Untagged
@@ -229,6 +232,7 @@ GameObject:
   - component: {fileID: 222426510217625696}
   - component: {fileID: 114895741141106140}
   - component: {fileID: 114496681604620626}
+  - component: {fileID: 225331206489364942}
   m_Layer: 5
   m_Name: ResetSave
   m_TagString: Untagged
@@ -265,6 +269,7 @@ GameObject:
   - component: {fileID: 222167538710095862}
   - component: {fileID: 114412609952067358}
   - component: {fileID: 114153989220490838}
+  - component: {fileID: 225842624901993358}
   m_Layer: 5
   m_Name: BuildingMenu
   m_TagString: Untagged
@@ -449,7 +454,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Reset Save
+  m_Text: Restart
 --- !u!114 &114276831923858694
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -825,7 +830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
+  m_BlockingObjects: 3
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1389,3 +1394,58 @@ RectTransform:
   m_AnchoredPosition: {x: 80, y: 15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &225142842369685330
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1192651007033500}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &225331206489364942
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1783761099387170}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &225459842463189112
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1619765767354614}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &225842624901993358
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1916014179108594}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &225953627548948682
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1724965704371436}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

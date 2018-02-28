@@ -9,5 +9,5 @@ EditorBuildSettings:
     path: Assets/Levels/MainMenu.unity
     guid: 559d01383203503459a558436aee8538
   - enabled: 1
-    path: Assets/TestArea.unity
-    guid: 373661a10d9eaca4a984ae9b404bb643
+    path: Assets/Levels/Tutorial.unity
+    guid: 15f679f53a27b884798f2ba044d10fb0

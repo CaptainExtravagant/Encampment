@@ -48,7 +48,7 @@ public class BaseWeapon : BaseItem, I_Item {
 
 	void I_Item.CalculateBaseStats(BaseVillager villagerReference)
 	{
-		float smithingBonus = baseWeaponValue + (1 + (villagerReference.GetTaskSkills ().weaponCrafting / 100)) * (villagerReference.GetTaskSkills().blacksmithing / 100) ;
+		float smithingBonus = baseWeaponValue + (1 + (villagerReference.GetTaskSkills ().weaponCrafting)) * (villagerReference.GetTaskSkills().blacksmithing) ;
 
 		SetBaseScore (smithingBonus);
 	}

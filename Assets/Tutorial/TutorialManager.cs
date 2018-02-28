@@ -16,19 +16,23 @@ public class TutorialManager : BaseManager {
     private bool demoAttackComplete;
 
     private bool[] resourcesCollected = new bool[3];
+    private bool resourcePanelOpened = false;
+    private bool buildingInfoOpened = false;
 
     private void Start()
     {
         ResetSave();
 
+        Init();
+
         subjectText = GetComponentsInChildren<Text>()[0];
         contentsText = GetComponentsInChildren<Text>()[1];
         
         //Make sure all menus are running so init values can be set
-        buildingMenu.SetActive(true);
-        questMenu.SetActive(true);
-        characterMenu.SetActive(true);
-        buildingInfo.SetActive(true);
+        //buildingMenu.SetActive(true);
+        //questMenu.SetActive(true);
+        //characterMenu.SetActive(true);
+        //buildingInfo.SetActive(true);
 
         supplyFood = 100;
         maxVillagers = 0;
@@ -42,9 +46,11 @@ public class TutorialManager : BaseManager {
             characterScroll.GetComponent<CharacterDisplay>().AddVillager(SpawnVillager());
         }
 
+        int questCount = GetQuestManager().GetQuestCount();
+
         //Create new quests
-        if (GetComponent<QuestManager>().GetQuestList().Count < 1)
-            //GetComponent<QuestManager>().Init();
+        for (int i = 3; i > questCount; i--)
+            GetQuestManager().AddQuest();
 
         //Close all menus after init
         buildingMenu.SetActive(false);
@@ -82,7 +88,7 @@ public class TutorialManager : BaseManager {
                 isUnderAttack = false;
                 if (!attackTimerSet)
                 {
-                    attackTimer = UnityEngine.Random.Range(60.0f, 120.0f);
+                    attackTimer = Random.Range(60.0f, 120.0f);
                     attackTimerSet = true;
 
                     if(!demoAttackComplete)
@@ -129,20 +135,25 @@ public class TutorialManager : BaseManager {
         }
 
         //Check resources collected//
-        if (resourcesCollected[0] && resourcesCollected[1] && resourcesCollected[2])
-            SetActiveAdvice(1);
-
+        if (!resourcePanelOpened)
+            if (resourcesCollected[0] && resourcesCollected[1] && resourcesCollected[2])
+            {
+                resourcePanelOpened = true;
+                SetActiveAdvice(1);
+            }
     }
     public override void ToggleBuildingInfo()
     {
         if (buildingInfo.activeSelf)
         {
-            buildingInfo.SetActive(false);
         }
         else
         {
-            buildingInfo.SetActive(true);
-            SetActiveAdvice(2);
+            if (!buildingInfoOpened)
+            {
+                SetActiveAdvice(2);
+                buildingInfoOpened = true;
+            }
         }
     }
     void SetActiveAdvice(int index)
@@ -171,11 +182,12 @@ public class TutorialManager : BaseManager {
             SetActiveAdvice(3);
             demoAttack = true;
 
-            attackTimer = UnityEngine.Random.Range(60.0f, 120.0f);
+            attackTimer = Random.Range(30.0f, 60.0f);
             attackTimerSet = true;
         }
         else
         {
+            controller.OpenCharacterInfoPanel(chosenVillager);
             ToggleCharacterMenu();
             SetActiveAdvice(8);
         }

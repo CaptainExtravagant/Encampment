@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class QuestManager : MonoBehaviour {
 
-    public List<Sprite> imageList = new List<Sprite>();
+    private List<Sprite> imageList = new List<Sprite>() { new Sprite() };
 
     private List<string> missionNamesStart = new List<string>() { "Banished", "Black", "Bleeding", "Blind", "Blinding", "Bloody", "Broken", "Brutal", "Burning", "Cold", "Crimson", "Cryptic", "Crystal", "Dark", "Defiant", "Demon", "Devil's", "Driving", "Dying", "Empty", "Enduring", "Fading", "Fallen", "Final", "First", "Flying", "Forgotten", "Frozen", "Glass", "Hidden", "Hot", "Lazy", "Lone", "Lost", "Morbid", "Patient", "Purple", "Red", "Rotting", "Sacred", "Secret", "Severed", "Shattered", "Silent", "Soaring", "Spectral", "Stone", "Swift", "Twisted", "Unceasing", "Vengeful" };
 	private List<string> missionNamesEnd = new List<string>() {"Apollo", "Bell", "Blade", "Breath", "Calm", "Crone", "Crown", "Daze", "Dream", "Druid", "Empire", "Engine", "Fall", "Father", "Fear", "Fog", "Future", "Grave", "God", "Hammer", "Hawk", "Hydra", "Hymn", "Jester", "Justice", "King", "Line", "Law", "Moon", "Mother", "Mountain", "Night", "Palace", "Paramour", "Pipe", "Priest", "Prophet", "Pyre", "Rain", "Ring", "Savior", "Scepter", "Serpent", "Shield", "Shroud", "Skull", "Smoke", "Stallion", "Star", "Stranger", "Stroke", "Summer", "Sword", "Tears", "Thorn", "Throne", "Thunder", "Vanguard", "Vengeance", "Whisper" };
@@ -77,6 +77,10 @@ public class QuestManager : MonoBehaviour {
     public List<Quest> GetQuestList()
     {
         return questList;
+    }
+    public int GetQuestCount()
+    {
+        return questList.Count;
     }
 
     public void ActivateQuest(Quest questRef)

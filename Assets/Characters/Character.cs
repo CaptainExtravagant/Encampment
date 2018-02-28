@@ -136,7 +136,7 @@ public class Character : MonoBehaviour{
     private float attackCooldownTime;
     private float attackTimer;
 
-    protected float baseAttributeValue = 75;
+    protected float baseAttributeValue = 50;
     float baseCombatValue = 4;
 
     private string[] MaleFirstNames = {"Noah", "Liam", "William", "Mason", "James", "Benjamin", "Jacob", "Michael", "Elijah", "Ethan" };
@@ -218,8 +218,8 @@ public class Character : MonoBehaviour{
     private Attributes CreateAttributes()
     {
         //Find Random values for Fitness and Nimbleness using the base value and a random percentage multiplier
-        float fitness = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
-		float nimbleness = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
+        float fitness = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f)) / 10;
+		float nimbleness = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f)) / 10;
 
         //If Fitness is higher than Nimbleness, lower Nimbleness by 13% of Fitness value
         if(fitness > nimbleness)
@@ -233,8 +233,8 @@ public class Character : MonoBehaviour{
         }
 
         //Find random values for Curiosity and Focus
-		float curiosity = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
-		float focus = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
+		float curiosity = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f)) / 10;
+		float focus = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f)) / 10;
 
         //If Curiosity is higher than Focus, lower by 13%
         if(curiosity > focus)
@@ -247,9 +247,24 @@ public class Character : MonoBehaviour{
         }
 
         //Find value for Charm
-		float charm = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f));
+		float charm = (baseAttributeValue * ((UnityEngine.Random.value) + 1.0f)) / 10;
         //Charm doesn't have a counter attribute so it can keep its new value
         
+        fitness = Mathf.Round(fitness);
+        fitness = Mathf.Clamp(fitness, 0, 10);
+
+        nimbleness = Mathf.Round(nimbleness);
+        nimbleness = Mathf.Clamp(nimbleness, 0, 10);
+
+        curiosity = Mathf.Round(curiosity);
+        curiosity = Mathf.Clamp(curiosity, 0, 10);
+
+        focus = Mathf.Round(focus);
+        focus = Mathf.Clamp(focus, 0, 10);
+
+        charm = Mathf.Round(charm);
+        charm = Mathf.Clamp(charm, 0, 10);
+
         //Return newly calculated attributes for assigning later
         return new Attributes(fitness, nimbleness, curiosity, focus, charm);
     }
@@ -257,27 +272,35 @@ public class Character : MonoBehaviour{
     {
         //Brawling is based off a characters fitness
         float brawling = (baseCombatValue + (newAttributes.fitness * 0.05f));
+        brawling = Mathf.Round(brawling);
 
         //Sword skills are based off nimbleness and focus
         float sword = (baseCombatValue + ((newAttributes.nimbleness + newAttributes.focus) * 0.05f));
+        sword = Mathf.Round(sword);
 
         //Longsword skills are based off fitness
         float longsword = (baseCombatValue + (newAttributes.fitness * 0.05f));
+        longsword = Mathf.Round(longsword);
 
         //Axe skills are based off fitness
         float axe = (baseCombatValue + (newAttributes.fitness * 0.05f));
+        axe = Mathf.Round(axe);
 
         //Polearm skills are based off fitness and focus
         float polearm = (baseCombatValue + ((newAttributes.fitness + newAttributes.focus) * 0.05f));
+        polearm = Mathf.Round(polearm);
 
         //Bow skills are based off focus
         float bow = (baseCombatValue + (newAttributes.focus * 0.05f));
+        bow = Mathf.Round(bow);
 
         //Dodge skills are based off nimbleness and focus, as this isn't a weapon skill 10% of the total is used
         float dodge = (baseCombatValue + ((newAttributes.nimbleness + newAttributes.focus) * 0.1f));
+        dodge = Mathf.Round(dodge);
 
         //Armor skills are based off fitness, as it isn't a weapon skill, 10% is used
         float armor = (baseCombatValue + (newAttributes.fitness * 0.1f));
+        armor = Mathf.Round(armor);
 
         return new CombatSkills(brawling, sword, axe, polearm, bow, dodge, armor, longsword);
     }
@@ -302,7 +325,8 @@ public class Character : MonoBehaviour{
         float newHealth = 0;
 
         //Create new health value based off Fitness and a random factor
-		newHealth = (newAttributes.fitness * ((UnityEngine.Random.value) + 1.0f));
+		newHealth = (newAttributes.fitness * 5) * ((UnityEngine.Random.value) + 1.0f);
+        newHealth = Mathf.Round(newHealth);
 
         return newHealth;
     }
@@ -582,7 +606,7 @@ public class Character : MonoBehaviour{
 
 	public void EquipWeaponToMainHand(BaseWeapon weaponToEquip)
     {
-		if(inventory.itemList.Contains(weaponToEquip))
+		if(inventory.CheckForItem(weaponToEquip))
 			inventory.RemoveItem (weaponToEquip);
 
 		equippedWeapon = weaponToEquip;
@@ -619,7 +643,7 @@ public class Character : MonoBehaviour{
     {
         if (offHandEnabled)
         {
-			if(inventory.itemList.Contains(weaponToEquip))
+			if(inventory.CheckForItem(weaponToEquip))
 				inventory.RemoveItem (weaponToEquip);
             offHandWeapon = weaponToEquip;
         }
@@ -627,7 +651,7 @@ public class Character : MonoBehaviour{
 
 	public void EquipArmor(BaseArmor armorToEquip)
     {
-		if(inventory.itemList.Contains(armorToEquip))
+		if(inventory.CheckForItem(armorToEquip))
 			inventory.RemoveItem (armorToEquip);
 		equippedArmor = armorToEquip;
     }

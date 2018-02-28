@@ -10,12 +10,25 @@ public class Building_TownHall : BaseBuilding, I_Building {
 	{
 		SetBuildingType (BUILDING_TYPE.BUILDING_TOWNHALL);
 		loadPath = "Buildings/BuildingTownHall";
-		workTime = 600.0f;
+		workTime = 60.0f;
 		maxWorkingVillagers = 4;
         villagerSlots = 10;
 		activeTimer = workTime;
 
 	}
+
+    new void Update()
+    {
+        base.Update();
+
+        if (workingVillagers.Count > 0)
+        {
+            activeTimer -= Time.deltaTime;
+
+            if (activeTimer <= 0)
+                WorkBuilding();
+        }
+    }
 
     protected override void CreateBuilding(BaseVillager characterReference)
     {
@@ -33,7 +46,7 @@ public class Building_TownHall : BaseBuilding, I_Building {
 			resourceValue += workingVillagers[i].GetCharacterInfo().characterAttributes.charm;;
 		}
 
-		resourceValue = (resourceValue / workingVillagers.Count) / 10;
+		resourceValue = (resourceValue / workingVillagers.Count) / 50;
 
 		for (int i = 0; i < resourceValue; i++) {
             if(baseManager.GetVillagerList().Count < baseManager.GetVillagerCap())
@@ -61,7 +74,7 @@ public class Building_TownHall : BaseBuilding, I_Building {
 			tempValue += workingVillagers[i].GetCharacterInfo().characterAttributes.charm;
 		}
 
-		tempValue = (tempValue / workingVillagers.Count) / 10;
+		tempValue = (tempValue / workingVillagers.Count) / 50;
         if (workingVillagers.Count > 0)
             infoPanel.GetComponentsInChildren<UnityEngine.UI.Text>()[9].text = Mathf.Ceil(tempValue).ToString();
         else
