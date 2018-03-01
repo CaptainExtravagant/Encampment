@@ -701,18 +701,21 @@ public class BaseManager : MonoBehaviour {
         }
         else
         {
-            //Debug.Log ("Place Construction Down");
+            Debug.Log ("Place Construction Down");
             //Place construction site on mouse position and add to list of construction areas.
-
-            if (heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld())
-                toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
-
-            placingBuilding = false;
-            heldBuilding = null;
+			if (heldBuilding.GetComponent<BaseBuilding> ().PlaceInWorld ()) {
+				toBeBuilt.Add (heldBuilding.GetComponent<BaseBuilding> ());
+				placingBuilding = false;
+				heldBuilding = null;
+			} else {
+				Debug.Log ("Construction Failed");
+				CancelBuilding ();
+			}
         }
     }
 	protected void CancelBuilding()
 	{
+		Debug.Log ("Cancel Building");
 		placingBuilding = false;
 		Destroy (heldBuilding);
 		heldBuilding = null;

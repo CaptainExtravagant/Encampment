@@ -206,16 +206,20 @@ public class TutorialManager : BaseManager {
 
             if (heldBuilding.GetComponent<BaseBuilding>().PlaceInWorld())
             {
-                toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
+				toBeBuilt.Add(heldBuilding.GetComponent<BaseBuilding>());
 
                 if (heldBuilding.GetComponent<Building_Farm>() || heldBuilding.GetComponent<Building_LumberCamp>() || heldBuilding.GetComponent<Building_MiningCamp>())
                 {
                     SetActiveAdvice(7);
-                }
-            }
+				}
 
-            placingBuilding = false;
-            heldBuilding = null;
+				placingBuilding = false;
+				heldBuilding = null;
+			} else {
+				Debug.Log ("Construction Failed");
+				CancelBuilding ();
+			}
+
         }
     }
 }

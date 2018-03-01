@@ -67,6 +67,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	private float currentHealth;
 	protected float coreModifier = 1.0f;
 
+	protected bool canBePlaced = true;
+
     protected void Start()
     {
         //SetMesh();
@@ -80,10 +82,24 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
         SetBuildingCost();
         
-        if (isBuilt)
-            GetComponent<BoxCollider>().enabled = true;
-
     }
+
+	void OnTriggerEnter(Collider collider)
+	{
+		canBePlaced = false;
+		Debug.Log ("Building Enter Triggered");
+	}
+
+	void OnTriggerExit(Collider collider)
+	{
+		canBePlaced = true;
+		Debug.Log ("Building Exit Triggered");
+	}
+
+	public bool CanBePlaced()
+	{
+		return canBePlaced;
+	}
 
     virtual protected void SetBuildingCost()
     {
@@ -312,28 +328,30 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         //Set the new position to the next rounded value, making the building snap to the grid
         if (Physics.Raycast(cursorPosition, out hit, Mathf.Infinity))
         {
-            transform.position = new Vector3(Mathf.Round(hit.point.x), 0.0f, Mathf.Round(hit.point.z));
+            transform.position = new Vector3(Mathf.Round(hit.point.x), 0.5f, Mathf.Round(hit.point.z));
         }
     }
 
 	public bool PlaceInWorld()
 	{
-		if (baseManager.RemoveBuildingResources(buildingCosts))
+		Debug.Log (canBePlaced);
+		if (CanBePlaced ())
 		{
-			//Debug.Log ("Place in World");
-			upgradeCosts[ResourceTile.RESOURCE_TYPE.FOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] / 2;
-			upgradeCosts[ResourceTile.RESOURCE_TYPE.WOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] / 2;
-			upgradeCosts[ResourceTile.RESOURCE_TYPE.STONE] = buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] / 2;
+			Debug.Log ("Can Be Placed");
+			if (baseManager.RemoveBuildingResources (buildingCosts))
+			{
+				//Debug.Log ("Place in World");
+				upgradeCosts [ResourceTile.RESOURCE_TYPE.FOOD] = buildingCosts [ResourceTile.RESOURCE_TYPE.FOOD] / 2;
+				upgradeCosts [ResourceTile.RESOURCE_TYPE.WOOD] = buildingCosts [ResourceTile.RESOURCE_TYPE.WOOD] / 2;
+				upgradeCosts [ResourceTile.RESOURCE_TYPE.STONE] = buildingCosts [ResourceTile.RESOURCE_TYPE.STONE] / 2;
 
-			SetPlacedInWorld (true);
-			return true;
+				SetPlacedInWorld (true);
+				return true;
+			}
 		}
-		else
-		{
-			Debug.Log ("Failed to place in world");
-			Destroy(gameObject);
-			return false;
-		}
+
+		Debug.Log ("Failed to place in world");
+		return false;
 	}
 
 	protected void SetPlacedInWorld(bool isPlaced)
@@ -371,7 +389,6 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 
 	virtual protected void CreateBuilding(BaseVillager characterReference)
     {
-        gameObject.GetComponent<BoxCollider>().enabled = true;
         baseManager.RemoveBuildingFromList(this, 0);
         baseManager.AddBuildingToList(this, 1);
 		SetMaxHealth (characterReference.GetTaskSkills().construction);
