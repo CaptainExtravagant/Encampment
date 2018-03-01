@@ -33,7 +33,7 @@ public class Building_MiningCamp : BaseBuilding, I_Building{
 			resourceValue += workingVillagers [i].GetTaskSkills ().mining;
 		}
 
-		resourceValue = resourceValue / workingVillagers.Count;
+		//resourceValue = resourceValue / workingVillagers.Count;
 
 		baseManager.AddResources ((int)resourceValue, 0);
 

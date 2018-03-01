@@ -17,6 +17,13 @@ public class Building_TownHall : BaseBuilding, I_Building {
 
 	}
 
+	override protected void SetBuildingCost()
+	{
+		buildingCosts.Add(ResourceTile.RESOURCE_TYPE.WOOD, 100);
+		buildingCosts.Add(ResourceTile.RESOURCE_TYPE.STONE, 100);
+		buildingCosts.Add(ResourceTile.RESOURCE_TYPE.FOOD, 0);
+	}
+
     new void Update()
     {
         base.Update();

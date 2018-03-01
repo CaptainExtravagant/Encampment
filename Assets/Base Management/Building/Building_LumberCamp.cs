@@ -33,7 +33,7 @@ public class Building_LumberCamp : BaseBuilding, I_Building {
 			resourceValue += workingVillagers [i].GetTaskSkills ().woodcutting;
 		}
 
-		resourceValue = resourceValue / workingVillagers.Count;
+		//resourceValue = resourceValue / workingVillagers.Count;
 	
 		baseManager.AddResources ((int)resourceValue, 1);
 

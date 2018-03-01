@@ -38,7 +38,7 @@ public class Building_Dock : BaseBuilding, I_Building {
 			resourceValue += workingVillagers [i].GetTaskSkills().sailing;
 		}
 
-		resourceValue = resourceValue / workingVillagers.Count;
+		//resourceValue = resourceValue / workingVillagers.Count;
 
 		baseManager.AddResources ((int)resourceValue, 2);
 

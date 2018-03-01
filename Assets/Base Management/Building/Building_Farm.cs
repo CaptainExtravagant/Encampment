@@ -33,7 +33,7 @@ public class Building_Farm : BaseBuilding, I_Building {
 			resourceValue += workingVillagers[i].GetTaskSkills ().farming;
 		}
 
-		resourceValue = resourceValue / workingVillagers.Count;
+		//resourceValue = resourceValue / workingVillagers.Count;
 
 		baseManager.AddResources ((int)resourceValue, 2);
 
