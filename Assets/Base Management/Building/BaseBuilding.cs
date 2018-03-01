@@ -140,7 +140,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		baseManager.AddResources (buildingCosts [ResourceTile.RESOURCE_TYPE.STONE] / 2, (int)ResourceTile.RESOURCE_TYPE.STONE);
 		baseManager.AddResources (buildingCosts [ResourceTile.RESOURCE_TYPE.WOOD] / 2, (int)ResourceTile.RESOURCE_TYPE.WOOD);
 
-		DestroyBuilding;
+		DestroyBuilding();
 	}
 
 	virtual public void DestroyBuilding()

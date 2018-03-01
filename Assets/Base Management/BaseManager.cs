@@ -597,7 +597,7 @@ public class BaseManager : MonoBehaviour {
     //===================//
 	protected void FeedVillagers()
 	{
-		float tempValue = supplyFood;
+		int tempValue = supplyFood;
 		for (int i = 0; i < GetVillagerCount (); i++) {
 			tempValue -= 10;
 		}

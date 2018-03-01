@@ -19,6 +19,8 @@ public class BaseVillager : Character{
         public float sailing;
     }
 
+	private bool targetPositionSet;
+
     private bool onQuest;
     private int activeQuest;
 
@@ -292,15 +294,24 @@ public class BaseVillager : Character{
 
 	protected override void AIMoveToTarget ()
     {
-        if (targetObject == null)
-		{
+		if (targetObject == null && !targetPositionSet) {
 
 			currentState = CHARACTER_STATE.CHARACTER_WANDER;
 			//Debug.Log ("Target is null");
-			AIFindTarget();
+			AIFindTarget ();
 
 			return;
-		}
+		} else if(
+			targetObject == null && targetPositionSet)
+			{
+			agent.SetDestination (targetPosition);
+
+			if (AICheckRange ()) {
+				currentState = CHARACTER_STATE.CHARACTER_WANDER;
+				AIFindTarget ();
+				targetPositionSet = false;
+			}
+			}
 
 		if (targetObject != null) {
 			targetPosition = targetObject.transform.position;
@@ -314,23 +325,28 @@ public class BaseVillager : Character{
 
 				if (manager.GetUpgradedList().Contains (targetObject.GetComponent<BaseBuilding> ()) && AICheckRange ()) {
 					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+					targetPositionSet = false;
 					return;
 				}
 
                 if (targetObject.GetComponent<BaseBuilding> ().IsBuilt () == false && AICheckRange()) {
 					currentState = CHARACTER_STATE.CHARACTER_BUILDING;
+					targetPositionSet = false;
                     return;
 				}
 
                 if(targetObject.GetComponent<BaseBuilding>().IsBuilt() && AICheckRange())
                 {
-                    VillagerWork();
+					VillagerWork();
+					targetPositionSet = false;;
                 }
 
 			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
+				targetPositionSet = false;
 			} else if (targetObject.GetComponent<ResourceTile> () && AICheckRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_COLLECTING;
+				targetPositionSet = false;
 			}
 		}
 	}
@@ -459,6 +475,13 @@ public class BaseVillager : Character{
 	public void FoodDamage()
 	{
 		SetCurrentHealth (GetCurrentHealth() - (20 - GetCharacterInfo().characterAttributes.focus));
+	}
+
+	public void SetTargetPosition(Vector3 newPosition)
+	{
+		targetPositionSet = true;
+		targetPosition = newPosition;
+		currentState = CHARACTER_STATE.CHARACTER_MOVING;
 	}
 
     void VillagerBuild()

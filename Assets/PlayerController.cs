@@ -81,80 +81,70 @@ public class PlayerController : MonoBehaviour {
                 {
                     //Debug.Log ("Object Selected");
 
-                    if (selectedObject.GetComponent<BaseVillager>())
-                    {
-                        //Debug.Log ("Villager Found");
+					if (selectedObject.GetComponent<BaseVillager> ()) {
+						//Debug.Log ("Villager Found");
 
-                        if (villagerReference == null)
-                        {
-                            villagerReference = selectedObject.GetComponent<BaseVillager>();
+						if (villagerReference == null) {
+							villagerReference = selectedObject.GetComponent<BaseVillager> ();
 
-                            villagerReference.SetSelected(true);
-                            OpenCharacterInfoPanel();
-                        }
-                        else
-                        {
-                            villagerReference.SetSelected(false);
-                            villagerReference = null;
-                            CloseCharacterInfoPanel();
-                        }
+							villagerReference.SetSelected (true);
+							OpenCharacterInfoPanel ();
+						} else {
+							villagerReference.SetSelected (false);
+							villagerReference = null;
+							CloseCharacterInfoPanel ();
+						}
 
-                        if (buildingReference != null)
-                        {
-                            CloseBuildingInfoPanel();
-                        }
-                    }
-                    else if (selectedObject.GetComponent<ResourceTile>())
-                    {
-                        //Debug.Log ("Resources Found");
-                        resourceReference = selectedObject.GetComponent<ResourceTile>();
+						if (buildingReference != null) {
+							CloseBuildingInfoPanel ();
+						}
+					} else if (selectedObject.GetComponent<ResourceTile> ()) {
+						//Debug.Log ("Resources Found");
+						resourceReference = selectedObject.GetComponent<ResourceTile> ();
 
-                        if (villagerReference != null)
-                        {
-                            //Debug.Log ("Setting Work Area (Controller)");
-                            villagerReference.SelectWorkArea(resourceReference.gameObject);
-                            villagerReference.SetSelected(false);
-                            villagerReference = null;
-                            CloseCharacterInfoPanel();
-                        }
+						if (villagerReference != null) {
+							//Debug.Log ("Setting Work Area (Controller)");
+							villagerReference.SelectWorkArea (resourceReference.gameObject);
+							villagerReference.SetSelected (false);
+							villagerReference = null;
+							CloseCharacterInfoPanel ();
+						}
 
-                        if (buildingReference != null)
-                        {
-                            CloseBuildingInfoPanel();
-                        }
+						if (buildingReference != null) {
+							CloseBuildingInfoPanel ();
+						}
 
-                        resourceReference = null;
-                    }
-                    else if (selectedObject.GetComponent<BaseBuilding>())
-                    {
+						resourceReference = null;
+					} else if (selectedObject.GetComponent<BaseBuilding> ()) {
 
-                        //Debug.Log ("Building Found");
+						//Debug.Log ("Building Found");
 
-                        if (buildingReference != null)
-                        {
-                            //Close panel and remove reference
-                            CloseBuildingInfoPanel();
-                        }
-                        else
-                        {
-                            //Set building reference and open info panel
-                            buildingReference = selectedObject.GetComponent<BaseBuilding>();
-                            if (buildingReference.IsBuilt() == true)
-                                OpenBuildingInfoPanel();
-                            else
-                                buildingReference = null;
-                        }
+						if (buildingReference != null) {
+							//Close panel and remove reference
+							CloseBuildingInfoPanel ();
+						} else {
+							//Set building reference and open info panel
+							buildingReference = selectedObject.GetComponent<BaseBuilding> ();
+							if (buildingReference.IsBuilt () == true)
+								OpenBuildingInfoPanel ();
+							else
+								buildingReference = null;
+						}
 
-                        if (villagerReference != null)
-                        {
+						if (villagerReference != null) {
 
-                            //buildingReference.OnClicked(villagerReference);
+							//buildingReference.OnClicked(villagerReference);
 
-                            villagerReference.SetSelected(false);
-                            villagerReference = null;
-                            CloseCharacterInfoPanel();
-                        }
-                    }
+							villagerReference.SetSelected (false);
+							villagerReference = null;
+							CloseCharacterInfoPanel ();
+						}
+					} else {
+						villagerReference.SetTargetPosition (Camera.main.ScreenToWorldPoint(Input.mousePosition));
+						villagerReference.SetSelected (false);
+						villagerReference = null;
+						CloseCharacterInfoPanel ();
+					}
                 }
                 else
                 {
