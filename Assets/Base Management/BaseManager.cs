@@ -67,6 +67,9 @@ public class BaseManager : MonoBehaviour {
 	protected float attackTimer;
 	protected bool attackTimerSet;
 
+	protected float foodTimer = 120.0f;
+	protected float timer;
+
     protected int buildingButtonIndex;
     
     //==========================//
@@ -116,11 +119,16 @@ public class BaseManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             //Debug.Log ("Base Manager Click");
-            if (heldBuilding != null)
+			if (placingBuilding)
             {
                 PlaceBuilding();
             }
         }
+
+		if (Input.GetKeyDown (KeyCode.Mouse1)) {
+			if (placingBuilding)
+				CancelBuilding ();
+		}
 
         if (FindEnemies())
         {
@@ -142,6 +150,12 @@ public class BaseManager : MonoBehaviour {
             }
 
         }
+
+		timer -= Time.deltaTime;
+		if (timer <= 0) {
+			timer = foodTimer;
+			FeedVillagers ();
+		}
 
         if (attackTimer <= 0.0f)
         {
@@ -581,6 +595,21 @@ public class BaseManager : MonoBehaviour {
     //===================//
     //Resource Management//
     //===================//
+	protected void FeedVillagers()
+	{
+		float tempValue = supplyFood;
+		for (int i = 0; i < GetVillagerCount (); i++) {
+			tempValue -= 10;
+		}
+
+		if (tempValue <= 0) {
+			for (int i = 0; i < GetVillagerCount (); i++) {
+				GetVillager (i).FoodDamage ();
+			}
+			supplyFood = 0;
+		} else
+			supplyFood = tempValue;
+	}
     public virtual void AddResources(int resourceValue, int resourceType)
     {
         switch(resourceType)
@@ -682,6 +711,12 @@ public class BaseManager : MonoBehaviour {
             heldBuilding = null;
         }
     }
+	protected void CancelBuilding()
+	{
+		placingBuilding = false;
+		Destroy (heldBuilding);
+		heldBuilding = null;
+	}
     public InventoryBase GetInventory()
     {
         return inventoryReference;

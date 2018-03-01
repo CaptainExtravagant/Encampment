@@ -456,6 +456,11 @@ public class BaseVillager : Character{
         }
     }
 
+	public void FoodDamage()
+	{
+		SetCurrentHealth (GetCurrentHealth() - (20 - GetCharacterInfo().characterAttributes.focus));
+	}
+
     void VillagerBuild()
     {
 		if (manager.GetUpgradedList().Contains (targetObject.GetComponent<BaseBuilding> ())) {
