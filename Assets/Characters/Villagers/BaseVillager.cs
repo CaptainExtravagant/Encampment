@@ -62,8 +62,6 @@ public class BaseVillager : Character{
 		EquipArmor (armor);
 
 		timer = wanderTimer;
-
-		CalculateNextLevelExperience ();
 	}
 
     public TaskSkills GetTaskSkills()

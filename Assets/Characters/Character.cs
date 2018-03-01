@@ -210,6 +210,8 @@ public class Character : MonoBehaviour{
     protected void CalculateNextLevelExperience()
     {
         experienceNextLevel = (int)Mathf.Ceil(60 * Mathf.Pow(characterInfo.characterLevel, 2.8f) - 60);
+		if (experienceNextLevel <= 0)
+			experienceNextLevel = 1;
     }
 
     //==========================
@@ -341,7 +343,7 @@ public class Character : MonoBehaviour{
         CombatSkills combatSkills = new CombatSkills(CreateCombatSkills(characterAttributes));
 
         //Create Character Info using previous stats, start characters at level 1
-        characterInfo = new CharacterInfo(tempSex, CreateName(tempSex), CreateHealth(characterAttributes), 1, 0, characterAttributes, combatSkills);
+        characterInfo = new CharacterInfo(tempSex, CreateName(tempSex), CreateHealth(characterAttributes), 1, 1, characterAttributes, combatSkills);
 
         //Set attack rate
         attackCooldownTime = 5 - (characterInfo.characterAttributes.nimbleness / 10);
@@ -354,7 +356,7 @@ public class Character : MonoBehaviour{
 
         //Set spawn position
         transform.position = spawnPosition;
-        
+		CalculateNextLevelExperience ();
 
     }
 

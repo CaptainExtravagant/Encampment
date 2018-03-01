@@ -43,28 +43,15 @@ public class Building_Barracks : BaseBuilding, I_Building {
 	override public void WorkBuilding()
 	{
 		float bonusValue;
+		GetSkillBonus ();
 
 		for (int i = 0; i < workingVillagers.Count; i++) {
-
-			if (
-			//If the villagers focus is lower than their curiosity then end the timer 1% of the curiostity value earlier than normal and improve the skill
-				workingVillagers[i].GetCharacterInfo ().characterAttributes.focus < workingVillagers[i].GetCharacterInfo ().characterAttributes.curiosity
-				&&
-				activeTimer <= activeTimer - workingVillagers[i].GetCharacterInfo ().characterAttributes.curiosity / 100) {
-
-				GetSkillBonus ();
-				workingVillagers[i].AddExperience ((int)skillBonus);
-				activeTimer = workTime;
-                SetUpInfoPanel();
-
-			} else if (activeTimer <= 0.0f) {
-				GetSkillBonus ();
-				bonusValue = skillBonus + (workingVillagers[i].GetCharacterInfo ().characterAttributes.focus / 100);
-
-				workingVillagers[i].AddExperience ((int)bonusValue);
-				activeTimer = workTime;
-                SetUpInfoPanel();
-			}
+			
+			bonusValue = skillBonus + (workingVillagers[i].GetCharacterInfo ().characterAttributes.focus) * 10;
+			  
+			workingVillagers[i].AddExperience ((int)bonusValue);
+			activeTimer = workTime;
+			SetUpInfoPanel();
 		}
 		
 	}

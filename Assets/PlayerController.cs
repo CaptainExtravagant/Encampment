@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour {
 							villagerReference = null;
 							CloseCharacterInfoPanel ();
 						}
-					} else {
+					} else if (villagerReference != null){
 						villagerReference.SetTargetPosition (Camera.main.ScreenToWorldPoint(Input.mousePosition));
 						villagerReference.SetSelected (false);
 						villagerReference = null;
