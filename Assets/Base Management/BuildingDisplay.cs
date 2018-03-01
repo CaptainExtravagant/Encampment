@@ -32,7 +32,7 @@ public class BuildingDisplay : MonoBehaviour {
 
 	public void DestroyButton()
 	{
-		buildingReference.DestroyBuilding ();
+		buildingReference.DemolishBuilding ();
 
 	}
 

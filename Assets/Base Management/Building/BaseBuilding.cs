@@ -40,6 +40,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
     private bool isBuilt;
 
     protected Dictionary<ResourceTile.RESOURCE_TYPE, int> buildingCosts = new Dictionary<ResourceTile.RESOURCE_TYPE, int>();
+	protected Dictionary<ResourceTile.RESOURCE_TYPE, int> upgradeCosts = new Dictionary<ResourceTile.RESOURCE_TYPE, int>();
 
     private BUILDING_TYPE buildingType;
     private int buildingLevel;
@@ -133,6 +134,15 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		}
 	}
 
+	public void DemolishBuilding()
+	{
+		baseManager.AddResources (buildingCosts [ResourceTile.RESOURCE_TYPE.FOOD] / 2, (int)ResourceTile.RESOURCE_TYPE.FOOD);
+		baseManager.AddResources (buildingCosts [ResourceTile.RESOURCE_TYPE.STONE] / 2, (int)ResourceTile.RESOURCE_TYPE.STONE);
+		baseManager.AddResources (buildingCosts [ResourceTile.RESOURCE_TYPE.WOOD] / 2, (int)ResourceTile.RESOURCE_TYPE.WOOD);
+
+		DestroyBuilding;
+	}
+
 	virtual public void DestroyBuilding()
 	{
 		if (isBuilt) {
@@ -158,9 +168,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 		Debug.Log ("Building Upgraded");
 
-		buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] = (int)(buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] * 1.5f);
-		buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] = (int)(buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] * 1.5f);
-		buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] = (int)(buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] * 1.5f);
+		upgradeCosts[ResourceTile.RESOURCE_TYPE.FOOD] = (int)(upgradeCosts[ResourceTile.RESOURCE_TYPE.FOOD] * 1.5f);
+		upgradeCosts[ResourceTile.RESOURCE_TYPE.WOOD] = (int)(upgradeCosts[ResourceTile.RESOURCE_TYPE.WOOD] * 1.5f);
+		upgradeCosts[ResourceTile.RESOURCE_TYPE.STONE] = (int)(upgradeCosts[ResourceTile.RESOURCE_TYPE.STONE] * 1.5f);
 
 		coreModifier += 0.5f;
 		maxHealth = maxHealth * coreModifier;
@@ -311,9 +321,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		if (baseManager.RemoveBuildingResources(buildingCosts))
 		{
 			//Debug.Log ("Place in World");
-			buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] / 2;
-			buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] / 2;
-			buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] = buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] / 2;
+			upgradeCosts[ResourceTile.RESOURCE_TYPE.FOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.FOOD] / 2;
+			upgradeCosts[ResourceTile.RESOURCE_TYPE.WOOD] = buildingCosts[ResourceTile.RESOURCE_TYPE.WOOD] / 2;
+			upgradeCosts[ResourceTile.RESOURCE_TYPE.STONE] = buildingCosts[ResourceTile.RESOURCE_TYPE.STONE] / 2;
 
 			SetPlacedInWorld (true);
 			return true;
