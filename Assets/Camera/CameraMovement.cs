@@ -48,29 +48,31 @@ public class CameraMovement : MonoBehaviour {
 
         if (movementEnabled)
         {
-			if (Input.mousePosition.x >= Screen.width) {
-				cameraTarget.Translate(new Vector3(0.5f,
-					0.0f,
-					-0.5f), Space.World);  
-			}
+			if (!holdingMouse) {
+				
+				if (Input.mousePosition.x >= Screen.width) {
+					cameraTarget.Translate (new Vector3 (0.5f,
+						0.0f,
+						-0.5f), Space.World);  
+				}
 
-			if (Input.mousePosition.x <= 0) {
-				cameraTarget.Translate(new Vector3(-0.5f,
-					0.0f,
-					0.5f), Space.World);  
-			}
+				if (Input.mousePosition.x <= 0) {
+					cameraTarget.Translate (new Vector3 (-0.5f,
+						0.0f,
+						0.5f), Space.World);  
+				}
 
-			if (Input.mousePosition.y >= Screen.height) {
-				cameraTarget.Translate(new Vector3(0.5f,
-					0.0f,
-					0.5f), Space.World);  
+				if (Input.mousePosition.y >= Screen.height) {
+					cameraTarget.Translate (new Vector3 (0.5f,
+						0.0f,
+						0.5f), Space.World);  
+				}
+				if (Input.mousePosition.y <= 0) {
+					cameraTarget.Translate (new Vector3 (-0.5f,
+						0.0f,
+						-0.5f), Space.World);  
+				}
 			}
-			if (Input.mousePosition.y <= 0) {
-				cameraTarget.Translate(new Vector3(-0.5f,
-					0.0f,
-					-0.5f), Space.World);  
-			}
-
             //Keyboard Movement (WASD)
             if (cameraTarget != null)
             {
@@ -85,7 +87,7 @@ public class CameraMovement : MonoBehaviour {
             //=====================
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                //holdMouseTimer += Time.deltaTime;
+                holdMouseTimer += Time.deltaTime;
 
             }
 
