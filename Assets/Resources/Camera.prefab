@@ -93,7 +93,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -146,9 +146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1d12b0ec94488439846e8fc8b7210c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryPanel: {fileID: 0}
-  characterPanel: {fileID: 0}
-  buildingPanel: {fileID: 0}
 --- !u!124 &124973613289478210
 Behaviour:
   m_ObjectHideFlags: 1

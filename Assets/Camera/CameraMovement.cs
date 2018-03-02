@@ -16,6 +16,7 @@ public class CameraMovement : MonoBehaviour {
     bool holdingMouse;
     bool movementEnabled;
 	float movement = 5;
+	Vector3 cameraLocal;
 
     float holdMouseTimer = 0.1f;
     float timer;
@@ -48,6 +49,7 @@ public class CameraMovement : MonoBehaviour {
 
         if (movementEnabled)
         {
+			//Edge Scrolling
 			if (!holdingMouse) {
 				
 				if (Input.mousePosition.x >= Screen.width) {
@@ -73,6 +75,7 @@ public class CameraMovement : MonoBehaviour {
 						-0.5f), Space.World);  
 				}
 			}
+
             //Keyboard Movement (WASD)
             if (cameraTarget != null)
             {
@@ -81,6 +84,9 @@ public class CameraMovement : MonoBehaviour {
                     0.0f,
                     ((translationZ / 2) - (translationX / 2))), Space.World);                
             }
+
+			//Mouse Wheel Zoom
+			cameraTarget.Translate(new Vector3(cameraLocal.x, cameraLocal.y, cameraLocal.z + Input.GetAxisRaw("Mouse ScrollWheel") * movement), Space.Self);
 
             //=====================
             //Click and Drag Movement with Right Mouse Button
