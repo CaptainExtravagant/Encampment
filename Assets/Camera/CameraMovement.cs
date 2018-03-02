@@ -55,24 +55,24 @@ public class CameraMovement : MonoBehaviour {
 				if (Input.mousePosition.x >= Screen.width) {
 					cameraTarget.Translate (new Vector3 (0.5f,
 						0.0f,
-						-0.5f), Space.World);  
+						-0.5f), Space.Self);  
 				}
 
 				if (Input.mousePosition.x <= 0) {
 					cameraTarget.Translate (new Vector3 (-0.5f,
 						0.0f,
-						0.5f), Space.World);  
+						0.5f), Space.Self);  
 				}
 
 				if (Input.mousePosition.y >= Screen.height) {
 					cameraTarget.Translate (new Vector3 (0.5f,
 						0.0f,
-						0.5f), Space.World);  
+						0.5f), Space.Self);  
 				}
 				if (Input.mousePosition.y <= 0) {
 					cameraTarget.Translate (new Vector3 (-0.5f,
 						0.0f,
-						-0.5f), Space.World);  
+						-0.5f), Space.Self);  
 				}
 			}
 
@@ -82,11 +82,19 @@ public class CameraMovement : MonoBehaviour {
                 //Move camera based on both X and Z so WASD line up properly to perspective; Space.World makes movement based on global axis, not local
                 cameraTarget.Translate(new Vector3(((translationX / 2) + (translationZ / 2)),
                     0.0f,
-                    ((translationZ / 2) - (translationX / 2))), Space.World);                
+					((translationZ / 2) - (translationX / 2))), Space.Self);                
             }
 
 			//Mouse Wheel Zoom
-			cameraTarget.Translate(new Vector3(cameraLocal.x, cameraLocal.y, cameraLocal.z + Input.GetAxisRaw("Mouse ScrollWheel") * movement), Space.Self);
+			cameraTarget.Translate(new Vector3(cameraLocal.x + Input.GetAxisRaw("Mouse ScrollWheel") * movement, cameraLocal.y - Input.GetAxisRaw("Mouse ScrollWheel") * movement, cameraLocal.z + Input.GetAxisRaw("Mouse ScrollWheel") * movement), Space.Self);
+
+			if (Input.GetKey(KeyCode.Q)) {
+				cameraTarget.Rotate (new Vector3 (0, 5.0f, 0), Space.World);
+			}
+
+			if (Input.GetKey(KeyCode.E)) {
+				cameraTarget.Rotate (new Vector3 (0, -5.0f, 0), Space.World);
+			}
 
             //=====================
             //Click and Drag Movement with Right Mouse Button
@@ -159,7 +167,7 @@ public class CameraMovement : MonoBehaviour {
             (((mouseOffset.x) / 2) + ((mouseOffset.y) / 2)),
             0.0f,
             (((mouseOffset.y) / 2) - (mouseOffset.x) / 2)),
-            Space.World);
+			Space.Self);
     }
     
 }
