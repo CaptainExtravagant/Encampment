@@ -8,11 +8,14 @@ public class CameraMovement : MonoBehaviour {
     //GLOBALS
     float translationX;
     float translationZ;
+	float zoomDelta;
+	float zoom;
     Transform cameraTarget;
     Vector3 targetStart;
     Vector3 holdingPoint;
     bool holdingMouse;
     bool movementEnabled;
+	float movement = 5;
 
     float holdMouseTimer = 0.1f;
     float timer;
@@ -41,9 +44,32 @@ public class CameraMovement : MonoBehaviour {
         //Update Input Axis for movement
         translationX = Input.GetAxis("Horizontal");
         translationZ = Input.GetAxis("Vertical");
+		zoomDelta = Input.mouseScrollDelta.y;
 
         if (movementEnabled)
         {
+			if (Input.mousePosition.x >= Screen.width) {
+				cameraTarget.Translate(new Vector3(0.5f,
+					0.0f,
+					-0.5f), Space.World);  
+			}
+
+			if (Input.mousePosition.x <= 0) {
+				cameraTarget.Translate(new Vector3(-0.5f,
+					0.0f,
+					0.5f), Space.World);  
+			}
+
+			if (Input.mousePosition.y >= Screen.height) {
+				cameraTarget.Translate(new Vector3(0.5f,
+					0.0f,
+					0.5f), Space.World);  
+			}
+			if (Input.mousePosition.y <= 0) {
+				cameraTarget.Translate(new Vector3(-0.5f,
+					0.0f,
+					-0.5f), Space.World);  
+			}
 
             //Keyboard Movement (WASD)
             if (cameraTarget != null)

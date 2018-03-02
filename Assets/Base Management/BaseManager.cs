@@ -329,7 +329,6 @@ public class BaseManager : MonoBehaviour {
     {
         return villagerList.Count;
     }
-
     public int GetBuildingCount()
     {
         return buildingList.Count;
@@ -562,6 +561,29 @@ public class BaseManager : MonoBehaviour {
             buildingMenu.SetActive(true);
         }
     }
+	public void CloseBuildingMenu()
+	{
+		buildingMenu.SetActive (false);
+	}
+	public void CloseCharacterMenu()
+	{
+		characterMenu.SetActive (false);
+	}
+	public void CloseQuestMenu()
+	{
+		questMenu.SetActive (false);
+	}
+	public void CloseBuildingInfo()
+	{
+		buildingInfo.SetActive (false);
+	}
+	public void CloseAllMenus()
+	{
+		CloseBuildingMenu ();
+		CloseCharacterMenu ();
+		CloseQuestMenu ();
+		CloseBuildingInfo ();
+	}
     public void ToggleCharacterMenu()
     {
         if (characterMenu.activeSelf)

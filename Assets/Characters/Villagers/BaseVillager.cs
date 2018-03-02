@@ -248,6 +248,12 @@ public class BaseVillager : Character{
         currentState = CHARACTER_STATE.CHARACTER_MOVING;
     }
 
+	public void RenameCharacter(string newName)
+	{
+		characterInfo.characterName = newName;
+		manager.GetCharacterDisplay ().UpdateButton (manager.GetVillagerIndex (this));
+	}
+
     public bool GetSelected()
     {
         return isSelected;

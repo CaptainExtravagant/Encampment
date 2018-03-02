@@ -200,6 +200,8 @@ public class Character : MonoBehaviour{
 
         characterInfo.characterLevel++;
 		CalculateNextLevelExperience();
+
+		manager.GetCharacterDisplay ().UpdateButton (manager.GetVillagerIndex(this as BaseVillager));
     }
 
 	public int GetNextLevelExperience()

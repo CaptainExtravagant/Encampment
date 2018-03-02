@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour {
         characterPanel.GetComponentsInChildren<Button>()[1].onClick.AddListener(EquipOffhandButton);
         characterPanel.GetComponentsInChildren<Button>()[2].onClick.AddListener(EquipArmorButton);
 
+		characterPanel.GetComponentInChildren<InputField> ().onEndEdit.AddListener (RenameCharacter);
+
         inventoryPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseInventory);
 
         Reset();
@@ -72,6 +74,10 @@ public class PlayerController : MonoBehaviour {
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
+			if (Input.GetKeyDown (KeyCode.Mouse1)) {
+				CloseAllMenus ();
+			}
+
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 //Debug.Log ("Mouse Click");
@@ -170,11 +176,25 @@ public class PlayerController : MonoBehaviour {
 		return foundObject;
     }
 
+	void CloseAllMenus()
+	{
+		CloseBuildingInfoPanel ();
+		CloseCharacterInfoPanel ();
+		CloseInventory ();
+		baseManager.CloseAllMenus ();
+	}
+
     //============================
     //CHARACTER INFO PANEL METHODS
     //============================
-        void OpenCharacterInfoPanel()
+	void RenameCharacter(string newName)
+	{
+		villagerReference.RenameCharacter (newName);
+	}
+
+    void OpenCharacterInfoPanel()
     {
+		CloseAllMenus ();
 		selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
 
@@ -184,7 +204,7 @@ public class PlayerController : MonoBehaviour {
 				infoText [i].text = selectedCharacterInfo.characterName;
 				break;
 
-			case 3:
+			case 4:
 				if (selectedCharacterInfo.characterSex == 1) {
 					infoText [i].text = "Male";
 				} else {
@@ -192,107 +212,107 @@ public class PlayerController : MonoBehaviour {
 				}
 				break;
 
-			case 5:
+			case 6:
 				infoText [i].text = selectedCharacterInfo.characterLevel.ToString();
 				break;
 
-			case 8:
+			case 9:
 				infoText [i].text = selectedCharacterInfo.characterAttributes.fitness.ToString ();
 				break;
 
-			case 10:
+			case 11:
 				infoText [i].text = selectedCharacterInfo.characterAttributes.nimbleness.ToString ();
 				break;
 
-			case 12:
+			case 13:
 				infoText [i].text = selectedCharacterInfo.characterAttributes.curiosity.ToString ();
 				break;
 
-			case 14:
+			case 15:
 				infoText [i].text = selectedCharacterInfo.characterAttributes.focus.ToString ();
 				break;
 
-			case 16:
+			case 17:
 				infoText [i].text = selectedCharacterInfo.characterAttributes.charm.ToString ();
 				break;
 
-			case 19:
+			case 20:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.brawling.ToString ();
 				break;
 
-			case 21:
+			case 22:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.sword.ToString ();
 				break;
 
-			case 23:
+			case 24:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.longsword.ToString ();
 				break;
 
-			case 25:
+			case 26:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.axe.ToString ();
 				break;
 
-			case 27:
+			case 28:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.polearm.ToString ();
 				break;
 
-			case 29:
+			case 30:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.bow.ToString ();
 				break;
 
-			case 31:
+			case 32:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.dodge.ToString ();
 				break;
 
-			case 33:
+			case 34:
 				infoText [i].text = selectedCharacterInfo.characterCombatSkills.armor.ToString ();
 				break;
 
-			case 36:
+			case 37:
 				infoText [i].text = selectedCharacterTaskSkills.mining.ToString ();
 				break;
 
-			case 38:
+			case 39:
 				infoText [i].text = selectedCharacterTaskSkills.woodcutting.ToString ();
 				break;
 
-			case 40:
+			case 41:
 				infoText [i].text = selectedCharacterTaskSkills.blacksmithing.ToString ();
 				break;
 
-			case 42:
+			case 43:
 				infoText [i].text = selectedCharacterTaskSkills.weaponCrafting.ToString ();
 				break;
 
-			case 44:
+			case 45:
 				infoText [i].text = selectedCharacterTaskSkills.armorCrafting.ToString ();
 				break;
 
-			case 46:
+			case 47:
 				infoText [i].text = selectedCharacterTaskSkills.tailoring.ToString ();
 				break;
 
-			case 48:
+			case 49:
 				infoText [i].text = selectedCharacterTaskSkills.farming.ToString ();
 				break;
 
-			case 50:
+			case 51:
 				infoText [i].text = selectedCharacterTaskSkills.construction.ToString ();
 				break;
 
-			case 52:
+			case 53:
 				infoText [i].text = selectedCharacterTaskSkills.sailing.ToString ();
 				break;
 
-			case 54:
+			case 55:
 				infoText [i].text = villagerReference.GetEquippedWeapon ().GetItemName ();
 				break;
 
-			case 56:
+			case 57:
 				infoText [i].text = villagerReference.GetOffHandWeapon ().GetItemName ();
 				break;
 
-			case 58:
+			case 59:
 				infoText [i].text = villagerReference.GetEquippedArmor ().GetItemName ();
 				break;
 			}
@@ -302,6 +322,7 @@ public class PlayerController : MonoBehaviour {
     }
         public void OpenCharacterInfoPanel(BaseVillager villager)
         {
+		CloseAllMenus ();
         villagerReference = villager;
 
         selectedCharacterInfo = villagerReference.GetCharacterInfo();
@@ -570,6 +591,7 @@ public class PlayerController : MonoBehaviour {
 
     void OpenBuildingInfoPanel()
     {
+		CloseAllMenus ();
         baseManager.ToggleBuildingInfo();
         buildingDisplay.SetInformation(buildingReference);
 
@@ -594,6 +616,7 @@ public class PlayerController : MonoBehaviour {
     //=======================
 	    public void OpenInventory()
 	{
+		CloseAllMenus ();
 		inventoryPanel.SetActive (true);
 	}
 

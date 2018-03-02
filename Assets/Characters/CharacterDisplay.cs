@@ -79,6 +79,12 @@ public class CharacterDisplay : MonoBehaviour {
 		    parentEnd = new Vector3(parentEnd.x, parentEnd.y + 168, parentEnd.z);
 	}
 
+	public void UpdateButton(int index)
+	{
+		buttonList [index].GetComponentsInChildren<Text> ()[0].text = manager.GetVillager (index).GetName();
+		buttonList [index].GetComponentsInChildren<Text> () [1].text = manager.GetVillager (index).GetLevel ().ToString();
+	}
+
     public void DisableCharacterButton(int index)
     {
         buttonList[index].GetComponent<Button>().interactable = false;
