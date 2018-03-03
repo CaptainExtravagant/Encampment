@@ -120,6 +120,8 @@ public class Character : MonoBehaviour{
     protected bool offHandEnabled = true;
 	public BaseArmor equippedArmor;
 
+	private float attackRange;
+
     protected int experienceNextLevel = 1;
     
     private float currentHealth;
@@ -459,7 +461,7 @@ public class Character : MonoBehaviour{
 					targetObject = null;
 					currentState = CHARACTER_STATE.CHARACTER_WANDER;
 				}
-			} else if (targetObject.GetComponent<Character> () && AICheckRange ()) {
+			} else if (targetObject.GetComponent<Character> () && AICheckWeaponRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_ATTACKING;
 			} else if (targetObject.GetComponent<ResourceTile> () && AICheckRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_COLLECTING;
@@ -475,6 +477,24 @@ public class Character : MonoBehaviour{
         else
             return false;
     }
+
+	protected bool AICheckWeaponRange()
+	{
+		if (Vector3.Distance (transform.position, targetPosition) <= attackRange)
+			return true;
+		else
+			return false;
+	}
+
+	public float GetWeaponRange()
+	{
+		return attackRange;
+	}
+
+	public void SetWeaponRange(float range)
+	{
+		attackRange = range;
+	}
 
     //Attack the target if they're close enough
     protected void AIAttack()
@@ -612,6 +632,8 @@ public class Character : MonoBehaviour{
     {
 		if(inventory.CheckForItem(weaponToEquip))
 			inventory.RemoveItem (weaponToEquip);
+
+		SetWeaponRange (weaponToEquip.GetWeaponRange());
 
 		equippedWeapon = weaponToEquip;
 

@@ -9,6 +9,7 @@ public class Weapon_Longsword : BaseWeapon {
         SetWeaponType(WEAPON_TYPE.WEAPON_LONGSWORD);
         SetItemName("Longsword");
         SetTwoHanded(true);
+		weaponRange = 6.0f;
     }
 
     public override void CalculateStats(Character characterReference)

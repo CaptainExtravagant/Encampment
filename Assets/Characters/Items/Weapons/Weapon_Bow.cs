@@ -9,6 +9,7 @@ public class Weapon_Bow : BaseWeapon {
         SetWeaponType(WEAPON_TYPE.WEAPON_BOW);
         SetItemName("Bow");
         SetTwoHanded(true);
+		weaponRange = 15.0f;
     }
 
     public override void CalculateStats(Character characterReference)

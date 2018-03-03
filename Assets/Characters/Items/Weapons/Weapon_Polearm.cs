@@ -8,6 +8,7 @@ public class Weapon_Polearm : BaseWeapon {
     {
         SetWeaponType(WEAPON_TYPE.WEAPON_POLEARM);
         SetItemName("Polearm");
+		weaponRange = 6.0f;
     }
 
     public override void CalculateStats(Character characterReference)

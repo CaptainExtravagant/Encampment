@@ -23,6 +23,7 @@ public class BaseWeapon : BaseItem, I_Item {
     private float defense;
 
     private bool twoHanded;
+	protected float weaponRange = 2.0f;
 
     private void Awake()
     {
@@ -44,6 +45,11 @@ public class BaseWeapon : BaseItem, I_Item {
 		defenseValue = (GetBaseScore() / 10) + characterSkill;
 
 		SetDefenseValue(defenseValue);
+	}
+
+	public float GetWeaponRange()
+	{
+		return weaponRange;
 	}
 
 	void I_Item.CalculateBaseStats(BaseVillager villagerReference)
