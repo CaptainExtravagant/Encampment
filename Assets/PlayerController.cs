@@ -67,11 +67,13 @@ public class PlayerController : MonoBehaviour {
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            CloseAllMenus();
+        }
+
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-			if (Input.GetKeyDown (KeyCode.Mouse1)) {
-				CloseAllMenus ();
-			}
 
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -189,7 +191,6 @@ public class PlayerController : MonoBehaviour {
 
     void OpenCharacterInfoPanel()
     {
-		CloseAllMenus ();
 		selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
 
@@ -317,7 +318,6 @@ public class PlayerController : MonoBehaviour {
     }
         public void OpenCharacterInfoPanel(BaseVillager villager)
         {
-		CloseAllMenus ();
         villagerReference = villager;
 
         selectedCharacterInfo = villagerReference.GetCharacterInfo();
@@ -586,7 +586,6 @@ public class PlayerController : MonoBehaviour {
 
     void OpenBuildingInfoPanel()
     {
-		CloseAllMenus ();
         baseManager.ToggleBuildingInfo();
         buildingDisplay.SetInformation(buildingReference);
 
@@ -611,7 +610,6 @@ public class PlayerController : MonoBehaviour {
     //=======================
 	    public void OpenInventory()
 	{
-		CloseAllMenus ();
 		inventoryPanel.SetActive (true);
 	}
 

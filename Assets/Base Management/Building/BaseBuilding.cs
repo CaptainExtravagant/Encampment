@@ -329,6 +329,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         if (Physics.Raycast(cursorPosition, out hit, Mathf.Infinity))
         {
             transform.position = new Vector3(Mathf.Round(hit.point.x), 0.5f, Mathf.Round(hit.point.z));
+            canBePlaced = true;
         }
     }
 

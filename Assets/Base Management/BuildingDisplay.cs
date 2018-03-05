@@ -64,7 +64,8 @@ public class BuildingDisplay : MonoBehaviour {
     {
 		buildingReference = baseBuilding;
 
-        buildingType = baseBuilding.GetBuildingType();
+        buildingType = 
+            buildingReference.GetBuildingType();
         
 		switch(buildingType)
         {
@@ -137,8 +138,6 @@ public class BuildingDisplay : MonoBehaviour {
         buildingLevel = baseBuilding.GetBuildingLevel();
         buildingHealth = (int)baseBuilding.GetCurrentHealth();
         buildingMaxHealth = (int)baseBuilding.GetMaxHealth();
-
-        buildingType = baseBuilding.GetBuildingType();
 
         GetComponentsInChildren<Text>()[0].text = buildingName;
         GetComponentsInChildren<Text>()[2].text = buildingLevel.ToString();

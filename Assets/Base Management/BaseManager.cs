@@ -746,7 +746,7 @@ public class BaseManager : MonoBehaviour {
     }
     public void SelectBuilding(GameObject buildingType)
     {
-        heldBuilding = Instantiate(buildingType);
+        heldBuilding = Instantiate(buildingType, new Vector3(0, 0.5f, 0), Quaternion.identity);
         heldBuilding.GetComponent<BaseBuilding>().InitBuilding(this, buildingDisplay.uniquePanels[(int)heldBuilding.GetComponent<BaseBuilding>().GetBuildingType()]);
         ToggleBuildingMenu();
         PlaceBuilding();
