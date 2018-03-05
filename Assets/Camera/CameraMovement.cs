@@ -8,15 +8,12 @@ public class CameraMovement : MonoBehaviour {
     //GLOBALS
     float translationX;
     float translationZ;
-	float zoomDelta;
 	float zoom;
     Transform cameraTarget;
-    Vector3 targetStart;
     Vector3 holdingPoint;
     bool holdingMouse;
     bool movementEnabled;
 	float movement = 5;
-	Vector3 cameraLocal;
 
     float holdMouseTimer = 0.1f;
     float timer;
@@ -35,7 +32,6 @@ public class CameraMovement : MonoBehaviour {
     {
         //Set camera target reference and holdingMouse to false as default
         cameraTarget = transform.parent;
-        targetStart = cameraTarget.position;
         holdingMouse = false;
         movementEnabled = true;
     }
@@ -45,7 +41,6 @@ public class CameraMovement : MonoBehaviour {
         //Update Input Axis for movement
         translationX = Input.GetAxis("Horizontal");
         translationZ = Input.GetAxis("Vertical");
-		zoomDelta = Input.mouseScrollDelta.y;
 
         if (movementEnabled)
         {
@@ -86,7 +81,7 @@ public class CameraMovement : MonoBehaviour {
             }
 
 			//Mouse Wheel Zoom
-			cameraTarget.Translate(new Vector3(cameraLocal.x + Input.GetAxisRaw("Mouse ScrollWheel") * movement, cameraLocal.y - Input.GetAxisRaw("Mouse ScrollWheel") * movement, cameraLocal.z + Input.GetAxisRaw("Mouse ScrollWheel") * movement), Space.Self);
+			cameraTarget.Translate(new Vector3(Input.GetAxisRaw("Mouse ScrollWheel") * movement, -Input.GetAxisRaw("Mouse ScrollWheel") * movement, Input.GetAxisRaw("Mouse ScrollWheel") * movement), Space.Self);
 
 			if (Input.GetKey(KeyCode.Q)) {
 				cameraTarget.Rotate (new Vector3 (0, 5.0f, 0), Space.World);

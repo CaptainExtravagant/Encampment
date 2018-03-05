@@ -7,8 +7,6 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
 
-    Camera cameraReference;
-    CameraMovement cameraMovement;
     Ray cursorPosition;
     RaycastHit hit;
 
@@ -37,10 +35,7 @@ public class PlayerController : MonoBehaviour {
         characterPanel = characterPanelIn;
         buildingPanel = buildingPanelIn;
         buildingDisplay = buildingPanel.GetComponentInChildren<BuildingDisplay>();
-
-        cameraReference = Camera.main;
-        cameraMovement = cameraReference.GetComponent<CameraMovement>();
-
+        
         infoText = characterPanel.GetComponentsInChildren<Text>();
 
         baseManager = newManager;

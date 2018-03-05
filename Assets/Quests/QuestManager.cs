@@ -47,9 +47,14 @@ public class QuestManager : MonoBehaviour {
 
 		GameObject newPanel = Instantiate (questPanel, questScroll.transform);
 
-		newPanel.GetComponent<Quest> ().Init (RandomName(), RandomSlots(), RandomImage(), RandomTime(), this);
+		newPanel.GetComponent<Quest> ().Init (RandomName(), RandomSlots(), RandomImage(), RandomTime(), this, RandomDifficulty());
 		questList.Add (newPanel.GetComponent<Quest>());
 	}
+
+    int RandomDifficulty()
+    {
+        return Random.Range(1, 10);
+    }
 
 	string RandomName()
 	{
@@ -123,10 +128,11 @@ public class QuestManager : MonoBehaviour {
 
     public void QuestComplete(Quest finishedQuest)
     {
-        //Character checks (Is Character Alive, XP Gained etc.)==
+        //Character checks (Is Character Alive, XP Gained etc.)
         CharacterCheck(finishedQuest);
 
-        //Create loot==
+        //Create loot
+        baseManager.GetInventory().AddItem(CreateLoot(finishedQuest));
 
         //Enable villagers
         foreach(BaseVillager villager in finishedQuest.GetVillagerList())
@@ -149,13 +155,66 @@ public class QuestManager : MonoBehaviour {
 
     private void CharacterCheck(Quest quest)
     {
+        for(int i = 0; i < quest.GetVillagerList().Count; i++)
+        {
+            if(quest.GetVillagerList()[i].IsAlive())
+                quest.GetVillagerList()[i].AddExperience(quest.GetExperience());
+        }
+    }
+
+    public void QuestEvent(Quest quest)
+    {
 
     }
 
-    private BaseItem CreateLoot()
+    private BaseItem CreateLoot(Quest quest)
     {
-        BaseItem rewardItem = new BaseItem();
 
+        BaseWeapon rewardItem;
+        int rewardValue = Random.Range(1, 3) * quest.GetDifficulty();
+
+        switch(Random.Range(0, 6))
+        {
+            case 0:
+                rewardItem = new Weapon_Sword();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+
+            case 1:
+                rewardItem = new Weapon_Sword();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+
+            case 2:
+                rewardItem = new Weapon_Axe();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+
+            case 3:
+                rewardItem = new Weapon_Polearm();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+
+            case 4:
+                rewardItem = new Weapon_Bow();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+
+            case 5:
+                rewardItem = new Weapon_Longsword();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+
+            case 6:
+                rewardItem = new Item_Shield();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+
+            default:
+                rewardItem = new Weapon_Sword();
+                rewardItem.SetBaseScore(rewardValue);
+                break;
+        }
 
         return rewardItem;
     }

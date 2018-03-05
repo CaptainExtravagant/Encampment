@@ -5,51 +5,79 @@ using UnityEngine.UI;
 
 public class Quest : MonoBehaviour {
 
-	public Text nameText;
-	public GameObject characterPanel;
-	public Image questImageSlot;
+    public Text nameText;
+    public GameObject characterPanel;
+    public Image questImageSlot;
     public Text questTimeText;
 
-	protected string questName;
-	protected int characterSlots;
+    protected string questName;
+    protected int characterSlots;
     protected float time;
+    protected float checkTimer;
 
-	protected Sprite questImage;
+    protected int difficulty;
+    protected int baseExperience = 150;
+    protected int givenExperience;
 
-	protected List<BaseVillager> activeVillagers = new List<BaseVillager> ();
+    protected Sprite questImage;
+
+    protected List<BaseVillager> activeVillagers = new List<BaseVillager>();
     protected List<int> villagerIndexes = new List<int>();
-	protected List<Button> buttonList = new List<Button> ();
+    protected List<Button> buttonList = new List<Button>();
 
-	public GameObject characterButton;
-	private BaseManager manager;
+    public GameObject characterButton;
+    private BaseManager manager;
     private QuestManager questManager;
 
     public bool active;
 
-	public void Init(string name, int slot, Sprite image, float newTime, QuestManager newManager)
-	{
+    public void Init(string name, int slot, Sprite image, float newTime, QuestManager newManager, int newDifficulty)
+    {
         manager = FindObjectOfType<BaseManager>();
 
-        SetQuestName (name);
-		SetCharacterSlots (slot);
-		SetImage (image);
+        SetQuestName(name);
+        SetCharacterSlots(slot);
+        SetImage(image);
+
+        SetDifficulty(newDifficulty);
         SetTime(newTime);
+        SetExperience();
 
         questManager = newManager;
 
-		for (int i = 0; i < characterSlots; i++) {
-			buttonList.Add(Instantiate (
-				characterButton, 
-				characterPanel.transform).GetComponent<Button>());
-		}
+        for (int i = 0; i < characterSlots; i++) {
+            buttonList.Add(Instantiate(
+                characterButton,
+                characterPanel.transform).GetComponent<Button>());
+        }
 
-		for (int i = 0; i < buttonList.Count; i++) {
-			buttonList [i].onClick.AddListener (delegate{manager.SettingUpQuest(this);});
-		}
+        for (int i = 0; i < buttonList.Count; i++) {
+            buttonList[i].onClick.AddListener(delegate { manager.SettingUpQuest(this); });
+        }
 
-		nameText.text = questName;
-		questImageSlot.sprite = questImage;
+        nameText.text = questName;
+        questImageSlot.sprite = questImage;
         questTimeText.text = string.Format("{0}:{1:00}", (int)time / 60, (int)time % 60);
+    }
+
+    protected void SetExperience()
+    {
+        givenExperience = baseExperience * difficulty;
+    }
+
+    public int GetExperience()
+    {
+        return givenExperience;
+    }
+
+    protected void SetDifficulty(int newDifficulty)
+    {
+        difficulty = newDifficulty;
+    }
+
+    public int GetDifficulty()
+    {
+        return difficulty;
     }
 
     public void ActivateQuest()
@@ -69,6 +97,14 @@ public class Quest : MonoBehaviour {
             active = false;
             questManager.QuestComplete(this);
         }
+
+            //checkTimer -= Time.deltaTime;
+            //
+            //if(checkTimer <= 0)
+            //{
+            //    questManager.QuestEvent(this);
+            //    checkTimer = Random.Range(20.0f, 120.0f);
+            //}
 
         }
 
@@ -94,7 +130,7 @@ public class Quest : MonoBehaviour {
 
     protected void SetTime(float newTime)
     {
-        time = newTime;
+        time = newTime * difficulty;
     }
 	
 	protected void SetQuestName(string newName)
@@ -133,6 +169,7 @@ public class Quest : MonoBehaviour {
             name = questName,
             slots = characterSlots,
             active = active,
+            difficulty = difficulty,
 
             villagerIndexes = villagerIndexes
         };
@@ -149,7 +186,7 @@ public class Quest : MonoBehaviour {
         villagerIndexes = dataToLoad.villagerIndexes;
 
         //Init the quest with the loaded data
-        Init(dataToLoad.name, dataToLoad.slots, null, dataToLoad.time, questManager);
+        Init(dataToLoad.name, dataToLoad.slots, null, dataToLoad.time, questManager, dataToLoad.difficulty);
         if (manager == null)
             Debug.Log("Manager is null");
 
@@ -174,6 +211,7 @@ public class QuestData
     public string name;
     public int slots;
     public bool active;
+    public int difficulty;
 
     public List<int> villagerIndexes;
     //public Sprite image;

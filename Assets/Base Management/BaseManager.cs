@@ -51,7 +51,6 @@ public class BaseManager : MonoBehaviour {
     protected List<BaseEnemy> enemyList = new List<BaseEnemy>();
 
     private Camera cameraReference;
-    private CameraMovement cameraMovement;
 
 	InventoryBase inventoryReference;
 
@@ -200,7 +199,6 @@ public class BaseManager : MonoBehaviour {
         villagerList.AddRange(FindObjectsOfType<BaseVillager>());
 
         cameraReference = Camera.main;
-        cameraMovement = cameraReference.GetComponent<CameraMovement>();
 
         controller = cameraReference.GetComponent<PlayerController>();
 

@@ -44,6 +44,8 @@ public class BaseVillager : Character{
     private bool isWorking;
     private float workTimer;
 
+    private bool isAlive = true;
+
 	protected override void Awake()
 	{
 		base.Awake ();
@@ -83,6 +85,11 @@ public class BaseVillager : Character{
 	{
 		return characterInfo.characterLevel;
 	}
+
+    public bool IsAlive()
+    {
+        return isAlive;
+    }
 
 	public void ImproveTaskSkill(TaskSkills targetSkill, float bonusValue)
 	{
@@ -566,6 +573,7 @@ public class BaseVillager : Character{
 
 	new protected void AIDead()
 	{
+        isAlive = false;
 		manager.RemoveVillagerFromList (this);
 		manager.CheckVillagerCount ();
 		base.AIDead ();
