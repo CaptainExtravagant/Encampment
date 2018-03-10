@@ -40,6 +40,8 @@ public class BaseManager : MonoBehaviour {
 	protected GameObject buildingInfo;
     private BuildingDisplay buildingDisplay;
 
+    protected GameObject pauseMenu;
+
     protected bool isUnderAttack;
 	protected bool settingUpQuest;
 	protected bool addingToBuilding;
@@ -112,6 +114,7 @@ public class BaseManager : MonoBehaviour {
         buildingInfo.SetActive(false);
 		mainUI.SetActive (true);
 		lossPanel.SetActive (false);
+        pauseMenu.SetActive(false);
     }
     private void Update()
     {
@@ -176,8 +179,14 @@ public class BaseManager : MonoBehaviour {
     }
     public void RestartGame()
     {
+        Time.timeScale = 1;
         ResetSave();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void SaveQuit()
+    {
+        SaveGame();
+        SceneManager.LoadScene(0);
     }
     public void ReturnToMenu()
     {
@@ -224,10 +233,15 @@ public class BaseManager : MonoBehaviour {
 
         inventoryPanel = Instantiate(Resources.Load("UI/InventoryPanel")) as GameObject;
 
+        pauseMenu = Instantiate(Resources.Load("UI/PauseMenu")) as GameObject;
+
         inventoryReference = gameObject.AddComponent<InventoryBase>();
         questManager = gameObject.AddComponent<QuestManager>();
 
-        
+        pauseMenu.GetComponentsInChildren<Button>()[0].onClick.AddListener(delegate { TogglePauseMenu(true); });
+        pauseMenu.GetComponentsInChildren<Button>()[1].onClick.AddListener(RestartGame);
+        pauseMenu.GetComponentsInChildren<Button>()[2].onClick.AddListener(SaveQuit);
+
         questMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleQuestMenu);
         characterMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleCharacterMenu);
         
@@ -528,6 +542,22 @@ public class BaseManager : MonoBehaviour {
     //=====//
     //Menus//
     //=====//
+    public void TogglePauseMenu(bool isPaused)
+    {
+        if (isPaused)
+        {
+            Time.timeScale = 1;
+            pauseMenu.SetActive(false);
+            controller.isPaused = false;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            pauseMenu.SetActive(true);
+            controller.isPaused = true;
+        }
+    }
+
     public virtual void ToggleBuildingInfo()
     {
         if (buildingInfo.activeSelf)

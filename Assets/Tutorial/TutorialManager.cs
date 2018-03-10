@@ -59,6 +59,7 @@ public class TutorialManager : BaseManager {
         buildingInfo.SetActive(false);
         mainUI.SetActive(true);
         lossPanel.SetActive(false);
+        pauseMenu.SetActive(false);
 
         attackTimer = 1;
         attackTimerSet = false;
