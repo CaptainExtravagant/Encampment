@@ -231,7 +231,7 @@ public class PlayerController : MonoBehaviour {
                     break;
 
                 case 2:
-				infoText [i].text = selectedCharacterInfo.characterName;
+                    characterPanel.GetComponentInChildren<InputField>().text = selectedCharacterInfo.characterName;
 				break;
 
 			case 4:

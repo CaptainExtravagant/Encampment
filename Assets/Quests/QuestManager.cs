@@ -216,6 +216,8 @@ public class QuestManager : MonoBehaviour {
                 break;
         }
 
+        Debug.Log("Quest Reward Made");
+
         return rewardItem;
     }
 

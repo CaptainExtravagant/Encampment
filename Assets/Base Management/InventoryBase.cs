@@ -89,16 +89,14 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 	bool I_Inventory.AddItem(BaseItem itemToAdd)
     {
         //Run through entire inventory
-		for(int i = 0; i < itemCap; i++)
+        if (itemList.Count < itemCap)
         {
-            //Find the next empty slot
-            if(itemList[i] == null)
-            {
+            int i = itemList.Count;
 				//Debug.Log ("Spawned Sword");
 				GameObject newItem = new GameObject();
 				newItem.AddComponent(itemToAdd.GetType ());
 
-				itemList.Insert(i, newItem.GetComponent<BaseItem>());
+				itemList.Add(newItem.GetComponent<BaseItem>());
 
                 //Add the item to the inventory, the object itself is somewhere in the world when it's picked up/created
 				itemButtonList[i] = 
@@ -125,7 +123,7 @@ public class InventoryBase : MonoBehaviour, I_Inventory {
 				
                 return true;
             }
-        }
+    else
         return false;
     }
 

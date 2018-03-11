@@ -541,9 +541,10 @@ public class BaseVillager : Character{
 			if	(targetObject.GetComponent<BaseBuilding>().IsBuilt())
 			{ 	
                     
-					isBuilding = false;
-					agent.enabled = true;
-					currentState = CHARACTER_STATE.CHARACTER_WANDER;
+				isBuilding = false;
+				agent.enabled = true;
+				currentState = CHARACTER_STATE.CHARACTER_WANDER;
+                targetObject = null;
 			} 	
 		}
     }
