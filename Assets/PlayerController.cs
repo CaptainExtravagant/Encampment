@@ -57,7 +57,8 @@ public class PlayerController : MonoBehaviour {
 
 	public void Reset()
 	{
-		CloseCharacterInfoPanel ();
+        CloseCharacterInfoPanel ();
+
 		CloseInventory ();
 		selectedObject = null;
 
@@ -108,8 +109,6 @@ public class PlayerController : MonoBehaviour {
                             }
                             else
                             {
-                                villagerReference.SetSelected(false);
-                                villagerReference = null;
                                 CloseCharacterInfoPanel();
                             }
 
@@ -127,8 +126,7 @@ public class PlayerController : MonoBehaviour {
                             {
                                 //Debug.Log ("Setting Work Area (Controller)");
                                 villagerReference.SelectWorkArea(resourceReference.gameObject);
-                                villagerReference.SetSelected(false);
-                                villagerReference = null;
+                                
                                 CloseCharacterInfoPanel();
                             }
 
@@ -163,17 +161,14 @@ public class PlayerController : MonoBehaviour {
                             {
 
                                 //buildingReference.OnClicked(villagerReference);
-
-                                villagerReference.SetSelected(false);
-                                villagerReference = null;
+                                
                                 CloseCharacterInfoPanel();
                             }
                         }
                         else if (villagerReference != null)
                         {
-                            villagerReference.SetTargetPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                            villagerReference.SetSelected(false);
-                            villagerReference = null;
+                            villagerReference.SetTargetPosition(Camera.main.ViewportToWorldPoint(Input.mousePosition));
+                            
                             CloseCharacterInfoPanel();
                         }
                     }
@@ -486,6 +481,11 @@ public class PlayerController : MonoBehaviour {
 
 	    public void CloseCharacterInfoPanel()
     {
+        if (villagerReference)
+        {
+            villagerReference.SetSelected(false);
+            villagerReference = null;
+        }
         characterPanel.SetActive(false);
     }
 

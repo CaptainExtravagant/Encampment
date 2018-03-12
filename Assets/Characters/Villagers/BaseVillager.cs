@@ -312,17 +312,17 @@ public class BaseVillager : Character{
 			AIFindTarget ();
 
 			return;
-		} else if(
-			targetObject == null && targetPositionSet)
-			{
+		}
+        else if(targetObject == null && targetPositionSet)
+		{
 			agent.SetDestination (targetPosition);
 
 			if (AICheckRange ()) {
 				currentState = CHARACTER_STATE.CHARACTER_WANDER;
-				AIFindTarget ();
-				targetPositionSet = false;
-			}
-			}
+                AIFindTarget ();
+                targetPositionSet = false;
+            }
+		}
 
 		if (targetObject != null) {
 			targetPosition = targetObject.transform.position;
