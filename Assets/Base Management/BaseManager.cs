@@ -39,6 +39,7 @@ public class BaseManager : MonoBehaviour {
 
 	protected GameObject buildingInfo;
     private BuildingDisplay buildingDisplay;
+    private GameObject incidentPanel;
 
     protected GameObject pauseMenu;
 
@@ -70,6 +71,7 @@ public class BaseManager : MonoBehaviour {
 
 	protected float foodTimer = 120.0f;
 	protected float timer;
+    protected float UITimer = 5.0f;
 
     protected int buildingButtonIndex;
     
@@ -115,6 +117,10 @@ public class BaseManager : MonoBehaviour {
 		mainUI.SetActive (true);
 		lossPanel.SetActive (false);
         pauseMenu.SetActive(false);
+
+        incidentPanel.GetComponentsInChildren<Text>()[0].enabled = false;
+        incidentPanel.GetComponentsInChildren<Text>()[1].enabled = false;
+
     }
     private void Update()
     {
@@ -172,6 +178,14 @@ public class BaseManager : MonoBehaviour {
         stoneText.GetComponent<Text>().text = "Stone: " + supplyStone;
         foodText.GetComponent<Text>().text = "Food: " + supplyFood;
         villagerText.GetComponent<Text>().text = "Villagers: " + villagerList.Count + "/" + maxVillagers;
+
+        UITimer -= Time.deltaTime;
+
+        if (UITimer <= 0.0f)
+        {
+            incidentPanel.GetComponentsInChildren<Text>()[0].enabled = false;
+            incidentPanel.GetComponentsInChildren<Text>()[1].enabled = false;
+        }
     }
     void OnApplicationQuit()
     {
@@ -244,6 +258,9 @@ public class BaseManager : MonoBehaviour {
 
         questMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleQuestMenu);
         characterMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleCharacterMenu);
+
+        //Incident Panel
+        incidentPanel = Instantiate(Resources.Load("UI/AttackArrivalPanel")) as GameObject;
         
         //Loss Panel
         lossPanel.GetComponentsInChildren<Button>()[0].onClick.AddListener(RestartGame);
@@ -438,6 +455,12 @@ public class BaseManager : MonoBehaviour {
             villagerList.Add(newVillager.GetComponent<BaseVillager>());
         }
 
+
+        incidentPanel.GetComponentsInChildren<Text>()[0].enabled = true;
+        incidentPanel.GetComponentsInChildren<Text>()[1].enabled = false;
+
+        UITimer = 5.0f;
+
         return newVillager;
     }
     public void CheckVillagerCount()
@@ -514,6 +537,11 @@ public class BaseManager : MonoBehaviour {
                 newGoblin = null;
             }
         }
+
+        UITimer = 5.0f;
+
+        incidentPanel.GetComponentsInChildren<Text>()[0].enabled = false;
+        incidentPanel.GetComponentsInChildren<Text>()[1].enabled = true;
     }
     public float GetAttackTimer()
     {
@@ -753,10 +781,19 @@ public class BaseManager : MonoBehaviour {
         {
             Debug.Log ("Place Construction Down");
             //Place construction site on mouse position and add to list of construction areas.
-			if (heldBuilding.GetComponent<BaseBuilding> ().PlaceInWorld ()) {
+            if (heldBuilding.GetComponent<BaseBuilding> ().PlaceInWorld ()) {
 				toBeBuilt.Add (heldBuilding.GetComponent<BaseBuilding> ());
-				placingBuilding = false;
-				heldBuilding = null;
+
+                if (heldBuilding.GetComponent<Building_Walls>())
+                {
+                    heldBuilding = Instantiate(Resources.Load("Buildings/BuildingWall") as GameObject, new Vector3(0, 0.5f, 0), Quaternion.identity);
+                    heldBuilding.GetComponent<BaseBuilding>().InitBuilding(this, buildingDisplay.uniquePanels[(int)heldBuilding.GetComponent<BaseBuilding>().GetBuildingType()]);
+                }
+                else
+                {
+                    placingBuilding = false;
+                    heldBuilding = null;
+                }
 			} else {
 				Debug.Log ("Construction Failed");
 				CancelBuilding ();

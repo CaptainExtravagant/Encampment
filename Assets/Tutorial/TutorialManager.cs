@@ -214,9 +214,17 @@ public class TutorialManager : BaseManager {
                     SetActiveAdvice(7);
 				}
 
-				placingBuilding = false;
-				heldBuilding = null;
-			} else {
+                if (heldBuilding.GetComponent<Building_Walls>())
+                {
+                    heldBuilding = Instantiate(Resources.Load("Buildings/BuildingWall") as GameObject, new Vector3(0, 0.5f, 0), Quaternion.identity);
+                    heldBuilding.GetComponent<BaseBuilding>().InitBuilding(this, GetBuildingDisplay().uniquePanels[(int)heldBuilding.GetComponent<BaseBuilding>().GetBuildingType()]);
+                }
+                else
+                {
+                    placingBuilding = false;
+                    heldBuilding = null;
+                }
+            } else {
 				Debug.Log ("Construction Failed");
 				CancelBuilding ();
 			}

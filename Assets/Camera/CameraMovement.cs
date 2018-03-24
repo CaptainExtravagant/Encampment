@@ -151,7 +151,7 @@ public class CameraMovement : MonoBehaviour {
 
 	}
 
-    //Function for moving the camera with mouse or touch on mobile
+    //Function for moving the camera with mouse and touch on mobile
     void CameraDragMovement()
     {
         //Set offset to the current mouse position - the position when the mouse was clicked
@@ -164,5 +164,5 @@ public class CameraMovement : MonoBehaviour {
             (((mouseOffset.y) / 2) - (mouseOffset.x) / 2)),
 			Space.Self);
     }
-    
+
 }
