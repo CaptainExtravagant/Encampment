@@ -217,8 +217,10 @@ public class PlayerController : MonoBehaviour {
     {
 		selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
-        
-		for (int i = 0; i < infoText.Length; i++) {
+
+        villagerReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.2f);
+
+        for (int i = 0; i < infoText.Length; i++) {
 			switch (i)
             {
                 case 1:
@@ -348,6 +350,8 @@ public class PlayerController : MonoBehaviour {
         public void OpenCharacterInfoPanel(BaseVillager villager)
         {
         villagerReference = villager;
+
+        villagerReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.2f);
 
         selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
@@ -483,6 +487,8 @@ public class PlayerController : MonoBehaviour {
     {
         if (villagerReference)
         {
+            villagerReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.0f);
+
             villagerReference.SetSelected(false);
             villagerReference = null;
         }
@@ -626,13 +632,14 @@ public class PlayerController : MonoBehaviour {
     {
         baseManager.ToggleBuildingInfo();
         buildingDisplay.SetInformation(buildingReference);
-
+        buildingReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.2f);
         buildingPanel.SetActive(true);
     }
 
     public void CloseBuildingInfoPanel()
     {
         baseManager.ToggleBuildingInfo();
+        buildingReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.0f);
         buildingReference = null;
 
         buildingDisplay.ClosePanel ();

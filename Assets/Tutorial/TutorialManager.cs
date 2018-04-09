@@ -76,6 +76,12 @@ public class TutorialManager : BaseManager {
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            if (placingBuilding)
+                CancelBuilding();
+        }
+
         if (demoAttack)
         {
             if (FindEnemies())
