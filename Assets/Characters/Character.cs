@@ -505,28 +505,41 @@ public class Character : MonoBehaviour{
             agent.enabled = true;
             currentState = CHARACTER_STATE.CHARACTER_WANDER;
         }
-
-        if(isAttacking && targetObject != null)
+        if (AICheckWeaponRange())
         {
-            attackTimer += Time.deltaTime;
 
-			if (attackTimer >= attackCooldownTime) {
-				
-				//Attack the target
-					
-				if (targetObject.GetComponent<Character> ()) {
-						DealDamage (targetObject.GetComponent<Character> ());
-					} else if (targetObject.GetComponent<BaseBuilding> ()) {
-					DamageBuilding (targetObject.GetComponent<BaseBuilding> ());
-					}
-					attackTimer = 0;
-			}
+            if (isAttacking && targetObject != null)
+            {
+                attackTimer += Time.deltaTime;
+
+                if (attackTimer >= attackCooldownTime)
+                {
+
+                    //Attack the target
+
+                    if (targetObject.GetComponent<Character>())
+                    {
+                        DealDamage(targetObject.GetComponent<Character>());
+                    }
+                    else if (targetObject.GetComponent<BaseBuilding>())
+                    {
+                        DamageBuilding(targetObject.GetComponent<BaseBuilding>());
+                    }
+                    attackTimer = 0;
+                }
+            }
+            else if (!isAttacking && targetObject != null)
+            {
+                //Set attacking to true, start attack timer, stop navigation
+                isAttacking = true;
+                agent.enabled = false;
+            }
         }
-        else if(!isAttacking && targetObject != null)
+        else
         {
-            //Set attacking to true, start attack timer, stop navigation
-            isAttacking = true;
-            agent.enabled = false;
+            isAttacking = false;
+            agent.enabled = true;
+            currentState = CHARACTER_STATE.CHARACTER_MOVING;
         }
     }
 
