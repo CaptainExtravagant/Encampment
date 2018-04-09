@@ -333,6 +333,7 @@ public class BaseManager : MonoBehaviour {
         mainUI.GetComponentsInChildren<Button>()[2].onClick.AddListener(OpenQuestMenu);
         mainUI.GetComponentsInChildren<Button>()[3].onClick.AddListener(ToggleCharacterMenu);
         mainUI.GetComponentsInChildren<Button>()[4].onClick.AddListener(RestartGame);
+		mainUI.GetComponentsInChildren<Button> () [5].onClick.AddListener (delegate{TogglePauseMenu(false);});
 
         Debug.Log("Init Successful");
     }
