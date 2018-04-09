@@ -140,7 +140,7 @@ public class CameraMovement : MonoBehaviour {
 
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
             {
-                CameraDragMovement();
+				CameraMobileMovement();
             }
 
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
@@ -158,11 +158,23 @@ public class CameraMovement : MonoBehaviour {
         Vector3 mouseOffset = Camera.main.ScreenToViewportPoint(Input.mousePosition) - holdingPoint;
 
         //Move camera, use x values normally, empty y value, use y value from mouseOffset so z moves properly; use same method as WASD movement so the mouse movements lines up with camera movement correctly
-        cameraTarget.Translate(new Vector3(
-            (((mouseOffset.x) / 2) + ((mouseOffset.y) / 2)),
-            0.0f,
-            (((mouseOffset.y) / 2) - (mouseOffset.x) / 2)),
+		cameraTarget.Translate(new Vector3(
+			(((mouseOffset.x) / 2) + ((mouseOffset.y) / 2)),
+			0.0f,
+			(((mouseOffset.y) / 2) - (mouseOffset.x) / 2)),
 			Space.Self);
     }
 
+	void CameraMobileMovement()
+	{
+		//Set offset to the current mouse position - the position when the mouse was clicked
+		Vector3 mouseOffset = Camera.main.ScreenToViewportPoint(Input.mousePosition) - holdingPoint;
+
+		//Move camera, use x values normally, empty y value, use y value from mouseOffset so z moves properly; use same method as WASD movement so the mouse movements lines up with camera movement correctly
+		cameraTarget.Translate(new Vector3(
+			(((-mouseOffset.x) / 2) + ((-mouseOffset.y) / 2)),
+			0.0f,
+			(((-mouseOffset.y) / 2) - ((-mouseOffset.x) / 2))),
+			Space.Self);
+	}
 }
