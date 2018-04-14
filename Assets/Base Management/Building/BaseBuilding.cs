@@ -28,6 +28,9 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         BUILDING_BLACKSMITH
     }
 
+    protected string buildingName;
+    protected string buildingFunction;
+
 	protected List <BaseVillager> workingVillagers = new List <BaseVillager>();
 	protected List <int> villagerIndexes = new List<int>();
     protected int maxWorkingVillagers;
@@ -80,8 +83,16 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         
 		currentHealth = baseHealthValue;
 
-        SetBuildingCost();
-        
+    }
+
+    virtual protected void SetBuildingName()
+    {
+
+    }
+
+    virtual protected void SetBuildingFunction()
+    {
+
     }
 
 	void OnTriggerEnter(Collider collider)
@@ -108,7 +119,12 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         buildingCosts.Add(ResourceTile.RESOURCE_TYPE.FOOD, 0);
     }
 
-	public void InitBuilding(BaseManager manager, GameObject uniquePanel)
+    public Dictionary<ResourceTile.RESOURCE_TYPE, int> GetBuildingCost()
+    {
+        return buildingCosts;
+    }
+
+    public void InitBuilding(BaseManager manager, GameObject uniquePanel)
 	{
 		SetBaseManager (manager);
 		meshFilterReference = GetComponent<MeshFilter> ();
@@ -205,6 +221,16 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		currentHealth = maxHealth;
 	}
     
+    public string GetBuildingName()
+    {
+        return buildingName;
+    }
+
+    public string GetBuildingFunction()
+    {
+        return buildingFunction;
+    }
+
     public int GetBuildingLevel()
     {
         return buildingLevel;

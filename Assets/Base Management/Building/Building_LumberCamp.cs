@@ -11,7 +11,12 @@ public class Building_LumberCamp : BaseBuilding, I_Building {
 		workTime = 20.0f;
 		maxWorkingVillagers = 4;
 		activeTimer = workTime;
-	}
+
+        SetBuildingCost();
+
+        SetBuildingName();
+        SetBuildingFunction();
+    }
 
 	new void Update()
 	{
@@ -25,7 +30,17 @@ public class Building_LumberCamp : BaseBuilding, I_Building {
 		}
 	}
 
-	override public void WorkBuilding()
+    protected override void SetBuildingName()
+    {
+        buildingName = "Lumber Camp";
+    }
+
+    protected override void SetBuildingFunction()
+    {
+        buildingFunction = "Generates wood for the village.";
+    }
+
+    override public void WorkBuilding()
 	{
 		float resourceValue = 0;
 

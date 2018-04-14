@@ -21,7 +21,12 @@ public class Building_Barracks : BaseBuilding, I_Building {
 		workTime = 10.0f;
 		activeTimer = workTime;
         GetSkillBonus();
-	}
+
+        SetBuildingCost();
+
+        SetBuildingName();
+        SetBuildingFunction();
+    }
 
 	new void Update()
 	{
@@ -33,7 +38,17 @@ public class Building_Barracks : BaseBuilding, I_Building {
 			if (activeTimer <= 0)
 				WorkBuilding ();
 		}
-	}
+    }
+
+    protected override void SetBuildingName()
+    {
+        buildingName = "Barracks";
+    }
+
+    protected override void SetBuildingFunction()
+    {
+        buildingFunction = "Train villagers to increase their level and combat skills.";
+    }
 
     private void GetSkillBonus()
     {

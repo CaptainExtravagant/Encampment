@@ -11,7 +11,12 @@ public class Building_Farm : BaseBuilding, I_Building {
 		workTime = 20.0f;
 		maxWorkingVillagers = 4;
 		activeTimer = workTime;
-	}
+
+        SetBuildingCost();
+
+        SetBuildingName();
+        SetBuildingFunction();
+    }
 
 	new void Update()
 	{
@@ -39,6 +44,16 @@ public class Building_Farm : BaseBuilding, I_Building {
 
 		activeTimer = workTime;
 	}
+
+    protected override void SetBuildingName()
+    {
+        buildingName = "Farm";
+    }
+
+    protected override void SetBuildingFunction()
+    {
+        buildingFunction = "Generate food for the village.";
+    }
 
     public override void SetUpInfoPanel()
     {

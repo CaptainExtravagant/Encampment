@@ -15,7 +15,11 @@ public class Building_TownHall : BaseBuilding, I_Building {
         villagerSlots = 10;
 		activeTimer = workTime;
 
-	}
+        SetBuildingCost();
+
+        SetBuildingName();
+        SetBuildingFunction();
+    }
 
 	override protected void SetBuildingCost()
 	{
@@ -23,6 +27,16 @@ public class Building_TownHall : BaseBuilding, I_Building {
 		buildingCosts.Add(ResourceTile.RESOURCE_TYPE.STONE, 100);
 		buildingCosts.Add(ResourceTile.RESOURCE_TYPE.FOOD, 0);
 	}
+
+    protected override void SetBuildingName()
+    {
+        buildingName = "Town Hall";
+    }
+
+    protected override void SetBuildingFunction()
+    {
+        buildingFunction = "Bring in new villagers. Villagers with higher Charm bring more new arrivals";
+    }
 
     new void Update()
     {

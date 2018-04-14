@@ -22,6 +22,11 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 
 		workTime = 20.0f;
 		activeTimer = workTime;
+
+        SetBuildingCost();
+
+        SetBuildingName();
+        SetBuildingFunction();
     }
 
 	new void Update()
@@ -36,6 +41,16 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 				WorkBuilding ();
 		}
 	}
+
+    protected override void SetBuildingName()
+    {
+        buildingName = "Blacksmith";
+    }
+
+    protected override void SetBuildingFunction()
+    {
+        buildingFunction = "Create weapons and armor.";
+    }
 
     public override void StartWorking()
     {

@@ -10,13 +10,28 @@ public class Building_Outpost : BaseBuilding, I_Building {
 		SetBuildingType (BUILDING_TYPE.BUILDING_OUTPOST);
 		loadPath = "Buildings/BuildingOutpost";
         maxWorkingVillagers = 2;
-	}
+
+        SetBuildingCost();
+
+        SetBuildingName();
+        SetBuildingFunction();
+    }
 
     new void Update()
     {
         base.Update();
 
         SetUpInfoPanel();
+    }
+
+    protected override void SetBuildingName()
+    {
+        buildingName = "Outpost";
+    }
+
+    protected override void SetBuildingFunction()
+    {
+        buildingFunction = "Provides an estimation on when the next goblin attack occurs. One man gives a basic idea, two man gives an exact time.";
     }
 
     public override void SetUpInfoPanel()

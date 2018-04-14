@@ -35,6 +35,8 @@ public class BaseManager : MonoBehaviour {
 	private Vector3 buildingPanelPositionStart;
 	private Vector3 buildingPanelPositionEnd;
 
+    protected GameObject buildingText;
+
     private GameObject inventoryPanel;
 
 	protected GameObject buildingInfo;
@@ -265,8 +267,12 @@ public class BaseManager : MonoBehaviour {
         //Loss Panel
         lossPanel.GetComponentsInChildren<Button>()[0].onClick.AddListener(RestartGame);
         lossPanel.GetComponentsInChildren<Button>()[1].onClick.AddListener(ReturnToMenu);
-        
+
         //Build Menu
+        buildingText = buildingMenu.transform.GetChild(1).gameObject;
+        buildingText.GetComponentsInChildren<Button>()[0].onClick.AddListener(CreateBuilding);
+        buildingText.GetComponentsInChildren<Button>()[1].onClick.AddListener(CloseBuildingMenu);
+
         buildingMenu.GetComponentsInChildren<Button>()[0].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingTownHall") as GameObject); });
         buildingMenu.GetComponentsInChildren<Button>()[1].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingWall") as GameObject); });
         buildingMenu.GetComponentsInChildren<Button>()[2].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingHouse") as GameObject); });
@@ -620,6 +626,7 @@ public class BaseManager : MonoBehaviour {
     }
 	public void CloseBuildingMenu()
 	{
+        CancelBuilding();
 		buildingMenu.SetActive (false);
 	}
 	public void CloseCharacterMenu()
@@ -812,12 +819,40 @@ public class BaseManager : MonoBehaviour {
     {
         return inventoryReference;
     }
+
     public void SelectBuilding(GameObject buildingType)
     {
+        CancelBuilding();
+
         heldBuilding = Instantiate(buildingType, new Vector3(0, 0.5f, 0), Quaternion.identity);
         heldBuilding.GetComponent<BaseBuilding>().InitBuilding(this, buildingDisplay.uniquePanels[(int)heldBuilding.GetComponent<BaseBuilding>().GetBuildingType()]);
+        heldBuilding.SetActive(false);
+
+        int woodCost = heldBuilding.GetComponent<BaseBuilding>().GetBuildingCost()[ResourceTile.RESOURCE_TYPE.WOOD];
+        int stoneCost = heldBuilding.GetComponent<BaseBuilding>().GetBuildingCost()[ResourceTile.RESOURCE_TYPE.STONE];
+        int foodCost = heldBuilding.GetComponent<BaseBuilding>().GetBuildingCost()[ResourceTile.RESOURCE_TYPE.FOOD];
+
+        buildingText.GetComponentsInChildren<Text>()[0].text = heldBuilding.GetComponent<BaseBuilding>().GetBuildingName();
+        buildingText.GetComponentsInChildren<Text>()[1].text = heldBuilding.GetComponent<BaseBuilding>().GetBuildingFunction();
+
+        buildingText.GetComponentsInChildren<Text>()[3].text = woodCost.ToString();
+        buildingText.GetComponentsInChildren<Text>()[5].text = stoneCost.ToString();
+        buildingText.GetComponentsInChildren<Text>()[7].text = foodCost.ToString();
+
+        if(woodCost > supplyWood || stoneCost > supplyStone || foodCost > supplyFood)
+        {
+            buildingText.GetComponentsInChildren<Button>()[0].interactable = false;
+        }
+        else
+        {
+            buildingText.GetComponentsInChildren<Button>()[0].interactable = true;
+        }
+    }
+
+    private void CreateBuilding()
+    {
+        heldBuilding.SetActive(true);
         ToggleBuildingMenu();
-        PlaceBuilding();
     }
 
     public void AddBuildingToList(BaseBuilding buildingToAdd, int listIndex)
