@@ -14,6 +14,7 @@ public class Quest : MonoBehaviour {
     protected int characterSlots;
     protected float time;
     protected float checkTimer;
+    protected bool eventDone;
 
     protected int difficulty;
     protected int baseExperience = 150;
@@ -58,6 +59,8 @@ public class Quest : MonoBehaviour {
         nameText.text = questName;
         questImageSlot.sprite = questImage;
         questTimeText.text = string.Format("{0}:{1:00}", (int)time / 60, (int)time % 60);
+
+        checkTimer = Random.Range(5, 10);
     }
 
     protected void SetExperience()
@@ -80,6 +83,11 @@ public class Quest : MonoBehaviour {
         return difficulty;
     }
 
+    public string GetName()
+    {
+        return questName;
+    }
+
     public void ActivateQuest()
     {
         questManager.ActivateQuest(this);
@@ -98,13 +106,14 @@ public class Quest : MonoBehaviour {
             questManager.QuestComplete(this);
         }
 
-            //checkTimer -= Time.deltaTime;
-            //
-            //if(checkTimer <= 0)
-            //{
-            //    questManager.QuestEvent(this);
-            //    checkTimer = Random.Range(20.0f, 120.0f);
-            //}
+            checkTimer -= Time.deltaTime;
+            
+            if(checkTimer <= 0 && !eventDone)
+            {
+                eventDone = true;
+                //checkTimer = Random.Range(20.0f, 120.0f);
+                questManager.QuestEvent(this);
+            }
 
         }
 

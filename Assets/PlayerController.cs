@@ -347,7 +347,8 @@ public class PlayerController : MonoBehaviour {
 
         characterPanel.SetActive(true);
     }
-        public void OpenCharacterInfoPanel(BaseVillager villager)
+
+    public void OpenCharacterInfoPanel(BaseVillager villager)
         {
         villagerReference = villager;
 
@@ -483,7 +484,7 @@ public class PlayerController : MonoBehaviour {
         characterPanel.SetActive(true);
         }
 
-	    public void CloseCharacterInfoPanel()
+	public void CloseCharacterInfoPanel()
     {
         if (villagerReference)
         {
@@ -495,7 +496,7 @@ public class PlayerController : MonoBehaviour {
         characterPanel.SetActive(false);
     }
 
-        string AttributeTextLoop()
+    string AttributeTextLoop()
     {
         string attributeString = "";
 
@@ -527,7 +528,7 @@ public class PlayerController : MonoBehaviour {
         return attributeString;
     }
 
-        string CombatTextLoop()
+    string CombatTextLoop()
     {
         string skillString = "";
 
@@ -572,7 +573,7 @@ public class PlayerController : MonoBehaviour {
         return skillString;
     }
 
-        string TaskTextLoop()
+    string TaskTextLoop()
     {
         string taskString = "";
 
@@ -655,12 +656,12 @@ public class PlayerController : MonoBehaviour {
     //=======================
 	    public void OpenInventory()
 	{
-		inventoryPanel.SetActive (true);
-	}
+        inventoryPanel.GetComponent<Canvas>().enabled = true;
+    }
 
 	    public void CloseInventory()
 	{
-		inventoryPanel.SetActive (false);
+		inventoryPanel.GetComponent<Canvas>().enabled = false;
 	}
 
 	    public void EquipWeaponButton()

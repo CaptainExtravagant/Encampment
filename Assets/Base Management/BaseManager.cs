@@ -86,7 +86,6 @@ public class BaseManager : MonoBehaviour {
 
         //Make sure all menus are running so init values can be set
         buildingMenu.SetActive(true);
-        questMenu.SetActive(true);
         characterMenu.SetActive(true);
         buildingInfo.SetActive(true);
 
@@ -113,7 +112,7 @@ public class BaseManager : MonoBehaviour {
 
         //Close all menus after init
         buildingMenu.SetActive(false);
-        questMenu.SetActive(false);
+        questMenu.GetComponent<Canvas>().enabled = false;
         characterMenu.SetActive(false);
         buildingInfo.SetActive(false);
 		mainUI.SetActive (true);
@@ -418,7 +417,7 @@ public class BaseManager : MonoBehaviour {
     //======//
     public void OpenQuestMenu()
 	{
-		ToggleQuestMenu ();
+        questMenu.GetComponent<Canvas>().enabled = true;
     }
     public void SettingUpQuest(Quest activeQuest)
     {
@@ -429,13 +428,13 @@ public class BaseManager : MonoBehaviour {
     }
     public void ToggleQuestMenu()
     {
-        if (questMenu.activeSelf)
+        if (questMenu.GetComponent<Canvas>().enabled)
         {
-            questMenu.SetActive(false);
+            questMenu.GetComponent<Canvas>().enabled = false;
         }
         else
         {
-            questMenu.SetActive(true);
+            questMenu.GetComponent<Canvas>().enabled = true;
         }
     }
     //======//
@@ -635,7 +634,7 @@ public class BaseManager : MonoBehaviour {
 	}
 	public void CloseQuestMenu()
 	{
-		questMenu.SetActive (false);
+		questMenu.GetComponent<Canvas>().enabled = false;
 	}
 	public void CloseBuildingInfo()
 	{

@@ -54,7 +54,7 @@ public class TutorialManager : BaseManager {
 
         //Close all menus after init
         buildingMenu.SetActive(false);
-        questMenu.SetActive(false);
+        questMenu.GetComponent<Canvas>().enabled = false;
         characterMenu.SetActive(false);
         buildingInfo.SetActive(false);
         mainUI.SetActive(true);

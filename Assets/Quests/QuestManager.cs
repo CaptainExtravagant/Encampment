@@ -16,6 +16,8 @@ public class QuestManager : MonoBehaviour {
 	private GameObject questScroll;
 	protected GameObject questPanel;
 
+    private GameObject eventPanel;
+
     private BaseManager baseManager;
     
     public void Init(GameObject menu, GameObject scroll)
@@ -35,10 +37,10 @@ public class QuestManager : MonoBehaviour {
 	public void ToggleQuestMenu()
 	{
 		if (questMenu.activeSelf) {
-			questMenu.SetActive (false);
+			questMenu.GetComponent<Canvas>().enabled = false;
 		} else {
-			questMenu.SetActive (true);
-		}
+            questMenu.GetComponent<Canvas>().enabled = true;
+        }
 	}
 
 	public void AddQuest()
@@ -162,8 +164,156 @@ public class QuestManager : MonoBehaviour {
         }
     }
 
+    public void CloseEventPanel()
+    {
+        Destroy(eventPanel);
+        Time.timeScale = 1;
+    }
+
     public void QuestEvent(Quest quest)
     {
+        Time.timeScale = 0;
+
+        int checkValue = Random.Range(0, 16);
+        
+        switch (Random.Range(0, 5))
+        {
+            case 0:
+                //Fitness Check (Heavy lifting, running)
+                for(int i = 0; i < quest.GetVillagerList().Count; i++)
+                {
+                    if(Random.Range(0, 10) + quest.GetVillagerList()[i].GetCharacterInfo().characterAttributes.fitness >= checkValue)
+                    {
+
+                        eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                        eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                        eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                        eventPanel.GetComponentsInChildren<Text>()[1].text = "Fitness Event";
+
+                        eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened and one of your dudes managed to buff it out. Bro's a hench guy.";
+
+                        return;
+                    }
+                }
+                eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                eventPanel.GetComponentsInChildren<Text>()[1].text = "Fitness Event";
+
+                eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened and none of your dudes were hench enough to deal with it...";
+                                
+                break;
+
+            case 1:
+                //Nimbleness Check (Climbing, stealth)
+                for (int i = 0; i < quest.GetVillagerList().Count; i++)
+                {
+                    if (Random.Range(0, 10) + quest.GetVillagerList()[i].GetCharacterInfo().characterAttributes.fitness >= checkValue)
+                    {
+                        eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                        eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                        eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                        eventPanel.GetComponentsInChildren<Text>()[1].text = "Nimbleness Event";
+
+                        eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened and one of your dudes managed to dodge, dip, duck, dive and dodge around the issue.";
+                        
+                        return;
+                    }
+                }
+                eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                eventPanel.GetComponentsInChildren<Text>()[1].text = "Nimbleness Event";
+
+                eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened but your dudes were too slow...";
+                
+                break;
+
+            case 2:
+                //Curiosity Check (Exploration, questioning)
+                for (int i = 0; i < quest.GetVillagerList().Count; i++)
+                {
+                    if (Random.Range(0, 10) + quest.GetVillagerList()[i].GetCharacterInfo().characterAttributes.fitness >= checkValue)
+                    {
+                        eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                        eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                        eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                        eventPanel.GetComponentsInChildren<Text>()[1].text = "Curiosity Event";
+
+                        eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened and one of your dudes was just curious enough to find a solution.";
+                        
+                        return;
+                    }
+                }
+                eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                eventPanel.GetComponentsInChildren<Text>()[1].text = "Curiosity Event";
+
+                eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened and none of your guys could think creatively enough...";
+                
+                break;
+
+            case 3:
+                //Focus Check (Battle tactics, perception)
+                for (int i = 0; i < quest.GetVillagerList().Count; i++)
+                {
+                    if (Random.Range(0, 10) + quest.GetVillagerList()[i].GetCharacterInfo().characterAttributes.fitness >= checkValue)
+                    {
+                        eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                        eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                        eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                        eventPanel.GetComponentsInChildren<Text>()[1].text = "Focus Event";
+
+                        eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened and one of your dudes knuckled down on the situation to get the gang through it.";
+                        
+                        return;
+                    }
+                }
+                eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                eventPanel.GetComponentsInChildren<Text>()[1].text = "Focus Event";
+
+                eventPanel.GetComponentsInChildren<Text>()[2].text = "None of your guys could pay enough attention. It's so easy to procrastinate on quests...";
+                
+                break;
+
+            case 4:
+                //Charm Check (Trade, negotiation etc.)
+                for (int i = 0; i < quest.GetVillagerList().Count; i++)
+                {
+                    if (Random.Range(0, 10) + quest.GetVillagerList()[i].GetCharacterInfo().characterAttributes.fitness >= checkValue)
+                    {
+                        eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                        eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                        eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                        eventPanel.GetComponentsInChildren<Text>()[1].text = "Charm Event";
+
+                        eventPanel.GetComponentsInChildren<Text>()[2].text = "Some stuff happened and one of your dudes was just oh so charming. Like, they were super suave.";
+                        
+                        return;
+                    }
+                }
+                eventPanel = Instantiate(Resources.Load("UI/QuestEventPanel")) as GameObject;
+                eventPanel.GetComponentInChildren<Button>().onClick.AddListener(CloseEventPanel);
+
+                eventPanel.GetComponentsInChildren<Text>()[0].text = quest.GetName();
+                eventPanel.GetComponentsInChildren<Text>()[1].text = "Charm Event";
+
+                eventPanel.GetComponentsInChildren<Text>()[2].text = "This crew was just the worst at social interaction...";
+                
+                break;
+        }
 
     }
 
