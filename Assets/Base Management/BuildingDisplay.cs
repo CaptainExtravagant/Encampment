@@ -34,10 +34,9 @@ public class BuildingDisplay : MonoBehaviour {
 	{
         int limit = buildingReference.GetWorkingVillagers().Count;
 
-        for(int i = 0; i < limit; i++)
+        for(int i = limit -1; i >= 0; i--)
         {
             RemoveCharacter(i);
-            //buildingReference.RemoveVillagerFromWork(i);
         }
 
 		buildingReference.DemolishBuilding ();

@@ -42,6 +42,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	protected bool placedInWorld;
     private bool isBuilt;
 
+    private GameObject progressSlider;
+
     protected Dictionary<ResourceTile.RESOURCE_TYPE, int> buildingCosts = new Dictionary<ResourceTile.RESOURCE_TYPE, int>();
 	protected Dictionary<ResourceTile.RESOURCE_TYPE, int> upgradeCosts = new Dictionary<ResourceTile.RESOURCE_TYPE, int>();
 
@@ -60,6 +62,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
     Ray cursorPosition;
 
     private float buildTime;
+    private float initialBuildTime;
 
 	protected float workTime;
 	protected float activeTimer;
@@ -79,6 +82,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		//CloseInfoPanel ();
         
         buildTime = 10;
+        initialBuildTime = buildTime;
 		baseHealthValue = 40;
         
 		currentHealth = baseHealthValue;
@@ -373,6 +377,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 				upgradeCosts [ResourceTile.RESOURCE_TYPE.STONE] = buildingCosts [ResourceTile.RESOURCE_TYPE.STONE] / 2;
 
 				SetPlacedInWorld (true);
+
+                progressSlider = Instantiate(Resources.Load("UI/BuildingProgressSlider"), this.transform) as GameObject;
 				return true;
 			}
 		}
@@ -423,17 +429,23 @@ public class BaseBuilding : MonoBehaviour, I_Building {
         isBeingWorked = false;
 		constructor = characterReference.GetName();
 		SetBuildTime (buildTime / 2);
+
+        Destroy(progressSlider);
         //SetMesh();
     }
 
     private void SetBuildTime(float newBuildTime)
     {
         buildTime = newBuildTime;
+        initialBuildTime = buildTime;
     }
 
 	public void AddConstructionPoints(float points, BaseVillager characterReference)
     {
         buildTime -= points;
+
+        progressSlider.GetComponentInChildren<UnityEngine.UI.Slider>().value = buildTime / initialBuildTime;
+
         if(buildTime <= 0)
         {
 			if (!isBuilt)

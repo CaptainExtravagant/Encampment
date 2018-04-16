@@ -826,12 +826,13 @@ public class BaseManager : MonoBehaviour {
     {
         if (buttonPressed)
         {
+            //Fix this (Doesn't work how you think it does)
             if(Time.deltaTime <= buttonTimer)
             {
                 CreateBuilding();
             }
 
-            buttonPressed = false;
+            buttonPressed = false
         }
         else
         {

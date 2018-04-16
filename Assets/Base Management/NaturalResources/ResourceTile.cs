@@ -16,6 +16,7 @@ public class ResourceTile : MonoBehaviour {
     private BaseManager managerReference;
 
 	private int resourceValue;
+    private int initialValue;
 
 	private Mesh chosenMesh;
     private MeshFilter meshFilter;
@@ -31,6 +32,7 @@ public class ResourceTile : MonoBehaviour {
 		managerReference = FindObjectOfType<BaseManager> ();
 
 		resourceValue = Random.Range (0, 400);
+        initialValue = resourceValue;
 	}
 
 	private void SetUpMesh()

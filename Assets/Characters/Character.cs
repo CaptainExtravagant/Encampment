@@ -18,6 +18,17 @@ public class Character : MonoBehaviour{
         CHARACTER_ATTACKING,
         CHARACTER_DEAD
     };
+
+    protected enum CHARACTER_TRAIT
+    {
+        TRAIT_SMART = 0,
+        TRAIT_DUMB,
+        TRAIT_BRAWLER,
+        TRAIT_HARDWORKER,
+        TRAIT_LAZY,
+        TRAIT_FAST,
+        TRAIT_CRAZED
+    }
     
     //=======
     //STRUCTS
@@ -97,8 +108,9 @@ public class Character : MonoBehaviour{
         public int characterExperience;
         public Attributes characterAttributes;
         public CombatSkills characterCombatSkills;
+        public List<int> characterTraits;
 
-        public CharacterInfo(int sex, string name, float health,  int level, int experience, Attributes attributes, CombatSkills combatSkills)
+        public CharacterInfo(int sex, string name, float health,  int level, int experience, Attributes attributes, CombatSkills combatSkills, List<int> traits)
         {
             characterName = name;
             characterHealth = health;
@@ -107,6 +119,7 @@ public class Character : MonoBehaviour{
             characterExperience = experience;
             characterAttributes = attributes;
             characterCombatSkills = combatSkills;
+            characterTraits = traits;
         }
     }
     
@@ -123,6 +136,7 @@ public class Character : MonoBehaviour{
 	private float attackRange;
 
     protected int experienceNextLevel = 1;
+    protected float experienceModifier = 1;
     
     private float currentHealth;
 
@@ -176,7 +190,7 @@ public class Character : MonoBehaviour{
 
     public void AddExperience(int experienceValue)
     {
-        characterInfo.characterExperience += experienceValue;
+        characterInfo.characterExperience += (int)(experienceValue * experienceModifier);
         CheckExperience();
     }
 
@@ -347,7 +361,44 @@ public class Character : MonoBehaviour{
         CombatSkills combatSkills = new CombatSkills(CreateCombatSkills(characterAttributes));
 
         //Create Character Info using previous stats, start characters at level 1
-        characterInfo = new CharacterInfo(tempSex, CreateName(tempSex), CreateHealth(characterAttributes), 1, 1, characterAttributes, combatSkills);
+        characterInfo = new CharacterInfo(tempSex, CreateName(tempSex), CreateHealth(characterAttributes), 1, 1, characterAttributes, combatSkills, CreateTraits());
+
+        for(int i = 0; i < characterInfo.characterTraits.Count; i++)
+        {
+            switch(characterInfo.characterTraits[i])
+            {
+                case 0:
+                    //Smart
+                    experienceModifier = 1.18f;
+                    break;
+
+                case 1:
+                    //Dumb
+                    experienceModifier = 0.82f;
+                    break;
+
+                case 2:
+                    //Brawler - Per Combat
+                    break;
+
+                case 3:
+                    //HardWorker - Per Build
+                    break;
+
+                case 4:
+                    //Lazy - Per Build
+                    break;
+
+                case 5:
+                    //Fast
+                    agent.speed *= 1.18f;
+                    break;
+
+                case 6:
+                    //Crazed - Per Combat
+                    break;
+            }
+        }
 
         //Set attack rate
         attackCooldownTime = 5 - (characterInfo.characterAttributes.nimbleness / 10);
@@ -362,6 +413,57 @@ public class Character : MonoBehaviour{
         transform.position = spawnPosition;
 		CalculateNextLevelExperience ();
 
+    }
+
+    protected List<int> CreateTraits()
+    {
+        List<int> traits = new List<int>();
+
+        for(int i = 0; i < Random.Range(0, 4); i++)
+        {
+            switch(Random.Range(0, 14))
+            {
+                case 0:
+                    traits.Add((int)CHARACTER_TRAIT.TRAIT_SMART);
+                    Debug.Log("Add Smart");
+                    break;
+
+                case 2:
+                    traits.Add((int)CHARACTER_TRAIT.TRAIT_DUMB);
+                    Debug.Log("Add Dumb");
+                    break;
+
+                case 4:
+                    traits.Add((int)CHARACTER_TRAIT.TRAIT_BRAWLER);
+                    Debug.Log("Add Brawler");
+                    break;
+
+                case 6:
+                    traits.Add((int)CHARACTER_TRAIT.TRAIT_HARDWORKER);
+                    Debug.Log("Add Hard Worker");
+                    break;
+
+                case 8:
+                    traits.Add((int)CHARACTER_TRAIT.TRAIT_LAZY);
+                    Debug.Log("Add Lazy");
+                    break;
+
+                case 10:
+                    traits.Add((int)CHARACTER_TRAIT.TRAIT_FAST);
+                    Debug.Log("Add Fast");
+                    break;
+
+                case 12:
+                    traits.Add((int)CHARACTER_TRAIT.TRAIT_CRAZED);
+                    Debug.Log("Add Crazed");
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return traits;
     }
 
     //==========
@@ -554,15 +656,24 @@ public class Character : MonoBehaviour{
 
     protected void DealDamage(Character targetCharacter)
     {
+        float combatModifier = 1;
+
+        if (currentHealth <= 10.0f && characterInfo.characterTraits.Contains(6))
+            combatModifier += 0.18f;
+
+        if (characterInfo.characterTraits.Contains(4))
+            combatModifier += 0.18f;
+
+
         if (equippedWeapon != null)
         {
             //Deal damage to target character
-            targetCharacter.TakeDamage(equippedWeapon.GetDamageValue(), this);
+            targetCharacter.TakeDamage(equippedWeapon.GetDamageValue() * combatModifier, this);
         }
         else
         {
             //If the character doesn't have an active weapon, use their brawling skill instead
-            targetCharacter.TakeDamage(GetCombatSkills().brawling, this);
+                targetCharacter.TakeDamage(GetCombatSkills().brawling * combatModifier, this);
         }
     }
 
