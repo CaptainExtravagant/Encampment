@@ -32,10 +32,14 @@ public class BuildingDisplay : MonoBehaviour {
 
 	public void DestroyButton()
 	{
-        for(int i = 0; i < buildingReference.GetWorkingVillagers().Count; i++)
+        int limit = buildingReference.GetWorkingVillagers().Count;
+
+        for(int i = 0; i < limit; i++)
         {
-            buildingReference.RemoveVillagerFromWork(i);
+            RemoveCharacter(i);
+            //buildingReference.RemoveVillagerFromWork(i);
         }
+
 		buildingReference.DemolishBuilding ();
         ClosePanel();
 	}
@@ -105,13 +109,11 @@ public class BuildingDisplay : MonoBehaviour {
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_DOCK:
-                buildingName = "Dock";
                 baseBuilding.infoPanel = uniquePanels[6];
                 baseBuilding.gameObject.GetComponent<Building_Dock>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_BARRACKS:
-				buildingName = "Barracks";
                 baseBuilding.infoPanel = uniquePanels[7];
 				baseBuilding.gameObject.GetComponent<Building_Barracks> ().SetUpInfoPanel ();
                 break;
@@ -166,9 +168,9 @@ public class BuildingDisplay : MonoBehaviour {
 		buildingReference.SetUpInfoPanel ();
 	}
 
-    public void RemoveCharacter(int villagerIndex)
+    public void RemoveCharacter(int buttonIndex)
     {
-        buildingReference.RemoveVillagerFromWork(villagerIndex);
+        buildingReference.RemoveVillagerFromWork(buttonIndex);
         buildingReference.SetUpInfoPanel();
         RefreshPanel();
     }

@@ -297,32 +297,32 @@ public class BaseManager : MonoBehaviour {
         buildingInfo.GetComponentsInChildren<Button>()[5].onClick.AddListener(delegate { AddingCharacter(1); });
 
         //Farm Buttons
-        buildingInfo.GetComponentsInChildren<Button>()[6].onClick.AddListener(delegate { AddingCharacter(0); });
-        buildingInfo.GetComponentsInChildren<Button>()[7].onClick.AddListener(delegate { AddingCharacter(1); });
-        buildingInfo.GetComponentsInChildren<Button>()[8].onClick.AddListener(delegate { AddingCharacter(2); });
-        buildingInfo.GetComponentsInChildren<Button>()[9].onClick.AddListener(delegate { AddingCharacter(3); });
+        buildingInfo.GetComponentsInChildren<Button>()[7].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[8].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[9].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[10].onClick.AddListener(delegate { AddingCharacter(3); });
 
         //Lumbermill Buttons
-        buildingInfo.GetComponentsInChildren<Button>()[10].onClick.AddListener(delegate { AddingCharacter(0); });
-        buildingInfo.GetComponentsInChildren<Button>()[11].onClick.AddListener(delegate { AddingCharacter(1); });
-        buildingInfo.GetComponentsInChildren<Button>()[12].onClick.AddListener(delegate { AddingCharacter(2); });
-        buildingInfo.GetComponentsInChildren<Button>()[13].onClick.AddListener(delegate { AddingCharacter(3); });
+        buildingInfo.GetComponentsInChildren<Button>()[11].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[12].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[13].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[14].onClick.AddListener(delegate { AddingCharacter(3); });
 
         //MiningCamp Buttons
-        buildingInfo.GetComponentsInChildren<Button>()[14].onClick.AddListener(delegate { AddingCharacter(0); });
-        buildingInfo.GetComponentsInChildren<Button>()[15].onClick.AddListener(delegate { AddingCharacter(1); });
-        buildingInfo.GetComponentsInChildren<Button>()[16].onClick.AddListener(delegate { AddingCharacter(2); });
-        buildingInfo.GetComponentsInChildren<Button>()[17].onClick.AddListener(delegate { AddingCharacter(3); });
+        buildingInfo.GetComponentsInChildren<Button>()[15].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[16].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[17].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[18].onClick.AddListener(delegate { AddingCharacter(3); });
 
         //Outpost Buttons
-        buildingInfo.GetComponentsInChildren<Button>()[18].onClick.AddListener(delegate { AddingCharacter(0); });
-        buildingInfo.GetComponentsInChildren<Button>()[19].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[19].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[20].onClick.AddListener(delegate { AddingCharacter(1); });
 
         //Townhall Buttons
-        buildingInfo.GetComponentsInChildren<Button>()[20].onClick.AddListener(delegate { AddingCharacter(0); });
-        buildingInfo.GetComponentsInChildren<Button>()[21].onClick.AddListener(delegate { AddingCharacter(1); });
-        buildingInfo.GetComponentsInChildren<Button>()[22].onClick.AddListener(delegate { AddingCharacter(2); });
-        buildingInfo.GetComponentsInChildren<Button>()[23].onClick.AddListener(delegate { AddingCharacter(3); });
+        buildingInfo.GetComponentsInChildren<Button>()[21].onClick.AddListener(delegate { AddingCharacter(0); });
+        buildingInfo.GetComponentsInChildren<Button>()[22].onClick.AddListener(delegate { AddingCharacter(1); });
+        buildingInfo.GetComponentsInChildren<Button>()[23].onClick.AddListener(delegate { AddingCharacter(2); });
+        buildingInfo.GetComponentsInChildren<Button>()[24].onClick.AddListener(delegate { AddingCharacter(3); });
 
         controller.Init(inventoryPanel, characterInfo, buildingInfo, this);
         characterDisplay.Init(this, characterMenu.GetComponentInChildren<Scrollbar>());
