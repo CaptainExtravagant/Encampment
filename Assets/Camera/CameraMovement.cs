@@ -47,24 +47,24 @@ public class CameraMovement : MonoBehaviour {
 			//Edge Scrolling
 			if (!holdingMouse) {
 				
-				if (Input.mousePosition.x >= Screen.width) {
+				if (Input.mousePosition.x >= Screen.width - 5) {
 					cameraTarget.Translate (new Vector3 (0.5f,
 						0.0f,
 						-0.5f), Space.Self);  
 				}
 
-				if (Input.mousePosition.x <= 0) {
+				if (Input.mousePosition.x <= 5) {
 					cameraTarget.Translate (new Vector3 (-0.5f,
 						0.0f,
 						0.5f), Space.Self);  
 				}
 
-				if (Input.mousePosition.y >= Screen.height) {
+				if (Input.mousePosition.y >= Screen.height - 5) {
 					cameraTarget.Translate (new Vector3 (0.5f,
 						0.0f,
 						0.5f), Space.Self);  
 				}
-				if (Input.mousePosition.y <= 0) {
+				if (Input.mousePosition.y <= 5) {
 					cameraTarget.Translate (new Vector3 (-0.5f,
 						0.0f,
 						-0.5f), Space.Self);  
