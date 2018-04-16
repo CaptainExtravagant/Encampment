@@ -32,8 +32,12 @@ public class BuildingDisplay : MonoBehaviour {
 
 	public void DestroyButton()
 	{
+        for(int i = 0; i < buildingReference.GetWorkingVillagers().Count; i++)
+        {
+            buildingReference.RemoveVillagerFromWork(i);
+        }
 		buildingReference.DemolishBuilding ();
-
+        ClosePanel();
 	}
 
 	public void UpgradeButton()
@@ -64,44 +68,38 @@ public class BuildingDisplay : MonoBehaviour {
     {
 		buildingReference = baseBuilding;
 
-        buildingType = 
-            buildingReference.GetBuildingType();
+        buildingType = buildingReference.GetBuildingType();
+        buildingName = buildingReference.GetBuildingName();
         
 		switch(buildingType)
         {
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_TOWNHALL:
-                buildingName = "Town Hall";
                 baseBuilding.infoPanel = uniquePanels[0];
                 baseBuilding.gameObject.GetComponent<Building_TownHall>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_WALL:
-                buildingName = "Wall";
                 baseBuilding.infoPanel = uniquePanels[1];
                 baseBuilding.gameObject.GetComponent<Building_Walls>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_HOUSE:
-                buildingName = "House";
                 baseBuilding.infoPanel = uniquePanels[2];
                 baseBuilding.gameObject.GetComponent<Building_House>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_FARM:
-                buildingName = "Farm";
                 baseBuilding.infoPanel = uniquePanels[3];
                 baseBuilding.gameObject.GetComponent<Building_Farm>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_LUMBERCAMP:
-                buildingName = "Lumber Camp";
                 baseBuilding.infoPanel = uniquePanels[4];
                 baseBuilding.gameObject.GetComponent<Building_LumberCamp>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_MININGCAMP:
-                buildingName = "Mining Camp";
                 baseBuilding.infoPanel = uniquePanels[5];
                 baseBuilding.gameObject.GetComponent<Building_MiningCamp>().SetUpInfoPanel();
                 break;
@@ -119,13 +117,11 @@ public class BuildingDisplay : MonoBehaviour {
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_OUTPOST:
-                buildingName = "Outpost";
                 baseBuilding.infoPanel = uniquePanels[8];
                 baseBuilding.gameObject.GetComponent<Building_Outpost>().SetUpInfoPanel();
                 break;
 
             case BaseBuilding.BUILDING_TYPE.BUILDING_BLACKSMITH:
-                buildingName = "Blacksmith";
                 baseBuilding.infoPanel = uniquePanels[9];
                 baseBuilding.gameObject.GetComponent<Building_Blacksmith>().SetUpInfoPanel();
                 break;

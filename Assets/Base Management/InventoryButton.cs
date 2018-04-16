@@ -61,7 +61,7 @@ public class InventoryButton : MonoBehaviour {
 
 	private void ButtonPressed()
 	{
-		inventoryRef.RemoveItem (heldItem);
+		//inventoryRef.RemoveItem (heldItem);
 		playerController.InventoryButtonPressed (heldItem);
 	}
 }

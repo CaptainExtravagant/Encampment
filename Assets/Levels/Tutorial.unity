@@ -156,10 +156,6 @@ Prefab:
       propertyPath: m_Name
       value: BushResource (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 1538569293400316, guid: 22510169d983545419b49bdfb33c745b, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22510169d983545419b49bdfb33c745b, type: 2}
   m_IsPrefabParent: 0
@@ -206,10 +202,6 @@ Prefab:
       propertyPath: m_Name
       value: StoneResource (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 1419804033874520, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
   m_IsPrefabParent: 0
@@ -255,10 +247,6 @@ Prefab:
     - target: {fileID: 1419804033874520, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
       propertyPath: m_Name
       value: StoneResource (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1419804033874520, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
@@ -371,10 +359,6 @@ Prefab:
       propertyPath: m_Name
       value: BushResource (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 1538569293400316, guid: 22510169d983545419b49bdfb33c745b, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22510169d983545419b49bdfb33c745b, type: 2}
   m_IsPrefabParent: 0
@@ -420,10 +404,6 @@ Prefab:
     - target: {fileID: 1296784664155922, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
       propertyPath: m_Name
       value: TreeResource (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1296784664155922, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
@@ -576,10 +556,6 @@ Prefab:
       propertyPath: m_Name
       value: BushResource (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 1538569293400316, guid: 22510169d983545419b49bdfb33c745b, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22510169d983545419b49bdfb33c745b, type: 2}
   m_IsPrefabParent: 0
@@ -626,10 +602,6 @@ Prefab:
       propertyPath: m_Name
       value: BushResource (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 1538569293400316, guid: 22510169d983545419b49bdfb33c745b, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22510169d983545419b49bdfb33c745b, type: 2}
   m_IsPrefabParent: 0
@@ -671,10 +643,6 @@ Prefab:
     - target: {fileID: 4673066004763812, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1296784664155922, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
@@ -926,10 +894,6 @@ Prefab:
       propertyPath: m_Name
       value: BushResource (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 1538569293400316, guid: 22510169d983545419b49bdfb33c745b, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22510169d983545419b49bdfb33c745b, type: 2}
   m_IsPrefabParent: 0
@@ -971,10 +935,6 @@ Prefab:
     - target: {fileID: 4056230676211102, guid: 22510169d983545419b49bdfb33c745b, type: 2}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1538569293400316, guid: 22510169d983545419b49bdfb33c745b, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22510169d983545419b49bdfb33c745b, type: 2}
@@ -1107,10 +1067,6 @@ Prefab:
     - target: {fileID: 1296784664155922, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
       propertyPath: m_Name
       value: TreeResource (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1296784664155922, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
@@ -1286,10 +1242,6 @@ Prefab:
       propertyPath: m_Name
       value: TreeResource (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 1296784664155922, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ccd88b9d9ae8e424cbb52be40b652555, type: 2}
   m_IsPrefabParent: 0
@@ -1418,10 +1370,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1419804033874520, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
   m_IsPrefabParent: 0
@@ -1468,10 +1416,6 @@ Prefab:
       propertyPath: m_Name
       value: StoneResource (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 1419804033874520, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
   m_IsPrefabParent: 0
@@ -1517,10 +1461,6 @@ Prefab:
     - target: {fileID: 1419804033874520, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
       propertyPath: m_Name
       value: StoneResource (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1419804033874520, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6570bd8ee0837dc4ca36dd45b8b7d251, type: 2}

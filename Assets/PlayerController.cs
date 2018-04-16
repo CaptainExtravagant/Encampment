@@ -82,6 +82,10 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 CloseAllMenus();
+                selectedObject = null;
+                villagerReference = null;
+                buildingReference = null;
+                resourceReference = null;
             }
 
             if (!EventSystem.current.IsPointerOverGameObject())
@@ -167,7 +171,12 @@ public class PlayerController : MonoBehaviour {
                         }
                         else if (villagerReference != null)
                         {
-                            villagerReference.SetTargetPosition(Camera.main.ViewportToWorldPoint(Input.mousePosition));
+                            Ray hitPosition = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                            if (Physics.Raycast(hitPosition, out hit, Mathf.Infinity))
+                            {
+                                villagerReference.SetTargetPosition(new Vector3(hit.point.x, 0, hit.point.z));
+                            }                           
                             
                             CloseCharacterInfoPanel();
                         }
@@ -198,9 +207,9 @@ public class PlayerController : MonoBehaviour {
     }
 
 	void CloseAllMenus()
-	{
-		CloseBuildingInfoPanel ();
-		CloseCharacterInfoPanel ();
+    {
+        CloseCharacterInfoPanel();
+        CloseBuildingInfoPanel ();
 		CloseInventory ();
 		baseManager.CloseAllMenus ();
 	}

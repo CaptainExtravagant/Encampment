@@ -153,6 +153,7 @@ public class TutorialManager : BaseManager {
     {
         if (buildingInfo.activeSelf)
         {
+            buildingInfo.SetActive(false);
         }
         else
         {
@@ -161,6 +162,7 @@ public class TutorialManager : BaseManager {
                 SetActiveAdvice(2);
                 buildingInfoOpened = true;
             }
+            buildingInfo.SetActive(true);
         }
     }
     void SetActiveAdvice(int index)
