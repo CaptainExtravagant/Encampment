@@ -459,7 +459,7 @@ public class BaseManager : MonoBehaviour {
     public GameObject SpawnVillager()
     {
         //Create some villagers
-        GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActor"));
+        GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActorOld"));
 
         if (newVillager != null)
         {
