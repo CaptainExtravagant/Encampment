@@ -53,6 +53,8 @@ public class BaseManager : MonoBehaviour {
 	protected bool addingToBuilding;
 
     protected List<BaseVillager> villagerList = new List<BaseVillager>();
+    protected List<BaseVillager> presentVillagers = new List<BaseVillager>();
+
     protected List<BaseBuilding> toBeBuilt = new List<BaseBuilding>();
     protected List<BaseBuilding> buildingList = new List<BaseBuilding>();
 	protected List<BaseBuilding> toBeUpgraded = new List<BaseBuilding>();
@@ -75,7 +77,7 @@ public class BaseManager : MonoBehaviour {
 	protected bool attackTimerSet;
 
 	protected float foodTimer = 120.0f;
-	protected float timer;
+	protected float timer = 120.0f;
     protected float UITimer = 5.0f;
 
     protected int buildingButtonIndex;
@@ -250,6 +252,7 @@ public class BaseManager : MonoBehaviour {
         lossPanel = Instantiate(Resources.Load("UI/GameOverPanel")) as GameObject;
 
         inventoryPanel = Instantiate(Resources.Load("UI/InventoryPanel")) as GameObject;
+        inventoryPanel.GetComponentInChildren<Dropdown>().onValueChanged.AddListener(delegate { inventoryReference.SortItems(inventoryPanel.GetComponentInChildren<Dropdown>().value); });
 
         pauseMenu = Instantiate(Resources.Load("UI/PauseMenu")) as GameObject;
 
@@ -260,7 +263,7 @@ public class BaseManager : MonoBehaviour {
         pauseMenu.GetComponentsInChildren<Button>()[1].onClick.AddListener(RestartGame);
         pauseMenu.GetComponentsInChildren<Button>()[2].onClick.AddListener(SaveQuit);
 
-        questMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleQuestMenu);
+        questMenu.GetComponentInChildren<Button>().onClick.AddListener(delegate { ToggleQuestMenu(true); });
         characterMenu.GetComponentInChildren<Button>().onClick.AddListener(ToggleCharacterMenu);
 
         //Incident Panel
@@ -281,10 +284,9 @@ public class BaseManager : MonoBehaviour {
         buildingMenu.GetComponentsInChildren<Button>()[3].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingFarm") as GameObject); });
         buildingMenu.GetComponentsInChildren<Button>()[4].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingLumbercamp") as GameObject); });
         buildingMenu.GetComponentsInChildren<Button>()[5].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingMiningcamp") as GameObject); });
-        buildingMenu.GetComponentsInChildren<Button>()[6].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingDocks") as GameObject); });
-        buildingMenu.GetComponentsInChildren<Button>()[7].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingBarracks") as GameObject); });
-        buildingMenu.GetComponentsInChildren<Button>()[8].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingOutpost") as GameObject); });
-        buildingMenu.GetComponentsInChildren<Button>()[9].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingBlacksmith") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[6].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingBarracks") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[7].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingOutpost") as GameObject); });
+        buildingMenu.GetComponentsInChildren<Button>()[8].onClick.AddListener(delegate { SelectBuilding(Resources.Load("Buildings/BuildingBlacksmith") as GameObject); });
 
         //Barracks Buttons
         buildingInfo.GetComponentsInChildren<Button>()[0].onClick.AddListener(delegate { AddingCharacter(0); });
@@ -330,7 +332,7 @@ public class BaseManager : MonoBehaviour {
         inventoryReference.Init(inventoryPanel, controller);
         
         buildingPanelPositionStart = buildingPanel.transform.position;
-        buildingPanelPositionEnd = new Vector3(buildingPanel.transform.position.x - 730, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
+        buildingPanelPositionEnd = new Vector3(buildingPanel.transform.position.x - 570, buildingPanel.transform.position.y, buildingPanel.transform.position.z);
 
         buildingMenu.GetComponentInChildren<Scrollbar>().onValueChanged.AddListener(ScrollBuildingMenu);
 
@@ -424,14 +426,14 @@ public class BaseManager : MonoBehaviour {
     }
     public void SettingUpQuest(Quest activeQuest)
     {
-        ToggleQuestMenu();
+        ToggleQuestMenu(true);
         characterScroll.GetComponent<CharacterDisplay>().OpenMenuForQuests(activeQuest);
         ToggleCharacterMenu();
         settingUpQuest = true;
     }
-    public void ToggleQuestMenu()
+    public void ToggleQuestMenu(bool enable)
     {
-        if (questMenu.GetComponent<Canvas>().enabled)
+        if (!enable)
         {
             questMenu.GetComponent<Canvas>().enabled = false;
         }
@@ -462,6 +464,7 @@ public class BaseManager : MonoBehaviour {
         if (newVillager != null)
         {
             villagerList.Add(newVillager.GetComponent<BaseVillager>());
+            presentVillagers.Add(newVillager.GetComponent<BaseVillager>());
         }
 
 
@@ -488,7 +491,7 @@ public class BaseManager : MonoBehaviour {
         if (settingUpQuest)
         {
             characterScroll.GetComponent<CharacterDisplay>().GetActiveQuest().AddCharacter(chosenVillager);
-            ToggleQuestMenu();
+            ToggleQuestMenu(false);
             ToggleCharacterMenu();
             settingUpQuest = false;
         }
@@ -501,6 +504,9 @@ public class BaseManager : MonoBehaviour {
         }
         else
         {
+            chosenVillager.SetSelected(true);
+            controller.SetVillagerReference(chosenVillager);
+            controller.OpenCharacterInfoPanel();
             ToggleCharacterMenu();
         }
     }
@@ -512,6 +518,7 @@ public class BaseManager : MonoBehaviour {
     public void RemoveVillagerFromList(BaseVillager villager)
     {
         villagerList.Remove(villager);
+        CheckVillagerCount();
     }
 
     public List<BaseVillager> GetVillagerList()
@@ -551,6 +558,7 @@ public class BaseManager : MonoBehaviour {
 
         incidentPanel.GetComponentsInChildren<Text>()[0].enabled = false;
         incidentPanel.GetComponentsInChildren<Text>()[1].enabled = true;
+        
     }
     public float GetAttackTimer()
     {
@@ -609,7 +617,7 @@ public class BaseManager : MonoBehaviour {
     public void ScrollBuildingMenu(float value)
 	{
 		//Zero value = 60
-		//1 value = -820
+		//1 value = -510
 
 		Vector3 newPosition = Vector3.Lerp(buildingPanelPositionStart, buildingPanelPositionEnd, value);
 
@@ -643,6 +651,10 @@ public class BaseManager : MonoBehaviour {
 	{
 		buildingInfo.SetActive (false);
 	}
+    public void OpenBuildingInfo()
+    {
+        buildingInfo.SetActive(true);
+    }
 	public void CloseAllMenus()
 	{
 		CloseBuildingMenu ();
@@ -660,7 +672,7 @@ public class BaseManager : MonoBehaviour {
         {
             characterMenu.SetActive(true);
         }
-    }
+    }    
     public void AddingCharacter(int buttonIndex)
     {
         if (buildingInfo.GetComponentInChildren<BuildingDisplay>().GetBuildingReference().FindVillagerSet(buttonIndex))
@@ -685,6 +697,7 @@ public class BaseManager : MonoBehaviour {
     //===================//
 	protected void FeedVillagers()
 	{
+        Debug.Log("Feed");
 		int tempValue = supplyFood;
 		for (int i = 0; i < GetVillagerCount (); i++) {
 			tempValue -= 10;
@@ -824,20 +837,6 @@ public class BaseManager : MonoBehaviour {
 
     public void SelectBuilding(GameObject buildingType)
     {
-        if (buttonPressed)
-        {
-            //Fix this (Doesn't work how you think it does)
-            if(Time.deltaTime <= buttonTimer)
-            {
-                CreateBuilding();
-            }
-
-            buttonPressed = false
-        }
-        else
-        {
-            buttonPressed = true;
-
             CancelBuilding();
 
             heldBuilding = Instantiate(buildingType, new Vector3(0, 0.5f, 0), Quaternion.identity);
@@ -863,7 +862,6 @@ public class BaseManager : MonoBehaviour {
             {
                 buildingText.GetComponentsInChildren<Button>()[0].interactable = true;
             }
-        }
     }
 
     private void CreateBuilding()

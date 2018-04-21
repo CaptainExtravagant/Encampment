@@ -22,10 +22,15 @@ public class Building_Farm : BaseBuilding, I_Building {
 	{
         base.Update();
 
-		if (workingVillagers.Count > 0) {
-			activeTimer -= Time.deltaTime;
+		if (workingVillagers.Count > 0)
+        {
+            if (!baseManager.GetUnderAttack())
+            {
+                activeTimer -= Time.deltaTime;
+            }
+            infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
 
-			if (activeTimer <= 0)
+            if (activeTimer <= 0)
 				WorkBuilding ();
 		}
 	}

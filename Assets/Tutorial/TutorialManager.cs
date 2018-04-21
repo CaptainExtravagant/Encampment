@@ -118,6 +118,12 @@ public class TutorialManager : BaseManager {
             }
         }
 
+        timer -= Time.deltaTime;
+        if (timer <= 0)
+        {
+            timer = foodTimer;
+            FeedVillagers();
+        }
 
         UIUpdate();
     }
@@ -175,7 +181,7 @@ public class TutorialManager : BaseManager {
         if (settingUpQuest)
         {
             characterScroll.GetComponent<CharacterDisplay>().GetActiveQuest().AddCharacter(chosenVillager);
-            ToggleQuestMenu();
+            ToggleQuestMenu(false);
             ToggleCharacterMenu();
             settingUpQuest = false;
 
@@ -196,7 +202,9 @@ public class TutorialManager : BaseManager {
         }
         else
         {
-            controller.OpenCharacterInfoPanel(chosenVillager);
+            chosenVillager.SetSelected(true);
+            controller.SetVillagerReference(chosenVillager);
+            controller.OpenCharacterInfoPanel();
             ToggleCharacterMenu();
             SetActiveAdvice(8);
         }

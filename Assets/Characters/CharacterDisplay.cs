@@ -75,8 +75,10 @@ public class CharacterDisplay : MonoBehaviour {
 
         buttonList.Add(button.gameObject);
 
-        if(buttonList.Count > 4)
-		    parentEnd = new Vector3(parentEnd.x, parentEnd.y + 168, parentEnd.z);
+        if (buttonList.Count == 4)
+            parentEnd = new Vector3(parentEnd.x, parentEnd.y + 84, parentEnd.z);
+        else if (buttonList.Count > 4)
+            parentEnd = new Vector3(parentEnd.x, parentEnd.y + 168, parentEnd.z);
 	}
 
 	public void UpdateButton(int index)

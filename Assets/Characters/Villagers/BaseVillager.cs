@@ -164,8 +164,6 @@ public class BaseVillager : Character{
 
     protected override void AIUpdate()
     {
-        
-
         switch(currentState)
         {
             case CHARACTER_STATE.CHARACTER_ATTACKING:
@@ -177,7 +175,7 @@ public class BaseVillager : Character{
                 break;
 
             case CHARACTER_STATE.CHARACTER_DEAD:
-                base.AIDead();
+                AIDead();
                 break;
 
             case CHARACTER_STATE.CHARACTER_MOVING:
@@ -303,7 +301,7 @@ public class BaseVillager : Character{
         AIFindTarget();
     }
 
-	protected override void AIMoveToTarget ()
+    protected override void AIMoveToTarget ()
     {
 		if (targetObject == null && !targetPositionSet) {
 
@@ -369,6 +367,7 @@ public class BaseVillager : Character{
         {
             targetObject = null;
             GetComponent<MeshRenderer>().enabled = true;
+            GetComponent<CapsuleCollider>().enabled = true;
             agent.enabled = true;
         }
 
@@ -486,6 +485,7 @@ public class BaseVillager : Character{
 	public void FoodDamage()
 	{
 		SetCurrentHealth (GetCurrentHealth() - (20 - GetCharacterInfo().characterAttributes.focus));
+        CheckHealth();
 	}
 
 	public void SetTargetPosition(Vector3 newPosition)
@@ -554,6 +554,7 @@ public class BaseVillager : Character{
         workingBuilding = targetObject.GetComponent<BaseBuilding>();
         currentState = CHARACTER_STATE.CHARACTER_WORKING;
         GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false;
         agent.enabled = false;
     }
 
@@ -562,6 +563,7 @@ public class BaseVillager : Character{
         workingBuilding = null;
         currentState = CHARACTER_STATE.CHARACTER_WANDER;
         GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<CapsuleCollider>().enabled = true;
         agent.enabled = true;
     }
 
@@ -643,6 +645,11 @@ public class BaseVillager : Character{
     {
         onQuest = true;
         activeQuest = questNumber;
+    }
+
+    public bool IsOnQuest()
+    {
+        return onQuest;
     }
 }
 

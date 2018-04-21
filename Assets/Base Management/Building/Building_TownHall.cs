@@ -44,7 +44,11 @@ public class Building_TownHall : BaseBuilding, I_Building {
 
         if (workingVillagers.Count > 0)
         {
-            activeTimer -= Time.deltaTime;
+            if (!baseManager.GetUnderAttack())
+            {
+                activeTimer -= Time.deltaTime;
+            }
+            infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
 
             if (activeTimer <= 0)
                 WorkBuilding();

@@ -164,7 +164,7 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	{
 		//Debug.Log ("Building Health: " + currentHealth);
 		currentHealth -= damage;
-
+                
 		if (currentHealth <= 0) {
 			DestroyBuilding();
 		}
@@ -260,6 +260,15 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 		if (!placedInWorld)
         {
             BindToMouse();
+        }
+
+        if(progressSlider != null)
+        {
+            Vector3 v = Camera.main.transform.position - progressSlider.transform.position;
+            v.x = v.z = 0.0f;
+
+            progressSlider.transform.LookAt(Camera.main.transform.position - v);
+            progressSlider.transform.rotation = Camera.main.transform.rotation;
         }
     }
 

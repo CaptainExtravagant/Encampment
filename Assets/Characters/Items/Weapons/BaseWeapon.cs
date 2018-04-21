@@ -23,7 +23,7 @@ public class BaseWeapon : BaseItem, I_Item {
     private float defense;
 
     private bool twoHanded;
-	protected float weaponRange = 2.0f;
+	protected float weaponRange = 5.0f;
 
     private void Awake()
     {

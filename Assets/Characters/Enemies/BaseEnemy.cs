@@ -70,13 +70,19 @@ public class BaseEnemy : Character {
         {
 			for (int i = 0; i < managerReference.GetVillagerCount(); i++) {
 				if (managerReference.GetVillagerList() [i] != null) {
-					if (i == 0) {
-						targetPosition = managerReference.GetVillagerList() [i].transform.position;
-						targetObject = managerReference.GetVillagerList() [i].gameObject;
-					} else if (Vector3.Distance (transform.position, targetPosition) > Vector3.Distance (transform.position, managerReference.GetVillagerList() [i].transform.position)) {
-						targetPosition = managerReference.GetVillagerList() [i].transform.position;
-						targetObject = managerReference.GetVillagerList() [i].gameObject;
-					}
+                    if (!managerReference.GetVillagerList()[i].IsOnQuest())
+                    {
+                        if (i == 0)
+                        {
+                            targetPosition = managerReference.GetVillagerList()[i].transform.position;
+                            targetObject = managerReference.GetVillagerList()[i].gameObject;
+                        }
+                        else if (Vector3.Distance(transform.position, targetPosition) > Vector3.Distance(transform.position, managerReference.GetVillagerList()[i].transform.position))
+                        {
+                            targetPosition = managerReference.GetVillagerList()[i].transform.position;
+                            targetObject = managerReference.GetVillagerList()[i].gameObject;
+                        }
+                    }
 				}
 			}
 			for (int i = 0; i < managerReference.GetBuildingCount(); i++) {

@@ -33,8 +33,10 @@ public class Building_Barracks : BaseBuilding, I_Building {
         base.Update();
 
 		if (workingVillagers.Count > 0) {
-			activeTimer -= Time.deltaTime;
-
+            if (!baseManager.GetUnderAttack())
+            {
+                activeTimer -= Time.deltaTime;
+            }
 			if (activeTimer <= 0)
 				WorkBuilding ();
 		}

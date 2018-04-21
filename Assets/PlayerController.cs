@@ -222,7 +222,12 @@ public class PlayerController : MonoBehaviour {
 		villagerReference.RenameCharacter (newName);
 	}
 
-    void OpenCharacterInfoPanel()
+    public void SetVillagerReference(BaseVillager newVillager)
+    {
+        villagerReference = newVillager;
+    }
+
+    public void OpenCharacterInfoPanel()
     {
 		selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
@@ -640,7 +645,7 @@ public class PlayerController : MonoBehaviour {
 
     void OpenBuildingInfoPanel()
     {
-        baseManager.ToggleBuildingInfo();
+        baseManager.OpenBuildingInfo();
         buildingDisplay.SetInformation(buildingReference);
         buildingReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.2f);
         buildingPanel.SetActive(true);
@@ -648,8 +653,9 @@ public class PlayerController : MonoBehaviour {
 
     public void CloseBuildingInfoPanel()
     {
-        baseManager.ToggleBuildingInfo();
-        buildingReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.0f);
+        baseManager.CloseBuildingInfo();
+        if(buildingReference != null)
+            buildingReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.0f);
         buildingReference = null;
 
         buildingDisplay.ClosePanel ();
@@ -705,7 +711,7 @@ public class PlayerController : MonoBehaviour {
 					//Debug.Log ("Shield Equipped");
 					OpenCharacterInfoPanel ();
 					return;
-				} else if (equippingToMain) {
+				} else if (equippingToMain) {                    
 					villagerReference.UnequipMainHand ();
 					villagerReference.EquipWeaponToMainHand (item as BaseWeapon);
 					//Debug.Log ("Main hand Equipped");

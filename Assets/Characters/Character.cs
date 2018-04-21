@@ -528,7 +528,7 @@ public class Character : MonoBehaviour{
     }
 
     //Destroy this character
-	protected void AIDead()
+	protected virtual void AIDead()
     {
         targetPosition = transform.position;
         targetObject = null;
@@ -607,9 +607,9 @@ public class Character : MonoBehaviour{
             agent.enabled = true;
             currentState = CHARACTER_STATE.CHARACTER_WANDER;
         }
+
         if (AICheckWeaponRange())
         {
-
             if (isAttacking && targetObject != null)
             {
                 attackTimer += Time.deltaTime;
@@ -769,7 +769,7 @@ public class Character : MonoBehaviour{
 
 	public void UnequipMainHand()
 	{
-		if(GetEquippedWeapon() != null)
+		if(GetEquippedWeapon() != null && GetEquippedWeapon().GetWeaponType() != BaseWeapon.WEAPON_TYPE.WEAPON_FISTS)
 			inventory.AddItem (GetEquippedWeapon ());
 
 		BaseWeapon emptyHand = new BaseWeapon ();
@@ -780,7 +780,7 @@ public class Character : MonoBehaviour{
 
 	public void UnequipOffHand()
 	{
-		if(GetOffHandWeapon() != null)
+		if(GetOffHandWeapon() != null && GetEquippedWeapon().GetWeaponType() != BaseWeapon.WEAPON_TYPE.WEAPON_FISTS)
 			inventory.AddItem (GetOffHandWeapon ());
 
 		BaseWeapon emptyHand = new BaseWeapon ();

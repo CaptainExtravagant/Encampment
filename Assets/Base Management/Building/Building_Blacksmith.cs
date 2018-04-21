@@ -27,14 +27,20 @@ public class Building_Blacksmith : BaseBuilding, I_Building {
 
         SetBuildingName();
         SetBuildingFunction();
+
+        chosenItem = new Weapon_Axe();
     }
 
 	new void Update()
 	{
         base.Update();
 
-		if (workingVillagers.Count > 0 && isWorking) {
-			activeTimer -= Time.deltaTime;
+		if (workingVillagers.Count > 0 && isWorking)
+        {
+            if (!baseManager.GetUnderAttack())
+            {
+                activeTimer -= Time.deltaTime;
+            }
             infoPanel.GetComponentInChildren<UnityEngine.UI.Slider>().value = activeTimer / workTime;
 
 			if (activeTimer <= 0)
