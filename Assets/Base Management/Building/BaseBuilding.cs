@@ -7,13 +7,15 @@ using System;
 
 public class BaseBuilding : MonoBehaviour, I_Building {
 
-	public virtual void WorkBuilding()
-	{
+	public virtual void WorkBuilding()        
+	{        
 	}
 
 	public GameObject infoPanel;
 	protected bool infoPanelOpen;
 
+    
+    
     public enum BUILDING_TYPE
     {
         BUILDING_TOWNHALL = 0,
@@ -452,6 +454,8 @@ public class BaseBuilding : MonoBehaviour, I_Building {
 	public void AddConstructionPoints(float points, BaseVillager characterReference)
     {
         buildTime -= points;
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sound/Sound_Building") as AudioClip, transform.position);
 
         progressSlider.GetComponentInChildren<UnityEngine.UI.Slider>().value = buildTime / initialBuildTime;
 

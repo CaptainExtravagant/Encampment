@@ -533,6 +533,8 @@ public class Character : MonoBehaviour{
         targetPosition = transform.position;
         targetObject = null;
 
+        AudioSource.PlayClipAtPoint(Resources.Load("Sound/Sound_Death") as AudioClip, transform.position);
+
         Destroy(gameObject);
     }
 
@@ -610,6 +612,7 @@ public class Character : MonoBehaviour{
 
         if (AICheckWeaponRange())
         {
+            AudioSource.PlayClipAtPoint(Resources.Load("Sound/Sound_Combat") as AudioClip, transform.position);
             if (isAttacking && targetObject != null)
             {
                 attackTimer += Time.deltaTime;
