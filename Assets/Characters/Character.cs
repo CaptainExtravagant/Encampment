@@ -612,7 +612,6 @@ public class Character : MonoBehaviour{
 
         if (AICheckWeaponRange())
         {
-            AudioSource.PlayClipAtPoint(Resources.Load("Sound/Sound_Combat") as AudioClip, transform.position);
             if (isAttacking && targetObject != null)
             {
                 attackTimer += Time.deltaTime;
@@ -621,6 +620,7 @@ public class Character : MonoBehaviour{
                 {
 
                     //Attack the target
+                    AudioSource.PlayClipAtPoint(Resources.Load("Sound/Sound_Combat") as AudioClip, transform.position);
 
                     if (targetObject.GetComponent<Character>())
                     {
