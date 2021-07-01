@@ -256,8 +256,15 @@ public class BaseManager : MonoBehaviour {
 
         pauseMenu = Instantiate(Resources.Load("UI/PauseMenu")) as GameObject;
 
-        inventoryReference = gameObject.AddComponent<InventoryBase>();
-        questManager = gameObject.AddComponent<QuestManager>();
+        if(!GetComponent<InventoryBase>())
+            inventoryReference = gameObject.AddComponent<InventoryBase>();
+        else
+            inventoryReference = GetComponent<InventoryBase>();
+
+        if(!GetComponent<QuestManager>())
+            questManager = gameObject.AddComponent<QuestManager>();
+        else
+            questManager = GetComponent<QuestManager>();
 
         pauseMenu.GetComponentsInChildren<Button>()[0].onClick.AddListener(delegate { TogglePauseMenu(true); });
         pauseMenu.GetComponentsInChildren<Button>()[1].onClick.AddListener(RestartGame);
@@ -459,7 +466,7 @@ public class BaseManager : MonoBehaviour {
     public GameObject SpawnVillager()
     {
         //Create some villagers
-        GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/VillagerActorOld"));
+        GameObject newVillager = (GameObject)Instantiate(Resources.Load("Characters/Male/Peasant Male 01"));
 
         if (newVillager != null)
         {

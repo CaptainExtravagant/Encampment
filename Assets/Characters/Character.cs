@@ -145,6 +145,8 @@ public class Character : MonoBehaviour{
     protected NavMeshAgent agent;
 	protected InventoryBase inventory;
 	protected BaseManager manager;
+    protected Rigidbody rb;
+    protected Animator animator;
 
     protected Vector3 targetPosition;
     protected GameObject targetObject;
@@ -169,6 +171,8 @@ public class Character : MonoBehaviour{
     {
         agent = GetComponent<NavMeshAgent>();
         //CreateCharacter(new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)));
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
 
         CalculateNextLevelExperience();
     }
@@ -621,6 +625,7 @@ public class Character : MonoBehaviour{
 
                     //Attack the target
                     AudioSource.PlayClipAtPoint(Resources.Load("Sound/Sound_Combat") as AudioClip, transform.position);
+                    animator.SetTrigger("Melee Right Attack 01");
 
                     if (targetObject.GetComponent<Character>())
                     {
@@ -721,6 +726,7 @@ public class Character : MonoBehaviour{
         {
             print("Total damage: " + totalDamage);
             currentHealth -= totalDamage;
+            animator.SetTrigger("Take Damage");
         }
 
         CheckHealth();

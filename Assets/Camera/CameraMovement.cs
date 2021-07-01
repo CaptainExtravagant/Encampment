@@ -13,10 +13,14 @@ public class CameraMovement : MonoBehaviour {
     Vector3 holdingPoint;
     bool holdingMouse;
     bool movementEnabled;
+    [SerializeField]
 	float movement = 5;
 
     float holdMouseTimer = 0.1f;
     float timer;
+
+    [SerializeField]
+    bool edgeScrolling = false;
 
     public bool IsHoldingMouse()
     {
@@ -45,7 +49,7 @@ public class CameraMovement : MonoBehaviour {
         if (movementEnabled)
         {
 			//Edge Scrolling
-			if (!holdingMouse) {
+			if (!holdingMouse && edgeScrolling) {
 				
 				if (Input.mousePosition.x >= Screen.width - 5) {
 					cameraTarget.Translate (new Vector3 (0.5f,

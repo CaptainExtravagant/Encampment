@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviour {
 		selectedCharacterInfo = villagerReference.GetCharacterInfo();
         selectedCharacterTaskSkills = villagerReference.GetTaskSkills();
 
-        villagerReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.2f);
+        //villagerReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.2f);
 
         for (int i = 0; i < infoText.Length; i++) {
 			switch (i)
@@ -502,7 +502,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (villagerReference)
         {
-            villagerReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.0f);
+            //villagerReference.gameObject.GetComponent<Renderer>().material.SetFloat("_Outline", 0.0f);
 
             villagerReference.SetSelected(false);
             villagerReference = null;

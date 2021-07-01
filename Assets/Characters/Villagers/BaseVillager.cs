@@ -199,6 +199,25 @@ public class BaseVillager : Character{
                 VillagerWander();
                 break;
         }
+
+        if(agent.velocity.magnitude > 0f)
+        {
+            if(agent.velocity.magnitude > 0.75f)
+            {
+                animator.SetBool("Walk", false);
+                animator.SetBool("Run", true);
+            }
+            else
+            {
+                animator.SetBool("Run", false);
+                animator.SetBool("Walk", true);
+            }
+        }
+        else
+        {
+            animator.SetBool("Walk", false);
+            animator.SetBool("Run", false);
+        }
     }
     
     void VillagerCollect()
